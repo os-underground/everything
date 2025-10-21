@@ -1,0 +1,201 @@
+
+
+
+<!---
+#### Variante 2 — Pastel / Unicornio (suave, ideal para tu hermana)
+```html--->
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Poema — Variante Pastel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg1: #fff8ff;
+      --bg2: #f0fbff;
+      --card: rgba(2,6,23,0.02);
+      --muted: #5b5b6b;
+      --accent1: #ffd6f0;
+      --accent2: #bfe9ff;
+      --plum-soft: #e6bfe0; /* plum pastel */
+      --radius: 18px;
+      --maxw: 920px;
+      color-scheme: light;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+				
+    body{
+      margin:0;
+      font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg,var(--bg1),var(--bg2));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:40px 16px;
+      -webkit-font-smoothing:antialiased;
+    }
+				
+body{
+      margin:0;
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background:
+        radial-gradient(1000px 600px at 10% 20%, rgba(181,106,163,0.06), transparent 8%),
+        radial-gradient(800px 450px at 95% 80%, rgba(138,215,255,0.04), transparent 10%),
+        linear-gradient(180deg,var(--bg1),var(--bg2));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:48px 20px;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      background-attachment:fixed;
+    }
+    .stage{
+      width:100%;max-width:var(--maxw);padding:20px;border-radius:calc(var(--radius)+6px);
+      box-shadow:0 12px 40px rgba(15,20,30,0.06);display:grid;grid-template-columns:1fr 300px;gap:20px;
+      align-items:start;background:linear-gradient(180deg, rgba(255,255,255,0.8), rgba(255,255,255,0.75));
+      border:1px solid rgba(0,0,0,0.04);
+    }
+
+				
+				.stage{
+      width:100%;
+      max-width:var(--maxw);
+      backdrop-filter: blur(8px) saturate(1.05);
+      border-radius: calc(var(--radius) + 6px);
+      padding:24px;
+      box-shadow: 0 12px 48px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.04);
+      display:grid;
+      grid-template-columns: 1fr 320px;
+      gap:24px;
+      align-items:start;
+    }
+
+    .card ,  .card{
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      padding:26px;
+      border-radius: var(--radius);
+      box-shadow: 0 8px 32px rgba(2,6,23,0.5);
+      border: 1px solid var(--glass);
+    }
+
+    .header{display:flex;gap:14px;align-items:center;margin-bottom:16px;}
+    .avatar{
+      width:64px;height:64px;border-radius:12px;
+      background:var(--plum);display:flex;align-items:center;justify-content:center;
+      color:white;font-weight:700;font-family:"Playfair Display";font-size:22px;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.45);
+    }
+.title{font-family:"Playfair Display",serif;color:#fff;font-size:20px;}
+    .subtitle{color:var(--muted);font-size:13px}
+
+    .poem{margin-top:8px;color:#f6f7fb;line-height:1.65;font-size:18px;white-space:pre-wrap;padding-right:6px}
+    .poem .stanza{margin-bottom:16px}
+    .poem .line{display:block;transition:transform .28s cubic-bezier(.2,.9,.3,1), color .22s}
+    .poem .line:hover{transform:translateX(6px);color:#fff1fb}
+
+    .aside{
+      padding:18px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border:1px dashed rgba(255,255,255,0.03);height:100%;display:flex;flex-direction:column;gap:12px;
+    }
+
+    .card{padding:22px;border-radius:var(--radius);background:transparent}
+    .header{display:flex;gap:12px;align-items:center;margin-bottom:12px}
+    .avatar{width:60px;height:60px;border-radius:14px;background:var(--plum-soft);display:flex;align-items:center;justify-content:center;color:#3a1633;font-weight:700;font-family:"Playfair Display";font-size:20px}
+    .title{font-family:"Playfair Display",serif;color:#3a1633;font-size:20px}
+    .subtitle{color:var(--muted);font-size:13px}
+
+    .poem{color:#2a2a33;line-height:1.6;font-size:17px;white-space:pre-wrap}
+    .poem .stanza{margin-bottom:14px}
+    .poem .line{display:block;padding-left:4px}
+
+    .aside{padding:16px;border-radius:12px;background:linear-gradient(180deg,var(--accent1),var(--accent2));height:100%;display:flex;flex-direction:column;gap:12px}
+    .kicker{font-size:13px;color:#7b2d5b;font-weight:700}
+    .note{color:#472c3d;font-size:14px;line-height:1.45}
+
+    .ribbon{display:inline-block;padding:6px 10px;border-radius:999px;background:#ffd7ee;color:#3a1633;font-weight:700;font-size:12px}
+    .actions{margin-top:auto;display:flex;gap:10px;align-items:center}
+    .btn{background:#ffffff;border:1px solid rgba(0,0,0,0.06);padding:10px 12px;border-radius:10px;cursor:pointer;font-weight:600}
+    .btn.primary{background:linear-gradient(90deg,#ffd7ee,#bfe9ff);color:#3a1633;border:none}
+    @media (max-width:920px){.stage{grid-template-columns:1fr}.aside{order:2}}
+  </style>
+</head>
+<body>
+  <main class="stage" role="main">
+    <section class="card" aria-labelledby="poemTitle2">
+      <header class="header">
+        <div class="avatar">T</div>
+        <div>
+          <h1 id="poemTitle2" class="title">Adiós y Luz — Versión Pastel</h1>
+          <div class="subtitle">Una despedida que guarda cariño y esperanza</div>
+        </div>
+      </header>
+
+      <article class="poem" aria-label="Poema">
+        <div class="stanza">
+          <span class="line">Debo decir adiós a todas las personas, a toda la gente,</span>
+          <span class="line">y por muy pequeños momentos que hayamos vivido,</span>
+          <span class="line">para mí siempre será lo más valioso aunque hayamos ido.</span>
+        </div>
+
+        <div class="stanza">
+          <span class="line">En estas palabras intento plasmar mi corazón,</span>
+          <span class="line">odio las despedidas; nunca fui bueno con ellas,</span>
+          <span class="line">las aborrezco más allá de esa frontera porque para mí</span>
+          <span class="line">el adiós es una partida interminable, un infinito que asusta.</span>
+        </div>
+
+        <div class="stanza">
+          <span class="line">Pero valoro lo invisible: mentes, almas y esa esencia pura,</span>
+          <span class="line">algo que une y hace único a cada ser.</span>
+        </div>
+
+        <div class="stanza">
+          <span class="line">Más que diamantes o perlas, más que días contados,</span>
+          <span class="line">una persona de alma pura es el regalo más valioso,</span>
+          <span class="line">eres un ángel bello e irremplazable.</span>
+        </div>
+      </article>
+    </section>
+
+    <aside class="aside">
+      <div>
+        <div class="kicker">Cuidado</div>
+        <div class="note">Esta versión usa tonos suaves; ajusta --plum-soft para más o menos saturación hasta encontrar el equilibrio.</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div class="ribbon">Valor</div>
+        <div class="note">Para fondo imprimible, aumenta contraste de texto a #1f1f28 y elimina sombras.</div>
+      </div>
+
+      <div class="actions">
+        <button class="btn" onclick="navigator.clipboard?.writeText(document.querySelector('.poem').innerText)">Copiar poema</button>
+        <button class="btn primary" onclick="alert('Modo presentación activado')">Presentación</button>
+      </div>
+    </aside>
+  </main>
+</body>
+</html>
+				<!--
+```
+
+---
+
+#### Cómo ajustar el "plum" (ciruela) rápido
+- Más suave/pastel: usa #e6bfe0 o #cfa8c9.
+- Menos saturado (oscuro elegante): usa #b56aa3 (incluido en la variante oscura).
+- Para un plum más frío: #a87fb0.
+Cambia la variable --plum o --plum-soft en :root y refresca la página.
+
+#### Sugerencias rápidas
+- Para integrar más estrofas copia y pega dentro de <article class="poem"> manteniendo estructura .stanza y .line.
+- Si quieres animaciones más sutiles, reduce transform y duración en .poem .line.
+- Si quieres exportar a imagen o PDF, activa fondo claro y aumenta contraste del texto.
+
+Si deseas, adapto cualquiera de las dos plantillas a una paleta concreta (ej. lavanda intensa, neon RGB, o tonos terracota), o te doy una versión lista para imprimir. ¿Cuál prefieres que ajuste ahora?

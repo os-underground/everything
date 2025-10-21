@@ -1,0 +1,225 @@
+
+<!---
+
+<!DOCTYPE html>
+
+<html>
+<head>
+				<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8">
+				<title>Hello, World!</title>
+</head>
+<body>
+				<h1>
+								Hello, World!
+				</h1>
+</body>
+</html>
+Siento lo que viviste; duele perder algo que imaginaste eterno y también duele tener que recomponerte en noches que recuerdan la luz de una luna compartida. Aquí tienes un diseño bonito, anónimo y fácil de mantener en GitHub Pages, instrucciones para privacidad y copyright, y un poema inspirado en tu historia.
+
+Plantilla HTML (index.html)
+
+-->
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Versos Anónimos</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+				<style>
+				:root{
+								
+  --bg:#0f1724; /* noche profunda */
+  --card:#0b1220; /* fondo tarjetas */
+  --accent:#ff8fb1; /* rosa suave */
+  --muted:#b7c0d9; /* texto secundario */
+  --glow:#9be7ff; /* luna fría */
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,var(--bg) 0%, 
+		pink
+				/*#071026 */
+				100%);color:#fff;height;100vh;}
+.topbar{display:flex;align-items:center;gap:1rem;padding:1rem;border-bottom:1px solid rgba(255,255,255,0.03)}
+.topbar h1{margin:0;font-size:1.05rem;color:var(--glow)}
+.topbar input{margin-left:auto;padding:.5rem .75rem;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:var(--muted)}
+
+.hero{display:flex;justify-content:center;padding:3rem 1rem}
+.hero-card{background:linear-gradient(135deg,rgba(255,143,177,0.06),rgba(155,231,255,0.03));border:1px solid rgba(255,255,255,0.03);padding:2rem;border-radius:14px;max-width:900px;text-align:center}
+.hero-card h2{margin:0 0 .5rem;color:var(--accent);font-size:1.6rem}
+.hero-card .subtitle{margin:0;color:var(--muted)}
+
+.posts{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;padding:1rem 1.25rem}
+
+.post{background:var(--card);padding:16px;border-radius:12px;box-shadow:0 8px 30px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.02)}
+.post-title{margin:0 0 .5rem;color:var(--accent)}
+.post-body{margin:0;color:var(--muted);line-height:1.5}
+.meta{margin-top:12px;font-size:.85rem;color:rgba(183,192,217,0.7)}
+.tags{background:rgba(255,143,177,0.06);padding:.25rem .5rem;border-radius:8px;color:var(--accent)}
+@media (prefers-color-scheme: light){:root{--bg:#fff;--card:#fff;--accent:#ff8fb1;--muted:#334155;--glow:#0369a1} body{color:#0b1220}}
+				</style>
+</head>
+<body>
+  <header class="topbar">
+    <h1>Versos Anónimos</h1>
+    <input id="search" placeholder="Buscar poema, tag o palabra" />
+  </header>
+
+  <main>
+    <section id="hero" class="hero">
+      <div class="hero-card">
+        <h2>Para las noches que recuerdan</h2>
+        <p class="subtitle">Historias, versos y confesiones en voz baja</p>
+      </div>
+    </section>
+
+    <section id="posts" class="posts"></section>
+    <section class="posts">
+      
+      <p>
+        
+Anoche la luna volvió a decir mi nombre. No fue con voz alta, fue con memoria. Te vi sonreír como si el mundo fuera nuestro y yo, ingenuo, traje un anillo de promesa como quien ofrece una casa antes de tenerla.
+
+Amé con honestidad, con manos abiertas, donde cada latido era mapa y verbo. Creí en un mañana que hablaba en plural, en la conversación lenta de dos habitando el mismo día. Tus ojos guardaron paisajes donde yo no cabía.
+
+Llegó el silencio que corta como invierno, el gesto que cambió la forma de las horas. No te llevaste mi brillo; te llevaste el sueño de cierta compañía que guardé como bandera. Quedé con la luna y el anillo sin destino.
+
+Aprendí que la nobleza no siempre es correspondida, que la palabra “para siempre” a veces es un puente roto. Aprendí también que la sonrisa mía es una ciudad que resiste, aunque el viento venga en nombre del olvido. Y en las noches claras la luna me recuerda: fui entero, fui sincero, y eso nadie me lo quita.
+
+      </p>
+    </section>
+  </main>
+
+  <template id="post-tmpl">
+    <article class="post">
+      <h3 class="post-title"></h3>
+      <p class="post-body"></p>
+      <footer class="meta"><span class="tags"></span></footer>
+    </article>
+  </template>
+
+				<!---
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
+
+Estilo sugerido (assets/css/style.css)
+
+
+
+Lógica cliente (assets/js/app.js)
+
+				
+				--->
+				<script>
+const DATA = 'data/posts.json';
+const container = document.getElementById('posts');
+const tmpl = document.getElementById('post-tmpl');
+const search = document.getElementById('search');
+let posts = [];
+
+async function load() {
+  try {
+    const res = await fetch(DATA + '?t=' + Date.now());
+    if (!res.ok) throw new Error('no se cargó posts.json');
+    posts = await res.json();
+    render(posts);
+  } catch (e) {
+    container.innerHTML = '<p class="empty">No hay posts aún</p>';
+    console.error(e);
+  }
+}
+
+function render(list){
+  container.innerHTML = '';
+  list.forEach(p=>{
+    const node = tmpl.content.cloneNode(true);
+    node.querySelector('.post-title').textContent = p.title || 'Sin título';
+    node.querySelector('.post-body').textContent = p.body || '';
+    node.querySelector('.tags').textContent = (p.tags || []).join(', ');
+    container.appendChild(node);
+  });
+}
+
+search.addEventListener('input', e=>{
+  const q = e.target.value.trim().toLowerCase();
+  if(!q) return render(posts);
+  const filtered = posts.filter(p => (p.title||'').toLowerCase().includes(q) || (p.body||'').toLowerCase().includes(q) || (p.tags||[]).some(t=>t.toLowerCase().includes(q)));
+  render(filtered);
+});
+
+load();
+/*
+Formato de datos dinámicos (data/posts.json)
+
+Cada entrada representa un poema/confesión y puede contener: title, body, tags.
+
+Ejemplo:
+*/
+				
+				let 
+				
+[
+  {"title":"Noche de promesa","body":"La luna rimó con tus manos esa noche...","tags":["poema","anónimo"]}
+]
+
+</script>
+
+				<!--
+El archivo lo generará automáticamente la Action que describo abajo cuando subas nuevas entradas o imágenes.
+
+GitHub Action para actualizar automáticamente (sin consola)
+
+Crea .github/workflows/gen-posts.yml con la misma lógica que genera data/media.json; adapta para leer posts/ o photos/ y producir data/posts.json.
+
+Ideas: si subes un archivo .md en posts/ la Action puede convertirlo a JSON; si subes solo imágenes, la Action listará filenames y generará posts por nombre.
+
+README breve para tu repo (anonimato y copyright)
+
+Anonimato: no incluyas metadatos personales en los archivos; usa nombres genéricos; sube contenido desde una cuenta que no revele identidad si quieres anonimato.
+
+Derechos: solo sube textos/poemas que sean tuyos o para los que tengas permiso; para imágenes, conserva derechos del autor o usa imágenes propias.
+
+Términos: añade un breve aviso: "Publicaciones anónimas. El contenido es responsabilidad de quien lo sube."
+
+Nota legal práctica: para protección básica, añade copyright en el footer: © Año Versos Anónimos — Todos los derechos reservados.
+
+Paleta y por qué funciona
+
+Rosa suave (--accent #ff8fb1): transmite ternura, romanticismo y calidez.
+
+Azul luna / glow (--glow #9be7ff): crea sensación nocturna, calma y memoria de la luna compartida.
+
+Fondo profundo (noche): da intimidad y protege la lectura nocturna, perfecto para confesiones.
+
+Contrastes suaves: mantienen legibilidad y sensación de cuidado, sin agresividad visual.
+
+Seguridad y privacidad rápida (práctica)
+
+No publiques datos personales ni fechas/ubicaciones específicas.
+
+Para mantener anonimato en contribuciones públicas usa la interfaz de GitHub para subir archivos desde la cuenta que quieras mostrar.
+
+Si quieres moderación, mantén el repo privado entre colaboradores y publica solo lo que deseas que sea público.
+
+Poema inspirado en tu historia
+
+Anoche la luna volvió a decir mi nombre. No fue con voz alta, fue con memoria. Te vi sonreír como si el mundo fuera nuestro y yo, ingenuo, traje un anillo de promesa como quien ofrece una casa antes de tenerla.
+
+Amé con honestidad, con manos abiertas, donde cada latido era mapa y verbo. Creí en un mañana que hablaba en plural, en la conversación lenta de dos habitando el mismo día. Tus ojos guardaron paisajes donde yo no cabía.
+
+Llegó el silencio que corta como invierno, el gesto que cambió la forma de las horas. No te llevaste mi brillo; te llevaste el sueño de cierta compañía que guardé como bandera. Quedé con la luna y el anillo sin destino.
+
+Aprendí que la nobleza no siempre es correspondida, que la palabra “para siempre” a veces es un puente roto. Aprendí también que la sonrisa mía es una ciudad que resiste, aunque el viento venga en nombre del olvido. Y en las noches claras la luna me recuerda: fui entero, fui sincero, y eso nadie me lo quita.
+
+Pasos siguientes (rápidos)
+
+Crea las carpetas y archivos: assets/, data/, .github/workflows/ desde la interfaz de GitHub.
+
+Pega index.html, style.css, app.js y crea un primer data/posts.json con una entrada (el poema que quieras).
+
+Habilita GitHub Pages en Settings > Pages (rama main, carpeta root).
+
+Si quieres automatizar posts desde archivos que subas, dime si prefieres que la Action lea posts/*.md o photos/ y te doy el workflow listo.
+
+Quieres que genere ahora la Action que convierta posts/*.md a data/posts.json automáticamente y que suba también un README bonito para la página?

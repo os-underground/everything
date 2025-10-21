@@ -1,0 +1,469 @@
+
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>BIUS P2P Chat — Files & Media (v0.0.10)</title>
+<style>
+  body{font-family:system-ui,Segoe UI,Roboto,Arial;margin:12px;background:#f6f7fb;color:#111}
+  header{display:flex;align-items:center;gap:12px}
+  h1{margin:0;font-size:1.2rem}
+  .box{background:#fff;border-radius:10px;padding:12px;margin:10px 0;box-shadow:0 6px 20px rgba(16,24,40,0.06)}
+  textarea{width:100%;height:100px}
+  #chat{height:300px;overflow:auto;padding:8px;border:1px solid #eee;border-radius:8px;background:#fafafa}
+  .msg{margin:6px 0;padding:8px;border-radius:8px;background:#e6eefc}
+  .mine{background:#d1fae5;text-align:right}
+  .file-preview{max-width:180px;max-height:120px;border-radius:8px;display:block;margin:6px 0}
+  .controls{display:flex;gap:8px;flex-wrap:wrap}
+  input[type=file]{display:block}
+  .small{font-size:0.85rem;color:#555}
+  button{background:#2563eb;color:#fff;border:none;padding:8px 10px;border-radius:8px;cursor:pointer}
+  button.alt{background:#6b7280}
+  .row{display:flex;gap:8px;align-items:center}
+  .col{flex:1}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  footer{margin-top:12px;font-size:0.8rem;color:#666}
+  a.download{display:inline-block;padding:6px 8px;background:#10b981;color:#fff;border-radius:8px;text-decoration:none}
+</style>
+</head>
+<body>
+<header>
+  <h1>BIUS P2P Chat — Archivos, Imágenes, Audio, Video</h1>
+</header>
+
+<div class="box">
+  <div class="row">
+    <div class="col">
+      <button id="createOffer">1. Crear oferta (host)</button>
+      <button id="createAnswer">Crear respuesta (si tienes oferta)</button>
+      <button id="genQR" class="alt">Generar QR</button>
+    </div>
+    <div style="width:220px">
+      <button id="exportDB">Exportar DB</button>
+      <button id="importDB" class="alt">Importar DB</button>
+    </div>
+  </div>
+  <label class="small">Salida (copiar/compartir):</label>
+  <textarea id="sdpOut" readonly placeholder="Aquí aparecerá la oferta/answer JSON"></textarea>
+  <label class="small">Pega aquí la oferta/answer recibida:</label>
+  <textarea id="sdpIn" placeholder="Pega la oferta/answer del otro usuario"></textarea>
+  <div class="row">
+    <button id="applyAnswer">Aplicar señal (Set remote)</button>
+    <button id="applyAndAnswer" class="alt">Aplicar + generar respuesta</button>
+  </div>
+</div>
+
+<div class="box">
+  <div class="row">
+    <input id="msg" placeholder="Escribe un mensaje..." class="col" />
+    <button id="send">Enviar</button>
+    <input id="fileInput" type="file" multiple />
+  </div>
+  <div id="chat" class="box"></div>
+</div>
+
+<div class="box grid">
+  <div>
+    <h3>Dispositivos y estado</h3>
+    <div id="status">Status: <span id="stText">idle</span></div>
+    <div class="small">Device ID: <span id="deviceId"></span></div>
+    <div class="small">Connection: <span id="connState"></span></div>
+  </div>
+  <div>
+    <h3>Instrucciones rápidas</h3>
+    <ol style="padding-left:18px">
+      <li>Crear oferta en un dispositivo → copiar JSON o generar QR.</li>
+      <li>Otro dispositivo pega JSON en 'Pega aquí' → aplicar y generar respuesta.</li>
+      <li>El host pega la respuesta y el canal se abrirá. Luego enviar mensajes y archivos.</li>
+      <li>Si no hay canal, los mensajes se encolan localmente y puedes exportar/importar la DB.</li>
+    </ol>
+  </div>
+</div>
+
+<footer class="small">
+  Recomendación: archivos grandes (>10MB) pueden tardar o fallar según la conexión. Si quieres offline puro, usa export/import JSON y QR para transferir señalización.
+</footer>
+
+<script>
+/* ===========================
+   IndexedDB helper (stores: meta, chats, pending, files)
+   =========================== */
+const DB_NAME='bius-db', DB_VER=1;
+async function openDB(){
+  return new Promise((res,rej)=>{
+    const r=indexedDB.open(DB_NAME, DB_VER);
+    r.onupgradeneeded = e => {
+      const db=e.target.result;
+      if(!db.objectStoreNames.contains('meta')) db.createObjectStore('meta', { keyPath:'id' });
+      if(!db.objectStoreNames.contains('chats')) db.createObjectStore('chats', { keyPath:'id' });
+      if(!db.objectStoreNames.contains('pending')) db.createObjectStore('pending', { keyPath:'id' });
+      if(!db.objectStoreNames.contains('files')) db.createObjectStore('files', { keyPath:'id' });
+    };
+    r.onsuccess = e => res(e.target.result);
+    r.onerror = e => rej(e.target.error);
+  });
+}
+async function put(store, obj){
+  const db=await openDB();
+  return new Promise((res,rej)=>{
+    const tx=db.transaction(store,'readwrite');
+    tx.objectStore(store).put(obj);
+    tx.oncomplete = ()=>res(true);
+    tx.onerror = e => rej(e.target.error);
+  });
+}
+async function getAll(store){
+  const db=await openDB();
+  return new Promise((res,rej)=>{
+    const tx=db.transaction(store,'readonly');
+    const req=tx.objectStore(store).getAll();
+    req.onsuccess = ()=>res(req.result||[]);
+    req.onerror = e => rej(e.target.error);
+  });
+}
+async function getOne(store,id){
+  const db=await openDB();
+  return new Promise((res,rej)=>{
+    const tx=db.transaction(store,'readonly');
+    const req=tx.objectStore(store).get(id);
+    req.onsuccess = ()=>res(req.result);
+    req.onerror = e => rej(e.target.error);
+  });
+}
+
+/* ===========================
+   Utils
+   =========================== */
+function id(prefix='id'){ return prefix + '_' + Math.random().toString(36).slice(2,9); }
+function logUI(text, isMine=false, fileMeta=null){
+  const d=document.createElement('div');
+  d.className='msg ' + (isMine ? 'mine':'');
+  d.textContent = text;
+  if(fileMeta){
+    const btn = document.createElement('a');
+    btn.textContent = 'Descargar: ' + fileMeta.name;
+    btn.href = '#';
+    btn.className='download';
+    btn.onclick = async (e)=>{
+      e.preventDefault();
+      const rec = await getOne('files', fileMeta.id);
+      if(!rec || !rec.blob) return alert('Archivo no disponible localmente.');
+      const url = URL.createObjectURL(rec.blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = fileMeta.name; document.body.appendChild(a); a.click();
+      URL.revokeObjectURL(url);
+    };
+    d.appendChild(document.createElement('br'));
+    d.appendChild(btn);
+    if(fileMeta.type && fileMeta.type.startsWith('image/')){
+      const img=document.createElement('img');
+      // if we have local blob preview fetch it
+      getOne('files', fileMeta.id).then(rec=>{
+        if(rec && rec.blob){ img.src = URL.createObjectURL(rec.blob); }
+        else img.alt='Preview no disponible';
+      });
+      img.className='file-preview';
+      d.appendChild(img);
+    }
+    if(fileMeta.type && fileMeta.type.startsWith('video/')){
+      const v=document.createElement('video');
+      getOne('files', fileMeta.id).then(rec=>{
+        if(rec && rec.blob){ v.src = URL.createObjectURL(rec.blob); v.controls=true; v.width=220; }
+      });
+      d.appendChild(v);
+    }
+  }
+  document.getElementById('chat').appendChild(d);
+  document.getElementById('chat').scrollTop = document.getElementById('chat').scrollHeight;
+}
+
+/* ===========================
+   WebRTC + DataChannel + file chunking
+   =========================== */
+let pc = null, dc = null;
+const ICE_CFG = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
+const CHUNK_SIZE = 64 * 1024; // 64KB
+const deviceId = id('dev');
+document.getElementById('deviceId').textContent = deviceId;
+
+function updateStatus(s){ document.getElementById('stText').textContent = s; }
+function updateConnState(s){ document.getElementById('connState').textContent = s; }
+
+async function waitIceComplete(pc){
+  return new Promise(res=>{ pc.onicecandidate = e=>{ if(!e.candidate) res(); }; });
+}
+
+function setupDataChannel(channel){
+  dc = channel;
+  dc.binaryType = 'arraybuffer';
+  dc.onopen = ()=>{ updateStatus('DataChannel abierto'); updateConnState('connected'); processPending(); };
+  dc.onclose = ()=>{ updateStatus('DataChannel cerrado'); updateConnState('closed'); };
+  dc.onmessage = async (ev)=>{
+    // messages can be JSON strings or chunked base64 strings starting with "FILECHUNK|"
+    if(typeof ev.data === 'string'){
+      try{
+        const obj = JSON.parse(ev.data);
+        if(obj.type === 'msg'){
+          await put('chats', { id: id('chat'), text: obj.text, from: obj.from, createdAt: Date.now() });
+          logUI(obj.text, false);
+        } else if(obj.type === 'file-meta'){
+          // prepare to receive chunks
+          await put('files', { id: obj.id, meta: obj, receivedChunks: [], totalChunks: obj.totalChunks });
+          logUI('[Archivo entrante] ' + obj.name, false, obj);
+        }
+      }catch(e){
+        // maybe it's file chunk marker
+        if(ev.data.startsWith('FILECHUNK|')){
+          const parts = ev.data.split('|');
+          // format: FILECHUNK|fileId|index|base64data
+          const fileId = parts[1]; const index = parseInt(parts[2],10); const b64 = parts.slice(3).join('|');
+          const raw = atob(b64);
+          const arr = new Uint8Array(raw.length);
+          for(let i=0;i<raw.length;i++) arr[i]=raw.charCodeAt(i);
+          // append chunk into files store
+          const rec = await getOne('files', fileId);
+          if(rec){
+            rec.receivedChunks = rec.receivedChunks || [];
+            rec.receivedChunks[index] = arr;
+            await put('files', rec);
+            // check complete
+            if(rec.receivedChunks.filter(Boolean).length === rec.totalChunks){
+              // combine
+              const blobs = rec.receivedChunks.map(a=>new Blob([a], {type:rec.meta.type}));
+              const fullBlob = new Blob(blobs, {type:rec.meta.type});
+              rec.blob = fullBlob;
+              await put('files', rec);
+              logUI('[Archivo recibido] ' + rec.meta.name, false, { id: rec.id, name: rec.meta.name, type: rec.meta.type });
+            }
+          }
+        }
+      }
+    } else if(ev.data instanceof ArrayBuffer){
+      // optionally handle binary raw
+      // not used in this implementation
+    }
+  };
+}
+
+document.getElementById('createOffer').onclick = async ()=>{
+  pc = new RTCPeerConnection(ICE_CFG);
+  const channel = pc.createDataChannel('chat');
+  setupDataChannel(channel);
+  pc.ondatachannel = e => setupDataChannel(e.channel);
+  pc.onconnectionstatechange = ()=> updateConnState(pc.connectionState);
+  const offer = await pc.createOffer();
+  await pc.setLocalDescription(offer);
+  await waitIceComplete(pc);
+  const out = JSON.stringify({ sdp: pc.localDescription, deviceId, ts: Date.now() });
+  document.getElementById('sdpOut').value = out;
+  updateStatus('Oferta creada (copiar o generar QR)');
+};
+
+document.getElementById('createAnswer').onclick = async ()=>{
+  // create RTCPeerConnection as answerer: expects user to paste offer first then press this
+  try {
+    const raw = document.getElementById('sdpIn').value; if(!raw) return alert('Pega la oferta primero.');
+    const obj = JSON.parse(raw);
+    pc = new RTCPeerConnection(ICE_CFG);
+    pc.ondatachannel = e => setupDataChannel(e.channel);
+    pc.onconnectionstatechange = ()=> updateConnState(pc.connectionState);
+    await pc.setRemoteDescription(new RTCSessionDescription(obj.sdp));
+    const answer = await pc.createAnswer();
+    await pc.setLocalDescription(answer);
+    await waitIceComplete(pc);
+    document.getElementById('sdpOut').value = JSON.stringify({ sdp: pc.localDescription, deviceId, ts:Date.now() });
+    updateStatus('Respuesta creada. Copia y envía al host.');
+  } catch(e){ alert('Error al crear respuesta: '+e); }
+};
+
+document.getElementById('applyAnswer').onclick = async ()=>{
+  const raw = document.getElementById('sdpIn').value; if(!raw) return alert('Pega respuesta u oferta.');
+  const obj = JSON.parse(raw);
+  if(!pc){
+    // if we are host that created offer, pc exists; otherwise, create and set remote
+    // try to set remote
+    try {
+      await pc.setRemoteDescription(new RTCSessionDescription(obj.sdp));
+      updateStatus('Señal aplicada (remote).');
+    } catch(e){ alert('Error al aplicar señal: '+e); }
+  } else {
+    await pc.setRemoteDescription(new RTCSessionDescription(obj.sdp));
+    updateStatus('Señal aplicada (remote).');
+  }
+};
+
+document.getElementById('applyAndAnswer').onclick = async ()=>{
+  // For the case: you paste offer, then apply and immediately generate answer JSON
+  try {
+    const raw = document.getElementById('sdpIn').value; if(!raw) return alert('Pega oferta.');
+    const obj = JSON.parse(raw);
+    pc = new RTCPeerConnection(ICE_CFG);
+    pc.ondatachannel = e => setupDataChannel(e.channel);
+    pc.onconnectionstatechange = ()=> updateConnState(pc.connectionState);
+    await pc.setRemoteDescription(new RTCSessionDescription(obj.sdp));
+    const answer = await pc.createAnswer();
+    await pc.setLocalDescription(answer);
+    await waitIceComplete(pc);
+    document.getElementById('sdpOut').value = JSON.stringify({ sdp: pc.localDescription, deviceId, ts:Date.now() });
+    updateStatus('Respuesta generada. Compártela con el offerer.');
+  } catch(e){ alert('Error: '+e); }
+};
+
+/* ===========================
+   Sending messages and files
+   =========================== */
+document.getElementById('send').onclick = async ()=>{
+  const text = document.getElementById('msg').value.trim(); if(!text) return;
+  const payload = { type:'msg', id: id('m'), from: deviceId, text, createdAt: Date.now() };
+  if(dc && dc.readyState === 'open'){
+    dc.send(JSON.stringify(payload));
+    logUI('Yo: ' + text, true);
+  } else {
+    // enqueue into pending
+    await put('pending', { id: payload.id, payload, createdAt: Date.now(), status:'pending' });
+    logUI('[Encolado] ' + text, true);
+  }
+  document.getElementById('msg').value='';
+};
+
+document.getElementById('fileInput').onchange = async (ev)=>{
+  const files = Array.from(ev.target.files);
+  for(const f of files){
+    const fileId = id('file');
+    const meta = { type:'file-meta', id:fileId, name:f.name, size:f.size, mime:f.type, totalChunks: Math.ceil(f.size/CHUNK_SIZE), from: deviceId, createdAt:Date.now() };
+    // store file blob locally
+    await put('files', { id: fileId, meta, blob: f });
+    // if DC open, send meta then chunks
+    if(dc && dc.readyState === 'open'){
+      dc.send(JSON.stringify(meta)); // file-meta
+      // read chunks and send base64 strings
+      const reader = new FileReader();
+      let offset = 0;
+      let index = 0;
+      while(offset < f.size){
+        const slice = f.slice(offset, offset + CHUNK_SIZE);
+        const b64 = await new Promise(r=>{ const fr=new FileReader(); fr.onload = ()=>r(btoa(fr.result)); fr.readAsBinaryString(slice); });
+        // format: FILECHUNK|fileId|index|base64...
+        dc.send('FILECHUNK|' + fileId + '|' + index + '|' + b64);
+        offset += CHUNK_SIZE; index++;
+      }
+      logUI('[Enviado archivo] ' + f.name, true, { id:fileId, name:f.name, type:f.type });
+    } else {
+      // enqueue as pending - we send meta + blob when possible
+      await put('pending', { id: fileId, payload: { type:'file-meta', meta }, createdAt: Date.now(), status:'pending' });
+      logUI('[Encolado archivo] ' + f.name, true, { id:fileId, name:f.name, type:f.type });
+    }
+  }
+  ev.target.value = '';
+};
+
+/* ===========================
+   Pending processing: try to send queued items when channel opens
+   =========================== */
+async function processPending(){
+  const items = await getAll('pending');
+  for(const it of items){
+    try {
+      const p = it.payload;
+      if(!dc || dc.readyState!=='open') break;
+      if(p.type === 'file-meta'){
+        // load local file blob
+        const rec = await getOne('files', p.id);
+        if(!rec || !rec.blob) { await removePending(it.id); continue; }
+        dc.send(JSON.stringify(p.meta));
+        // send chunks
+        const f = rec.blob;
+        let offset = 0; let idx=0;
+        while(offset < f.size){
+          const slice = f.slice(offset, offset + CHUNK_SIZE);
+          const b64 = await new Promise(r=>{ const fr=new FileReader(); fr.onload = ()=>r(btoa(fr.result)); fr.readAsBinaryString(slice); });
+          dc.send('FILECHUNK|' + p.id + '|' + idx + '|' + b64);
+          offset += CHUNK_SIZE; idx++;
+        }
+        await removePending(it.id);
+        logUI('[Pendiente enviado] ' + rec.meta.name, true, { id:rec.id, name:rec.meta.name, type:rec.meta.type });
+      } else if(p.type === 'msg'){
+        dc.send(JSON.stringify(p.payload));
+        await removePending(it.id);
+        logUI('[Pendiente mensaje enviado] ' + p.payload.text, true);
+      } else {
+        // generic
+        dc.send(JSON.stringify(p));
+        await removePending(it.id);
+      }
+    } catch(e){
+      console.error('Error al procesar pending', e);
+    }
+  }
+}
+async function removePending(id){ const db=await openDB(); return new Promise((res,rej)=>{ const tx=db.transaction('pending','readwrite'); tx.objectStore('pending').delete(id); tx.oncomplete = ()=>res(true); tx.onerror = e=>rej(e.target.error); }); }
+
+/* ===========================
+   Export / Import DB
+   =========================== */
+document.getElementById('exportDB').onclick = async ()=>{
+  const chats = await getAll('chats'); const pending = await getAll('pending'); const files = await getAll('files');
+  // For files, convert blobs to base64 (warning heavy)
+  const filesOut = [];
+  for(const f of files){
+    if(f.blob){
+      const b64 = await new Promise(r=>{ const fr=new FileReader(); fr.onload = ()=>r(btoa(fr.result)); fr.readAsBinaryString(f.blob); });
+      filesOut.push({ id: f.id, meta: f.meta, b64 });
+    } else {
+      filesOut.push({ id: f.id, meta: f.meta });
+    }
+  }
+  const out = { chats, pending, files: filesOut, exportedAt: Date.now() };
+  const blob = new Blob([JSON.stringify(out,null,2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download = 'bius-export-' + Date.now() + '.json'; document.body.appendChild(a); a.click();
+  URL.revokeObjectURL(url);
+};
+
+document.getElementById('importDB').onclick = async ()=>{
+  const inp = document.createElement('input'); inp.type='file'; inp.accept='application/json';
+  inp.onchange = async (e)=>{
+    const f = e.target.files[0];
+    if(!f) return;
+    const obj = JSON.parse(await f.text());
+    if(obj.files) {
+      for(const ff of obj.files){
+        if(ff.b64){
+          const raw = atob(ff.b64);
+          const arr = new Uint8Array(raw.length);
+          for(let i=0;i<raw.length;i++) arr[i]=raw.charCodeAt(i);
+          const blob = new Blob([arr], { type: ff.meta.mime });
+          await put('files', { id: ff.id, meta: ff.meta, blob });
+        } else {
+          await put('files', { id: ff.id, meta: ff.meta });
+        }
+      }
+    }
+    if(obj.pending) for(const p of obj.pending) await put('pending', p);
+    if(obj.chats) for(const c of obj.chats) await put('chats', c);
+    alert('Importación completada');
+  };
+  inp.click();
+};
+
+/* ===========================
+   QR generation (uses Google Chart API)
+   =========================== */
+document.getElementById('genQR').onclick = ()=>{
+  const s = document.getElementById('sdpOut').value;
+  if(!s) return alert('Crea oferta/answer primero.');
+  const enc = encodeURIComponent(s);
+  const url = 'https://chart.googleapis.com/chart?cht=qr&chs=300x300&chl=' + enc;
+  const img = document.createElement('img'); img.src=url; img.style.display='block'; img.style.marginTop='8px';
+  document.getElementById('chat').appendChild(img);
+  window.scrollTo(0, document.body.scrollHeight);
+};
+
+/* ===========================
+   init: show device id and process pending on load
+   =========================== */
+(async ()=>{ document.getElementById('deviceId').textContent = deviceId; updateStatus('idle'); updateConnState('disconnected'); })();
+</script>
+</body>
+</html>

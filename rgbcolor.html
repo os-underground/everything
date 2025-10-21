@@ -1,0 +1,302 @@
+
+
+
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Borde con cambio de color (CSS)</title>
+<style>
+  :root{
+    --dur: 4s; /* duración del ciclo */
+    --b-size: 4px;
+  }
+
+  body{
+    display:grid;
+    place-items:center;
+    min-height:100vh;
+    margin:0;
+    background:#0b0b12;
+    color:#e6eef6;
+    font-family:system-ui, sans-serif;
+  }
+
+  .box{
+    padding:28px;
+    border-radius:12px;
+    background:#0f1216;
+    border:var(--b-size) solid hsl(0 80% 60%);
+    transition: box-shadow .18s ease;
+    animation: borderColor var(--dur) linear infinite;
+  }
+
+  @keyframes borderColor{
+    0%   { border-color: hsl(0 85% 55%); }      /* rojo */
+    25%  { border-color: hsl(120 75% 50%); }    /* verde */
+    50%  { border-color: hsl(200 85% 55%); }    /* cyan/azul */
+    75%  { border-color: hsl(280 75% 60%); }    /* magenta */
+    100% { border-color: hsl(360 85% 55%); }    /* rojo (cierra ciclo) */
+  }
+
+  .box:focus-within{ box-shadow: 0 8px 30px rgba(0,0,0,.6); outline:none; }
+  button{ margin-top:12px; padding:8px 12px; border-radius:8px; background:#111; color:inherit; border:0; cursor:pointer; }
+</style>
+</head>
+<body>
+  <div class="box" tabindex="0">
+    <strong>Borde animado</strong>
+    <p>Este borde cambia solo el color cada cierto tiempo.</p>
+    <button onclick="document.querySelector('.box').style.animationPlayState = document.querySelector('.box').style.animationPlayState === 'paused' ? 'running' : 'paused'">Pausar/Reanudar</button>
+  </div>
+				
+				<!---
+</body>
+</html>
+```
+
+---
+
+### Controlar velocidad desde CSS (variable) y desde HTML con un control
+
+#### Ejemplo 2 — Control de velocidad por input range (CSS + JS mínimo)
+- `--dur` controla duración del ciclo; input permite elegir segundos.
+
+```html
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Control velocidad borde</title>--->
+<style>
+  :root{ --dur: 4s; --b-size:3px; }
+  body{ font-family: system-ui, sans-serif; background:#071018; color:#dfeaf6; margin:28px; }
+  .box{ padding:20px; border-radius:10px; border:var(--b-size) solid hsl(0 80% 55%); animation: borderColor var(--dur) linear infinite; background:#081019; max-width:520px; }
+  @keyframes borderColor{
+    0% { border-color: hsl(0 80% 55%); }
+    33% { border-color: hsl(160 80% 50%); }
+    66% { border-color: hsl(260 80% 60%); }
+    100% { border-color: hsl(360 80% 55%); }
+  }
+  .controls{ margin:12px 0; display:flex; gap:8px; align-items:center; }
+  input[type="range"]{ width:200px; }
+</style>
+</head>
+<body>
+  <h2>Borde con velocidad controlable</h2>
+  <div class="controls">
+    <label for="speed">Duración (s)</label>
+    <input id="speed" type="range" min="0.5" max="12" step="0.25" value="4">
+    <span id="val">4s</span>
+  </div>
+
+  <div class="box" id="demo">
+    <p>Prueba ajustar la duración para acelerar o ralentizar el cambio de color.</p>
+  </div>
+
+<script>
+  const r = document.getElementById('speed');
+  const val = document.getElementById('val');
+  const demo = document.getElementById('demo');
+
+  function update(){
+    const s = r.value;
+    demo.style.setProperty('--dur', s + 's');
+    val.textContent = s + 's';
+  }
+  r.addEventListener('input', update);
+  update();
+</script>
+				
+				
+				
+				<!----
+				
+				
+				
+				
+</body>
+</html>
+```
+
+---
+
+				---->
+				
+  
+  ________f
+  
+				
+### Aplicarlo a texto (letras que cambian de color, opción simple y con “stroke”)
+
+#### Ejemplo 3 — Texto cuyos colores cambian con la misma técnica (solo color de texto)
+- Usa keyframes para cambiar color del texto. Ideal para títulos o micro-interacciones.
+
+```html
+				
+			---->	
+				
+<h1 class="rainbow">Hola, soy un título RGB</h1>
+
+<style>
+  .rainbow{
+    font-size:2rem;
+    font-weight:700;
+    animation: textColor 5s linear infinite;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
+
+  @keyframes textColor{
+    0%   { color: hsl(0 80% 60%); }
+    25%  { color: hsl(120 70% 50%); }
+    50%  { color: hsl(210 80% 60%); }
+    75%  { color: hsl(280 70% 60%); }
+    100% { color: hsl(360 80% 60%); }
+  }
+</style>
+				
+				
+```
+
+  _____
+  
+  
+  
+#### Ejemplo 4 — Letras con borde (stroke) que cambia de color
+- En navegadores compatibles, `-webkit-text-stroke` o doble capa con text-shadow para simular stroke.
+
+```html
+				
+				
+				
+<h2 class="stroke">Texto con borde animado</h2>
+
+<style>
+  .stroke{
+    font-size:2rem;
+    color:#fff; /* relleno */
+    -webkit-text-stroke: 2px hsl(0 80% 60%); /* stroke inicial */
+    animation: strokeColor 6s linear infinite;
+  }
+
+  @keyframes strokeColor{
+    0%   { -webkit-text-stroke-color: hsl(0 85% 55%); }
+    33%  { -webkit-text-stroke-color: hsl(160 75% 50%); }
+    66%  { -webkit-text-stroke-color: hsl(260 80% 60%); }
+    100% { -webkit-text-stroke-color: hsl(360 85% 55%); }
+  }
+</style>
+				
+				
+```
+
+Nota: no todos los navegadores exponen `-webkit-text-stroke-color` en keyframes; si no funciona, usar doble-layer (texto encima de pseudo-elemento con background-clip) o animar `text-shadow`.
+
+---
+
+### Texto con borde animado usando pseudo-elemento (más compatible y estiloso)
+
+```html
+<h3 class="glow">Letra con contorno animado</h3>
+
+<style>
+  .glow{
+    position:relative;
+    display:inline-block;
+    font-size:2rem;
+    color:#eaf2ff;
+    padding:6px 10px;
+  }
+  .glow::before{
+    content: attr(data-text);
+    position:absolute;
+    inset:0;
+    z-index:-1;
+    color:transparent;
+    -webkit-text-stroke: 2px hsl(0 80% 60%);
+    filter: blur(0.6px);
+    animation: strokeColor 5s linear infinite;
+  }
+  /* reutiliza keyframes strokeColor del ejemplo anterior */
+</style>
+  
+```
+  
+  
+
+En HTML: <h3 class="glow" data-text="Letra con contorno animado">Letra con contorno animado</h3>/ñp
+
+  
+------
+
+### Sin JS: pausar animación en hover (útil en galerías)
+Añade esto para que cuando el usuario ponga el mouse sobre el elemento la animación se pause y muestre el color actual.
+
+```css
+  
+  
+  
+.element:hover { animation-play-state: paused; }
+  
+  
+```
+
+---
+
+### Version combinada: aplicar mismo hue/velocidad a varios elementos (sin duplicar keyframes)
+
+- Usa una variable `--hue` actualizada por JS y construye colores con HSL y calc() en CSS. Esto te permite sincronizar bordes y textos cambiando solo `--hue` en el root.
+
+```css
+  
+  
+  
+:root{ --hue:0; --dur:1s; }
+.border-sync{ border:3px solid hsl(var(--hue) 90% 55%); transition: border-color .12s linear; }
+.text-sync{ color: hsl(var(--hue) 90% 55%); transition: color .12s linear; }
+  
+  
+  
+```
+  
+
+JS (simple loop hue):
+```js
+  
+  
+  
+let hue = 0;
+const root = document.documentElement;
+const speed = 1; // grados por frame o ajusta según prefieras
+function tick(){
+  hue = (hue + speed) % 360;
+  root.style.setProperty('--hue', hue);
+  requestAnimationFrame(tick);
+}
+tick();
+  
+  
+```
+
+Este enfoque permite que el cambio sea continuo y que controles velocidad centralmente.
+
+---
+
+### Consejos prácticos y accesibilidad
+- Si el color animado es decorativo, asegúrate de que el contenido principal (texto) tenga contraste suficiente en todo momento.  
+- Evita cambios extremadamente rápidos que puedan causar molestia o desencadenar fotosensibilidad; velocidades razonables: 3–8s por ciclo para fondos y bordes; 1–3s si buscas efecto energético.  
+- Ofrece control (pausar/ajustar velocidad) cuando la animación es prominente en la UI.  
+- Para producción, usa HSL para manipular matiz (hue) fácilmente y para mantener saturación/luminosidad constantes.
+
+---
+
+Si quieres, te creo un archivo HTML completo que incluya:
+- Controls para velocidad y pausa,
+- Ejemplos de border estático con cambio de color,
+- Texto con color animado y stroke animado,
+- Integración con la galería previa (si quieres que las cards y los títulos compartan la misma paleta dinámica).
+
+¿Te lo genero ya listo para pegar en tu repo? Indícame si lo quieres en español y si quieres que lea imágenes desde un media.json o uses URLs estáticas.

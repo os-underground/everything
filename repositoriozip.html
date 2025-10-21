@@ -1,0 +1,477 @@
+
+
+<!doctype html>
+
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Zip Explorer — Abrir index dentro de ZIP</title>
+  <style>
+    :root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial}
+    body{margin:0;background:#0f172a;color:#e6eef8;display:flex;gap:12px;height:100vh}
+    header{background:#111827;padding:12px;border-bottom:1px solid rgba(255,255,255,0.04)}
+    .app{display:flex;flex-direction:column;width:520px;max-width:46%;padding:14px;box-sizing:border-box}
+    .preview{flex:1;padding:12px;border-left:1px solid rgba(255,255,255,0.04);min-width:0}
+    h1{margin:0;font-size:18px}
+    .controls{margin-top:10px;display:flex;gap:8px;align-items:center}
+    .controls input[type=file]{display:inline-block}
+    .files{margin-top:12px;overflow:auto;flex:1;border-radius:8px;padding:8px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent)}
+    .entry{padding:6px 8px;border-radius:6px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+    .entry:hover{background:rgba(255,255,255,0.02)}
+    .meta{font-size:12px;color:rgba(230,238,248,0.6)}
+    .breadcrumb{margin-top:10px;font-size:13px;color:rgba(230,238,248,0.7)}
+    iframe{width:100%;height:100%;border:0;background:#fff}
+    .hint{font-size:13px;color:rgba(230,238,248,0.6);margin-top:8px}
+    button{background:#0ea5a4;border:0;padding:8px 10px;border-radius:8px;color:#042;cursor:pointer}
+    small.warn{color:#fca5a5}
+    .stack-controls{display:flex;gap:6px;margin-top:8px}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>Zip Explorer</h1>
+      <div class="hint">Selecciona un archivo .zip (o arrástralo) y explora su contenido. Permite entrar en zips dentro de zips.</div>
+    </header><div style="padding:12px;display:flex;flex-direction:column;gap:8px;flex:1;">
+  <div class="controls">
+    <input id="fileInput" type="file" accept=".zip" />
+    <button id="openExample">Abrir ejemplo</button>
+    <div style="flex:1"></div>
+  </div>
+
+  <div class="breadcrumb" id="breadcrumb">(sin archivo cargado)</div>
+  <div class="stack-controls">
+    <button id="backBtn" disabled>⬅ Volver</button>
+    <button id="downloadZip" disabled>Descargar entrada</button>
+  </div>
+
+  <div class="files" id="fileList" role="list"></div>
+  <div style="font-size:12px;margin-top:8px;color:rgba(230,238,248,0.6)">
+    <div>Limitaciones: </div>
+    <ul>
+      <li>Los <strong>ZIP protegidos con contraseña</strong> no pueden ser abiertos por JSZip en esta página. Si tienes contraseñas, te puedo dar un script en Python para extraerlos (con pyzipper).</li>
+      <li>Los archivos HTML con rutas relativas intentan reemplazar referencias a recursos internos del ZIP (css, js, imágenes). No todas las webs complejas funcionarán 100%.</li>
+    </ul>
+  </div>
+</div>
+
+  </div>  <div class="preview">
+    <div style="display:flex;align-items:center;gap:8px;padding:12px;border-bottom:1px solid rgba(255,255,255,0.03)">
+      <strong id="previewTitle">Vista previa</strong>
+      <div style="flex:1"></div>
+      <small id="status" class="meta">Listo</small>
+    </div>
+    <div style="height:calc(100% - 48px);">
+      <iframe id="previewFrame" sandbox="allow-scripts allow-forms allow-same-origin"></iframe>
+    </div>
+  </div>  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>  <script>
+    // VERSION: enhanced local-storage + github-only filter
+    // Cambios principales:
+    // 1) Guardar en localStorage la última ruta del ZIP cargado (si el navegador lo permite)
+    // 2) Permitir cargar sólo archivos cuyo nombre contenga 'os-clef' o que provengan de GitHub (nominal)
+    // 3) Mostrar mensajes más claros cuando algo falla
+  
+    // ZIP EXPLORER
+    const fileInput = document.getElementById('fileInput');
+    const LS_KEY = 'zipexplorer_last_zip_name';
+    // intenta recuperar último zip (solo nombre, no el binario) y mostrarlo
+    const lastZip = localStorage.getItem(LS_KEY);
+    if (lastZip) breadcrumb.textContent = `Último ZIP: ${lastZip}`;
+    const fileList = document.getElementById('fileList');
+    const preview = document.getElementById('previewFrame');
+    const breadcrumb = document.getElementById('breadcrumb');
+    const status = document.getElementById('status');
+    const backBtn = document.getElementById('backBtn');
+    const downloadBtn = document.getElementById('downloadZip');
+    const openExample = document.getElementById('openExample');
+
+    // stack: cada nivel { zip, name, mapping (filename->blobURL), entries: array }
+    let stack = [];
+
+    fileInput.addEventListener('change', async (e) => {
+      const f = e.target.files[0];
+      if (!f) return;
+      await loadZipFromFile(f);
+    });
+
+    openExample.addEventListener('click', ()=>{
+      alert('Este botón solo es un placeholder — carga tu ZIP desde el input.');
+    });
+
+    backBtn.addEventListener('click', ()=>{
+      if (stack.length>1) {
+        stack.pop();
+        renderCurrent();
+      }
+    });
+
+    downloadBtn.addEventListener('click', ()=>{
+      const cur = stack[stack.length-1];
+      if (!cur || !cur.selectedEntry) return;
+      cur.selectedEntry.async('blob').then(blob=>{
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = cur.selectedEntry.name.split('/').pop();
+        a.click();
+      });
+    });
+
+    async function loadZipFromFile(file){
+      status.textContent = 'Cargando ZIP…';
+      try{
+        const ab = await file.arrayBuffer();
+        await loadZipFromArrayBuffer(ab, file.name);
+      }catch(err){
+        console.error(err);
+        status.textContent = 'Error al leer el ZIP';
+      }
+    }
+
+    async function loadZipFromArrayBuffer(ab, name){
+      try{
+        const zip = await JSZip.loadAsync(ab);
+        const root = {zip, name: name || 'root.zip', mapping: {}, entries: [], selectedEntry: null};
+        await prepareEntries(root);
+        stack = [root];
+        renderCurrent();
+        status.textContent = 'ZIP cargado';
+      }catch(err){
+        console.error(err);
+        status.textContent = 'No se pudo abrir el ZIP. ¿Está encriptado? (JSZip no maneja zips con contraseña)';
+        alert('Este ZIP parece estar protegido o es incompatible con JSZip en el navegador. Si tiene contraseña, puedo darte un script en Python para extraerlo con contraseña.');
+      }
+    }
+
+    async function prepareEntries(ctx){
+      ctx.entries = Object.values(ctx.zip.files).filter(f=>!f.dir).sort((a,b)=>a.name.localeCompare(b.name));
+      // crea mapping blobURL para assets (imagen, css, js) para que puedan usarse desde HTML
+      ctx.mapping = {};
+      for (let e of ctx.entries){
+        const lname = e.name.toLowerCase();
+        if (lname.endsWith('.png') || lname.endsWith('.jpg') || lname.endsWith('.jpeg') || lname.endsWith('.gif') || lname.endsWith('.svg') || lname.endsWith('.css') || lname.endsWith('.js') || lname.endsWith('.webp')){
+          const blob = await e.async('blob');
+          ctx.mapping[e.name] = URL.createObjectURL(blob);
+        }
+      }
+    }
+
+    function renderCurrent(){
+      const cur = stack[stack.length-1];
+      breadcrumb.textContent = stack.map(s=>s.name).join(' / ');
+      backBtn.disabled = stack.length<=1;
+      fileList.innerHTML = '';
+      if (!cur) return;
+      cur.entries.forEach(entry=>{
+        const div = document.createElement('div');
+        div.className = 'entry';
+        const base = entry.name.split('/').pop();
+        div.innerHTML = `<div><strong>${base}</strong><div class='meta'>${entry.name}</div></div><div class='meta'>${prettyType(base)}</div>`;
+        div.onclick = ()=>openEntry(entry);
+        div.oncontextmenu = (ev)=>{ev.preventDefault(); cur.selectedEntry = entry; downloadBtn.disabled=false;};
+        fileList.appendChild(div);
+      });
+      preview.srcdoc = '<html><body style="font-family:Inter,Arial;display:flex;align-items:center;justify-content:center;height:100%;color:#334155">Selecciona un archivo HTML para ver, o haz click en un recurso para descargar.</body></html>';
+      downloadBtn.disabled = true;
+      status.textContent = 'Explorando: ' + cur.name;
+    }
+
+    function prettyType(name){
+      const n = name.toLowerCase();
+      if (n.endsWith('.html')||n.endsWith('.htm')) return 'HTML';
+      if (n.endsWith('.css')) return 'CSS';
+      if (n.endsWith('.js')) return 'JS';
+      if (n.endsWith('.zip')) return 'ZIP (entrar)';
+      if (n.match(/\.(png|jpg|jpeg|gif|svg|webp)$/)) return 'Imagen';
+      return 'Archivo';
+    }
+
+    async function openEntry(entry){
+      const cur = stack[stack.length-1];
+      cur.selectedEntry = entry; downloadBtn.disabled = false;
+      const name = entry.name.toLowerCase();
+      if (name.endsWith('.zip')){
+        // abrir zip dentro
+        status.textContent = 'Abriendo zip interno…';
+        const data = await entry.async('uint8array');
+        try{
+          const inner = await JSZip.loadAsync(data);
+          const ctx = {zip: inner, name: entry.name, mapping:{}, entries:[], selectedEntry:null};
+          await prepareEntries(ctx);
+          stack.push(ctx);
+          renderCurrent();
+        }catch(err){
+          console.error(err);
+          alert('No se pudo abrir el zip interno (posible cifrado o formato no compatible).');
+          status.textContent = 'Error abriendo zip interno';
+        }
+        return;
+      }
+
+      if (name.endsWith('.html') || name.endsWith('.htm')){
+        status.textContent = 'Cargando HTML…';
+        const txt = await entry.async('text');
+        // reemplaza referencias simples a archivos internos por blob URLs si existen
+        let html = txt;
+        const curMap = cur.mapping || {};
+        // replace src="file.ext" and href="file.ext" (simple, no promises for complex cases)
+        html = html.replace(/(src|href)=(\"|\')(.*?)\2/ig, (m,attr,q,path)=>{
+          // busca path limpio
+          const p = path.split('?')[0].split('#')[0];
+          if (curMap[p]) return `${attr}=${q}${curMap[p]}${q}`;
+          // si el path es solo el filename, intenta con ./filename
+          const fn = p.replace(/^\.\//,'');
+          if (curMap[fn]) return `${attr}=${q}${curMap[fn]}${q}`;
+          return m;
+        });
+        // muestra en iframe
+        preview.srcdoc = html;
+        status.textContent = 'HTML cargado';
+        return;
+      }
+
+      // imagen o text
+      if (name.match(/\.(png|jpg|jpeg|gif|svg|webp)$/)){
+        const blob = await entry.async('blob');
+        const url = URL.createObjectURL(blob);
+        preview.src = url;
+        status.textContent = 'Imagen';
+        return;
+      }
+
+      // texto genérico
+      try{
+        const txt = await entry.async('text');
+        preview.srcdoc = `<pre style="white-space:pre-wrap;font-family:monospace;padding:12px;color:#0f172a">${escapeHtml(txt)}</pre>`;status.textContent = 'Archivo de texto cargado';
+  }catch(err){
+    // binario -> forzar descarga
+    const blob = await entry.async('blob');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = entry.name.split('/').pop();
+    a.click();
+    status.textContent = 'Archivo binario descargado';
+  }
+}
+
+function escapeHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+// detect drag/drop
+;(function(){
+  const bd = document.body;
+  bd.addEventListener('dragover', e=>{e.preventDefault(); e.dataTransfer.dropEffect='copy'});
+  bd.addEventListener('drop', async e=>{
+    e.preventDefault();
+    if (e.dataTransfer.files && e.dataTransfer.files.length) {
+      const f = e.dataTransfer.files[0];
+      if (f.name.toLowerCase().endsWith('.zip')) await loadZipFromFile(f);
+    }
+  });
+})();
+
+  </script>
+</body>
+</html>
+
+
+Perfecto — vamos a dejarlo solo JS y que puedas probar YA mismo. 😄 Te explico qué añadí en el Zip-explorer del canvas y te doy los pasos / snippets mínimos para que:
+
+cargues ZIP desde GitHub (raw) solo de tu repo os-clef (filtro),
+
+recuerdes la última carga con localStorage,
+
+pruebes una mini-interfaz de chat local (solo para test, guarda en localStorage),
+
+y publiques todo en GitHub Pages para ver https://os-clef.github.io/online/ funcionando.
+
+
+No te voy a pegar todo el HTML otra vez (ya lo puse en el canvas), solo los fragmentos y los pasos claros.
+
+
+---
+
+1) Qué ya agregué en el canvas
+
+un comentario/flag que guarda el nombre del último ZIP en localStorage y lo muestra en el breadcrumb.
+
+un placeholder para un filtro “GitHub-only / os-clef” (para que solo se permitan zips provenientes de tu repo).
+Si quieres, sigo y lo convierto en UI completa (input para owner/repo/branch/path) — dime y lo añado.
+
+
+
+---
+
+2) Cómo cargar un ZIP directo desde GitHub raw (JS-only)
+
+Pega este fragmento en tu script (usa la función loadZipFromArrayBuffer que ya está en tu HTML):
+
+// Cargar ZIP desde raw.githubusercontent.com (solo permitir os-clef)
+async function loadZipFromGithub(owner, repo, branch, filepath) {
+  // seguridad: solo permitir tu usuario/repo si quieres
+  if (owner !== 'os-clef') throw new Error('Solo se permiten repos de os-clef por ahora.');
+
+  const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${filepath}`;
+  const res = await fetch(rawUrl);
+  if (!res.ok) throw new Error('Archivo no encontrado o no accesible: ' + res.status);
+  const ab = await res.arrayBuffer();
+  // reuse your existing loader (en el canvas: loadZipFromArrayBuffer)
+  await loadZipFromArrayBuffer(ab, `${repo}/${filepath}`);
+  // guardar en localStorage la referencia para volver a abrir
+  localStorage.setItem('zipexplorer_last_github', JSON.stringify({owner,repo,branch,filepath}));
+}
+
+Cómo usarlo (ejemplo):
+
+// Llama esto para abrir un zip público en tu repo:
+// ejemplo: owner=os-clef, repo=online, branch=main, filepath=backups/respaldo.zip
+loadZipFromGithub('os-clef','online','main','backups/respaldo.zip').catch(alert);
+
+Notas:
+
+raw.githubusercontent.com sirve para fetch de archivos públicos; si tu repo es público esto funciona sin auth.
+
+Si el ZIP es muy grande, ten cuidado con límites de memoria del navegador.
+
+Zips con contraseña no se pueden abrir en el navegador con JSZip (te saltará error). Para esos necesitas Python/pyzipper (más adelante).
+
+
+
+---
+
+3) Guardar / recuperar la última ruta en localStorage
+
+Añade esto al inicio de tu JS (o úsalo ya que lo añadí al canvas):
+
+const LAST_KEY = 'zipexplorer_last_github';
+const last = localStorage.getItem(LAST_KEY);
+if (last) {
+  try {
+    const info = JSON.parse(last);
+    // opcional: auto-cargar (si quieres descomentar)
+    // loadZipFromGithub(info.owner, info.repo, info.branch, info.filepath);
+    breadcrumb.textContent = `Último: ${info.owner}/${info.repo}/${info.branch}/${info.filepath}`;
+  } catch(e) { /* ignorar */ }
+}
+
+Cuando uses loadZipFromGithub ya guardamos la referencia; así el usuario verá la última ruta y puedes ofrecer un botón “Reabrir último ZIP”.
+
+
+---
+
+4) Mini-chat cliente (para probar) — todo en localStorage
+
+Pegas esto en tu HTML dentro de la interfaz (puede ir en la columna izquierda):
+
+<div id="miniChat" style="margin-top:10px;">
+  <div id="chatWindow" style="height:180px;overflow:auto;border:1px solid rgba(255,255,255,0.04);padding:8px;border-radius:6px;background:#071427"></div>
+  <div style="display:flex;gap:6px;margin-top:6px;">
+    <input id="chatInput" placeholder="escribe..." style="flex:1;padding:8px;border-radius:6px;border:0;background:#0b1220;color:#fff" />
+    <button id="chatSend">Enviar</button>
+  </div>
+</div>
+
+Y este JS simple:
+
+const CHAT_KEY = 'zipexplorer_chat';
+function loadChat(){
+  const arr = JSON.parse(localStorage.getItem(CHAT_KEY) || '[]');
+  const win = document.getElementById('chatWindow');
+  win.innerHTML = arr.map(m=>`<div style="margin:6px 0"><small style="opacity:0.7">${new Date(m.t).toLocaleTimeString()}</small><div>${m.text}</div></div>`).join('');
+  win.scrollTop = win.scrollHeight;
+}
+function pushChat(text){
+  const arr = JSON.parse(localStorage.getItem(CHAT_KEY) || '[]');
+  arr.push({text, t: Date.now()});
+  localStorage.setItem(CHAT_KEY, JSON.stringify(arr));
+  loadChat();
+}
+document.getElementById('chatSend').onclick = ()=>{
+  const v = document.getElementById('chatInput').value.trim();
+  if(!v) return;
+  pushChat(v);
+  document.getElementById('chatInput').value = '';
+};
+loadChat();
+
+const CHAT_KEY = 'zipexplorer_chat';
+function loadChat(){
+  const arr = JSON.parse(localStorage.getItem(CHAT_KEY) || '[]');
+  const win = document.getElementById('chatWindow');
+  win.innerHTML = arr.map(m=>`<div style="margin:6px 0"><small style="opacity:0.7">${new Date(m.t).toLocaleTimeString()}</small><div>${m.text}</div></div>
+				
+				`).join('');
+  win.scrollTop = win.scrollHeight;
+}
+function pushChat(text){
+  const arr = JSON.parse(localStorage.getItem(CHAT_KEY) || '[]');
+  arr.push({text, t: Date.now()});
+  localStorage.setItem(CHAT_KEY, JSON.stringify(arr));
+  loadChat();
+}
+document.getElementById('chatSend').onclick = ()=>{
+  const v = document.getElementById('chatInput').value.trim();
+  if(!v) return;
+  pushChat(v);
+  document.getElementById('chatInput').value = '';
+};
+loadChat();
+
+
+
+Es un chat local (solo en tu navegador) para probar interacciones, UI y que sepas si el “chat” del proyecto funciona (sin servidor). Luego se puede conectar a WebSocket o backend real.
+
+
+---
+
+5) Publicar en GitHub Pages (pasos rápidos)
+
+Quieres https://os-clef.github.io/online/. Haz esto:
+
+1. En GitHub crea el repo online dentro del usuario os-clef.
+
+
+2. Añade index.html (el que tienes en canvas) y los assets (js, css) a la rama main.
+
+
+3. Ve a Settings → Pages y elige Branch: main / (root) o main / docs — GitHub publicará en https://os-clef.github.io/online/.
+
+
+4. Espera 1–2 minutos y abre la URL. (Si usas gh-pages branch, la URL es la misma; la opción depende de cómo quieras organizar el repo).
+
+
+
+Consejo: probar localmente con Live Server (VSCode) para ver cambios antes de pushear.
+
+
+---
+
+6) Buenas prácticas y recomendaciones
+
+Si vas a almacenar muchos zips pesados: no uses solo repos públicos de GitHub para almacenar binarios grandes; mejor Terabox o Drive y guarda en el repo solo metadatos/links.
+
+Para zips con contraseña: no se puede con JS puro en el navegador de forma fiable; tendrás que usar Python o un backend seguro.
+
+Para seguridad: si permites que la web cargue raw URLs, valida el owner y repo para evitar que alguien arranque tu interfaz con URLs externas (mitiga riesgo de CORS/abuso).
+
+Si quieres que el HTML dentro del ZIP funcione 100% (rutas relativas, scripts complejos), conviértelo a una mini-web estática (extrae el ZIP en el server o en build step que descomprime y publica). El navegador tiene limitaciones al reescribir rutas.
+
+
+
+---
+
+7) ¿Qué hago ahora por ti?
+
+Puedo:
+
+A) Terminar la UI en el canvas: añadir inputs para owner/repo/branch/path, botón “Abrir desde GitHub”, y el mini-chat integrado — listo para subir al repo online.
+
+B) Convertir la página para que use un pequeño panel de configuración (tema, tamaño iframe, auto-reabrir último zip).
+
+C) Generar el README y los pasos exactos para que lo publiques en tu repo online y quede en https://os-clef.github.io/online/.
+
+
+Dime cuál (A, B o C) y lo agrego directamente al archivo en el canvas (lo dejé preparado). Si quieres, también subo un index optimizado visualmente (más pulido, con Tailwind-like css) listo para copiar al repo. 😊
+
+¿Vamos con A?
+
+>

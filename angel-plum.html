@@ -1,0 +1,164 @@
+<!---
+### Plantillas HTML + CSS (dos variantes: Oscura favorita y Pastel / Unicornio). Incluyen el poema actualizado y ajuste del color "plum" (ciruela) para que luzca más suave.
+
+#### Variante 1 — Oscura (tu favorita, con plum corregido)
+```html----->
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Poema — Variante Oscura</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg1: #0c1220;
+      --bg2: #2a1436;
+      --card: rgba(255,255,255,0.04);
+      --muted: rgba(255,255,255,0.8);
+      --plum: #b56aa3; /* plum corregido: menos saturado, más cálido */
+      --accent: linear-gradient(90deg,var(--plum), #8ad7ff);
+      --glass: rgba(255,255,255,0.03);
+      --radius: 18px;
+      --maxw: 980px;
+      color-scheme: dark;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background:
+        radial-gradient(1000px 600px at 10% 20%, rgba(181,106,163,0.06), transparent 8%),
+        radial-gradient(800px 450px at 95% 80%, rgba(138,215,255,0.04), transparent 10%),
+        linear-gradient(180deg,var(--bg1),var(--bg2));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:48px 20px;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      background-attachment:fixed;
+    }
+
+    .stage{
+      width:100%;
+      max-width:var(--maxw);
+      backdrop-filter: blur(8px) saturate(1.05);
+      border-radius: calc(var(--radius) + 6px);
+      padding:24px;
+      box-shadow: 0 12px 48px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.04);
+      display:grid;
+      grid-template-columns: 1fr 320px;
+      gap:24px;
+      align-items:start;
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      padding:26px;
+      border-radius: var(--radius);
+      box-shadow: 0 8px 32px rgba(2,6,23,0.5);
+      border: 1px solid var(--glass);
+    }
+
+    .header{display:flex;gap:14px;align-items:center;margin-bottom:16px;}
+    .avatar{
+      width:64px;height:64px;border-radius:12px;
+      background:var(--plum);display:flex;align-items:center;justify-content:center;
+      color:white;font-weight:700;font-family:"Playfair Display";font-size:22px;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.45);
+    }
+
+    .title{font-family:"Playfair Display",serif;color:#fff;font-size:20px;}
+    .subtitle{color:var(--muted);font-size:13px}
+
+    .poem{margin-top:8px;color:#f6f7fb;line-height:1.65;font-size:18px;white-space:pre-wrap;padding-right:6px}
+    .poem .stanza{margin-bottom:16px}
+    .poem .line{display:block;transition:transform .28s cubic-bezier(.2,.9,.3,1), color .22s}
+    .poem .line:hover{transform:translateX(6px);color:#fff1fb}
+
+    .aside{
+      padding:18px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border:1px dashed rgba(255,255,255,0.03);height:100%;display:flex;flex-direction:column;gap:12px;
+    }
+
+    .kicker{font-size:13px;color:#ffb2da;font-weight:700}
+    .note{color:var(--muted);font-size:14px;line-height:1.5}
+
+    .ribbon{display:inline-block;padding:6px 10px;border-radius:999px;background:var(--plum);color:#071327;font-weight:700;font-size:12px}
+
+    .actions{margin-top:auto;display:flex;gap:10px;align-items:center}
+    .btn{background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.06);padding:10px 12px;border-radius:10px;cursor:pointer;font-weight:600;transition:all .18s;font-size:13px}
+    .btn.primary{background:var(--accent);color:#071327;border:none;box-shadow:0 8px 22px rgba(122,122,122,0.06)}
+    .btn:hover{transform:translateY(-4px)}
+
+    @media (max-width:920px){.stage{grid-template-columns:1fr;padding:20px}.aside{order:2}}
+    @media (prefers-reduced-motion:reduce){.poem .line,.btn{transition:none}}
+  </style>
+</head>
+<body>
+  <main class="stage" role="main" aria-labelledby="pageTitle">
+    <section class="card" aria-labelledby="poemTitle">
+      <header class="header">
+        <div class="avatar" aria-hidden="true">T</div>
+        <div>
+          <h1 id="poemTitle" class="title">Adiós y Luz</h1>
+          <div class="subtitle">Un poema sobre despedidas, alma y valor</div>
+        </div>
+      </header>
+
+      <article class="poem" aria-label="Poema">
+        <div class="stanza">
+          <span class="line">Debo decir adiós a todas las personas, a toda la gente,</span>
+          <span class="line">y por muy pequeños momentos que hayamos vivido,</span>
+          <span class="line">para mí siempre será lo más valioso aunque hayamos ido.</span>
+        </div>
+
+        <div class="stanza">
+          <span class="line">En estas palabras intento plasmar mi corazón,</span>
+          <span class="line">en serio odio las despedidas; nunca he sido bueno con ellas,</span>
+          <span class="line">las aborrezco más allá de esa frontera porque para mí</span>
+          <span class="line">el adiós es una partida interminable, un meterse en el infinito.</span>
+        </div>
+
+        <div class="stanza">
+          <span class="line">Me aterra ese tiempo eterno en que la vida se presenta</span>
+          <span class="line">como un sufrimiento más grande que las estrellas,</span>
+          <span class="line">y aun así vale la pena, porque no es solo lo material,</span>
+          <span class="line">yo veo mentes, almas, un corazón que unifica la esencia pura.</span>
+        </div>
+
+        <div class="stanza">
+          <span class="line">Valoro más que diamantes, más que perlas y días,</span>
+          <span class="line">valoro un alma pura; el amor será siempre el regalo más grande,</span>
+          <span class="line">te hace invaluable, eres más que una locura,</span>
+          <span class="line">eres un bello ángel, genuinamente irremplazable.</span>
+        </div>
+      </article>
+    </section>
+
+    <aside class="aside" aria-labelledby="asideTitle">
+      <div>
+        <div class="kicker">Pensamiento</div>
+        <div id="asideTitle" class="note">Las despedidas duelen porque revelan cuánto guardamos. Honra ese valor guardado.</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div class="ribbon">Integridad</div>
+        <div class="note">Si quieres suavizar más el plum, ajusta --plum a un tono #c78fb8 o #cfa8c9 para menos contraste.</div>
+      </div>
+
+      <div class="actions" aria-hidden="false">
+        <button class="btn" onclick="navigator.clipboard?.writeText(document.querySelector('.poem').innerText)">Copiar poema</button>
+        <button class="btn primary" onclick="document.documentElement.requestFullscreen?.()">Pantalla completa</button>
+      </div>
+    </aside>
+  </main>
+</body>
+</html>
+```
+
+---

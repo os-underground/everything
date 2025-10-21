@@ -1,0 +1,309 @@
+
+
+<!----
+
+### Plantilla HTML + CSS para poema (diseño elegante, responsivo y fácil de personalizar)
+
+Aquí tienes una plantilla completa y lista para copiar/pegar. Incluye: fondo degradado, tipografía cuidada, tarjeta centrada con sombra suave, estilos para versos y estrofas, versión para modo oscuro automático y pequeñas animaciones para un aspecto moderno y emotivo.
+
+```html
+--->
+
+
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Poema — Plantilla</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg1: #0f172a;
+      --bg2: #2a1642;
+      --card: rgba(255,255,255,0.06);
+      --accent: #ff7aa2;
+      --muted: rgba(255,255,255,0.72);
+      --glass: rgba(255,255,255,0.04);
+      --radius: 18px;
+      --maxw: 880px;
+      color-scheme: dark;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: radial-gradient(1200px 700px at 10% 20%, rgba(255,122,162,0.08), transparent 8%),
+                  radial-gradient(900px 500px at 95% 80%, rgba(0,180,255,0.06), transparent 10%),
+                  linear-gradient(180deg,var(--bg1),var(--bg2));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:48px 20px;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      background-attachment:fixed;
+    }
+
+    .stage{
+      width:100%;
+      max-width:var(--maxw);
+      backdrop-filter: blur(8px) saturate(1.05);
+      border-radius: calc(var(--radius) + 6px);
+      padding:28px;
+      box-shadow: 0 10px 40px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.04);
+      display:grid;
+      grid-template-columns: 1fr 340px;
+      gap:28px;
+      align-items:start;
+    }
+
+    /* tarjeta principal */
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      padding:28px;
+      border-radius: var(--radius);
+      box-shadow: 0 6px 24px rgba(2,6,23,0.45);
+      border: 1px solid var(--glass);
+    }
+
+    .header{
+      display:flex;
+      gap:16px;
+      align-items:center;
+      margin-bottom:18px;
+    }
+
+    .avatar{
+      width:62px;
+      height:62px;
+      border-radius:12px;
+      background: linear-gradient(135deg,var(--accent),#7ac6ff);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:white;
+      font-weight:700;
+      font-family:"Playfair Display";
+      font-size:22px;
+      box-shadow: 0 6px 18px rgba(122,122,122,0.06);
+    }
+
+    .meta{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+
+    .title{
+      font-family: "Playfair Display", serif;
+      color: #fff;
+      font-size:20px;
+      letter-spacing:0.2px;
+    }
+
+    .subtitle{
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .poem{
+      margin-top:8px;
+      color:#f6f7fb;
+      line-height:1.65;
+      font-size:18px;
+      white-space:pre-wrap;
+      padding-right:6px;
+    }
+
+    .poem .stanza{
+      margin-bottom:18px;
+    }
+
+    .poem .line{
+      display:block;
+      transition: transform .28s cubic-bezier(.2,.9,.3,1), color .25s;
+    }
+
+    .poem .line:hover{
+      transform: translateX(6px);
+      color: #ffeef8;
+    }
+
+    /* barra lateral con nota, acciones */
+    .aside{
+      padding:18px;
+      border-radius:12px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border: 1px dashed rgba(255,255,255,0.03);
+      height:100%;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    .kicker{
+      font-size:13px;
+      color:var(--accent);
+      font-weight:600;
+      letter-spacing:0.6px;
+    }
+
+    .note{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.5;
+    }
+
+    .actions{
+      margin-top:auto;
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+
+    .btn{
+      background:transparent;
+      color:#fff;
+      border:1px solid rgba(255,255,255,0.06);
+      padding:10px 12px;
+      border-radius:10px;
+      cursor:pointer;
+      font-weight:600;
+      transition: all .18s ease;
+      font-size:13px;
+    }
+
+    .btn.primary{
+      background: linear-gradient(90deg,var(--accent), #8ad7ff);
+      color: #081523;
+      box-shadow: 0 6px 18px rgba(122,122,122,0.08);
+      border: none;
+    }
+
+    .btn:hover{ transform: translateY(-4px); box-shadow: 0 8px 28px rgba(2,6,23,0.45) }
+
+    /* decorativo */
+    .ribbon{
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      background: linear-gradient(90deg,#ff9fbe, #8ad7ff);
+      color:#07202b;
+      font-weight:700;
+      font-size:12px;
+      letter-spacing:0.4px;
+    }
+
+    /* responsive */
+    @media (max-width:920px){
+      .stage{grid-template-columns:1fr; padding:20px;}
+      .aside{order:2}
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      .poem .line, .btn{ transition:none }
+    }
+  </style>
+</head>
+<body>
+  <main class="stage" role="main" aria-labelledby="pageTitle">
+    <section class="card" aria-labelledby="poemTitle">
+      <header class="header">
+        <div class="avatar" aria-hidden="true">T</div>
+        <div class="meta">
+          <h1 id="poemTitle" class="title">Poema de constancia y esperanza</h1>
+          <div class="subtitle">Un texto íntimo tejido con fuerza, fe y memoria</div>
+        </div>
+      </header>
+
+      <article class="poem" aria-label="Poema">
+        <div class="stanza">
+          <span class="line">Ya pasaron días y semanas en las que tanto esfuerzo,</span>
+          <span class="line">lo más o lo que sea, nunca dejé de echarle ganas.</span>
+          <span class="line">Busqué tanto la presencia de los demás que</span>
+          <span class="line">olvidé cómo era mi persona.</span>
+        </div>
+
+        <div class="stanza">
+          <span class="line">La integridad siempre es lo más valioso,</span>
+          <span class="line">y eso nadie me lo gana con tanta fuerza y valentía;</span>
+          <span class="line">contra mí creí que podía el peso de tantas personas,</span>
+          <span class="line">simplemente me patea, pero siempre me daré cuenta.</span>
+        </div>
+
+        <div class="stanza">
+          <span class="line">Siempre haré bien las cosas aunque nadie más lo vea,</span>
+          <span class="line">sufrir por amor, por decepción y por deshonra,</span>
+          <span class="line">la traición de quien más amo será lo que añora.</span>
+          <span class="line">Solo Dios y mi ángel de la guarda, con mis ojos soñadores,</span>
+          <span class="line">me recuerdan que siempre hay esperanza.</span>
+        </div>
+
+        <div class="stanza">
+          <span class="line">Por más que intento, y aun con esfuerzo,</span>
+          <span class="line">aún mi corazón es quien llora.</span>
+          <span class="line">El infierno es la vida misma: lucha y dolor eterno,</span>
+          <span class="line">y sin embargo sigo siendo dueño de mi sitio,</span>
+          <span class="line">con la mezcla de lenguas y memorias que me forman.</span>
+        </div>
+
+        <div class="stanza">
+          <span class="line">Pienso en perderlo todo y aún así persisto,</span>
+          <span class="line">porque no faltaron razones y aún habrá más por venir.</span>
+        </div>
+      </article>
+    </section>
+
+    <aside class="aside" aria-labelledby="asideTitle">
+      <div>
+        <div class="kicker">Reflexión</div>
+        <div id="asideTitle" class="note">
+          Mantén la integridad como brújula. Las batallas por el reconocimiento son duras, pero el trabajo honesto y la fe personal sostienen el corazón.
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div class="ribbon">Constancia</div>
+        <div class="note">Personaliza colores y tipografías en :root para ajustar la atmósfera del poema.</div>
+      </div>
+
+      <div class="actions" aria-hidden="false">
+        <button class="btn" onclick="navigator.clipboard?.writeText(document.querySelector('.poem').innerText)">Copiar poema</button>
+        <button class="btn primary" onclick="document.documentElement.requestFullscreen?.()">Ver en pantalla</button>
+      </div>
+    </aside>
+  </main>
+
+  <script>
+    // mejora pequeña: atajo para alternar alto contraste con "H"
+    document.addEventListener('keydown', (e)=>{
+      if(e.key.toLowerCase() === 'h'){
+        document.documentElement.style.setProperty('--bg1', '#fafafa');
+        document.documentElement.style.setProperty('--bg2', '#f0f7ff');
+        document.documentElement.style.setProperty('--card', 'rgba(2,6,23,0.04)');
+        document.documentElement.style.setProperty('--muted', 'rgba(2,6,23,0.7)');
+        document.documentElement.style.setProperty('--accent', '#ff5880');
+        document.documentElement.style.color = '#071327';
+      }
+    });
+  </script>
+</body>
+</html>
+				
+				<!---
+```
+
+---
+
+### Notas breves de personalización
+- **Cambiar paleta**: modifica las variables en :root (--bg1, --bg2, --accent).
+- **Fuente**: intercambia las fuentes de Google en el head; Playfair Display es para título y Inter para cuerpo.
+- **Tamaño y ritmo**: ajusta font-size en .poem y line-height para más o menos respiración entre versos.
+- **Accesibilidad**: los botones usan texto claro; mantiene contraste alto si cambias colores.
+
+Si quieres, te adapto la plantilla a una paleta pastel/unicornio para tu hermana, o la convierto en versión imprimible (PDF-friendly). ¿Cuál prefieres?

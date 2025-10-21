@@ -1,0 +1,210 @@
+
+
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+				<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8">
+				<title>Hello, World!</title>
+</head>
+<body>
+<!---
+				<h1>
+								Hello, World!
+				</h1>
+</body>
+</html>
+### Objetivo
+Unificar todos tus proyectos en una sola aplicación estática con **un index.html, un app.js y un data.json** que sirvan como único punto de carga. SCSS es opcional: útil para organización y variables, pero no estrictamente necesario si quieres simplicidad. Te doy una estructura, scripts para generar el bundle desde múltiples carpetas y plantillas listas para copiar.
+
+---
+
+### Estructura recomendada del proyecto unificado
+- root/
+  - index.html
+  - app.js
+  - data.json
+  - styles.css  (generado desde SCSS opcional)
+  - assets/ (imágenes, fuentes, íconos)
+  - scripts/ (script de consolidación que vas a ejecutar)
+
+---
+
+### Por qué usar JSON como fuente única
+- **Sencillo y universal**: fácil de leer desde JavaScript sin backend.  
+- **Escalable**: puedes añadir campos por proyecto: codigo, tipo, ruta_assets, readme, dependencias.  
+- **Automatizable**: el script de consolidación escribe data.json automáticamente.
+
+---
+
+### SCSS sí o no
+- Usa SCSS si quieres variables, mixins y organización modular de estilos; compila a styles.css para producción.  
+- Si prefieres máxima simplicidad y cero compilación, mantén un único styles.css y olvídate de SCSS.  
+- Recomendación práctica: mantener SCSS en desarrollo (opcional) y añadir un paso que compile SCSS -> styles.css cuando construyas el bundle.
+
+---
+
+### Script de consolidación (Node.js) — genera data.json y copia assets
+Crea scripts/consolidate.js y ejecútalo desde la carpeta que contiene todos tus proyectos. El script:
+- recorre subcarpetas,
+- extrae metadata (nombre, código desde patrón, archivos principales),
+- copia recursos a assets/<codigo>/,
+- genera data.json listo para el app.js.
+
+Copia y pega:
+
+```js--->
+				<script>
+				
+// scripts/consolidate.js
+const fs = require('fs');
+const path = require('path');
+
+const ROOT = process.cwd();
+const OUT_ASSETS = path.join(ROOT, 'assets');
+const DATA_FILE = path.join(ROOT, 'data.json');
+
+if (!fs.existsSync(OUT_ASSETS)) fs.mkdirSync(OUT_ASSETS, { recursive: true });
+
+const dirs = fs.readdirSync(ROOT, { withFileTypes: true })
+  .filter(d => d.isDirectory() && !['node_modules','assets','scripts'].includes(d.name));
+
+const projects = [];
+
+dirs.forEach(d => {
+  const src = path.join(ROOT, d.name);
+  // heurística de código: take prefix before first underscore or dash or 6-char hash fallback
+  const codeMatch = d.name.match(/^([A-Za-z0-9\-_.]+?)(?:[_\-].*)?$/);
+  const code = codeMatch ? codeMatch[1] : d.name;
+  const dest = path.join(OUT_ASSETS, code);
+  fs.rmSync(dest, { recursive: true, force: true });
+  fs.cpSync(src, dest, { recursive: true });
+  // Buscar archivos importantes
+  const files = fs.readdirSync(dest);
+  const entry = {
+    code,
+    name: d.name,
+    description: '',
+    entryFiles: files.filter(f => /\.(html|htm|js|py|exe|apk)$/i.test(f)).slice(0,5).join(';'),
+    assetsPath: `assets/${code}`,
+    tags: []
+  };
+  // intentar README.md como descripción breve
+  const readmePath = path.join(dest, 'README.md');
+  if (fs.existsSync(readmePath)) {
+    const txt = fs.readFileSync(readmePath, 'utf8').split('\n').slice(0,6).join(' ');
+    entry.description = txt.replace(/\r?\n|\t/g,' ').trim();
+  }
+  projects.push(entry);
+});
+
+fs.writeFileSync(DATA_FILE, JSON.stringify({ generated: new Date().toISOString(), projects }, null, 2));
+console.log('Generado', DATA_FILE, 'y copiados assets a', OUT_ASSETS);
+				</script>
+				
+				<!---
+				/*
+```
+
+Ejecución
+- node scripts/consolidate.js
+
+---
+
+### Plantillas para la app unificada
+
+index.html
+```html
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Portal Unificado</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+				*/-->
+  <header><h1>Portal Unificado</h1></header>
+  <main id="root"></main>
+  <script src="app.js" type="module"></script>
+				<!--
+</body>
+</html>
+```
+
+app.js
+```js*/-->
+				<script>
+				
+//app.js (módulo simple)
+async function load() {
+  const res = await fetch('data.json');
+  const data = await res.json();
+  const root = document.getElementById('root');
+  const ul = document.createElement('div');
+  ul.className = 'grid';
+  data.projects.forEach(p => {
+    const card = document.createElement('article');
+    card.className = 'card';
+    card.innerHTML = `
+      <h3>${p.code} — ${p.name}</h3>
+      <p class="desc">${p.description || ''}</p>
+      <p class="meta">Files: ${p.entryFiles || '—'}</p>
+      <a href="${p.assetsPath}" target="_blank">Ver assets</a>
+    `;
+    ul.appendChild(card);
+  });
+  root.appendChild(ul);
+}
+load();
+				
+				
+				</script>
+				<!--				/*
+```
+
+styles.css (simple)
+```css
+								--->
+				<style>
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto;line-height:1.4;padding:20px;background:#0f1724;color:#e6eef8}
+h1{margin:0 0 18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.card{background:rgba(255,255,255,0.03);padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.03)}
+.desc{font-size:0.9rem;color:#bcd}
+a{color:#7dd3fc}
+				</style>
+				
+</body>
+</html>
+				
+				<!---
+```
+
+---q X
+
+### Si quieres SCSS añade esto
+- Mantén src/styles.scss y compílalo con node-sass o Dart Sass. Ejemplo comando rápido:
+  - npm i -D sass
+  - npx sass src/styles.scss styles.css --no-source-map --style=compressed
+
+Incluye ese paso en tu README o en un script npm "build-css".
+
+---
+
+### Paso final recomendado
+- Ejecuta scripts/consolidate.js para crear data.json y copiar assets.  
+- Revisa data.json y ajusta campos de código o descripciones si quieres nombres más limpios.  
+- Coloca index.html, app.js, styles.css y data.json en la raíz y prueba abriendo index.html en un navegador estático (o con live-server).
+
+---
+
+### Resumen directo
+- Sí, usar JSON es la mejor opción para una app única y ligera.  
+- SCSS es opcional; útil para orden, pero no necesario.  
+- Te di un script Node que agrupa todo en assets/ y genera data.json, más plantillas de index.html, app.js y styles.css listas para usar.
+
+Si quieres que te entregue ahora mismo el script que además renombre carpetas usando un patrón de códigos más estricto, responderé con el script listo para copiar y ejecutar.

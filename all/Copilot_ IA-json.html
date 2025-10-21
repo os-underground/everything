@@ -1,0 +1,1696 @@
+
+
+
+
+Dijiste
+despues de todo lo que hemos hecho en html 🥺🥺🥺🥺me ayudas a hacer una web igual con Layout, sobre esoterismo ?? eso jajaj  aun no deciden el color del diseño porque los volores tienen significados, quehable asi en su index, sobre un poco de astrologia, sobre vibras , tarod, ademas de que pondre unas imagnees en github con su img src=" /vista de la imagen jej" 
+
+que opinas ?? 
+obvio quisiera añadir lo de la foto de perfil, portada, profesionalismo... etc etc  jeje ,
+Copilot dijo
+Estructura propuesta del sitio
+index.html  (página principal con layout responsivo)
+
+assets/css/styles.css (estilos separados)
+
+assets/img/ (tus imágenes: perfil, portada, galería, iconos)
+
+content/ (opcional: markdown o HTML para entradas sobre astrología, tarot, vibras)
+
+Diseño y paleta sugerida con significado
+Opción A Azul Índigo — Intuición y misterio
+
+Opción B Violeta Lavanda — Espiritualidad y transformación
+
+Opción C Verde Esmeralda — Sanación y equilibrio
+
+Opción D Dorado Suave — Sabiduría y profesionalismo
+
+Usa una paleta base y una de acento para botones y enlaces. Ejemplo de variables CSS que puedes cambiar rápidamente en styles.css:
+
+:root
+--bg: #0b1220;
+--card: #0f1724;
+--muted: #94a3b8;
+--accent: #7c3aed; /* violeta /
+--highlight: #fbbf24; / dorado */
+
+Cambia --accent y la combinación para ajustar el “mensaje” visual.
+
+index.html lista para pegar (plantilla completa)
+Html
+
+
+Copiar
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Portal Esotérico</title>
+<link rel="stylesheet" href="assets/css/styles.css" />
+<meta name="description" content="Astrología, tarot y vibras. Perfil profesional y galería.">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-grid">
+      <div class="brand">
+        <img src="assets/img/logo-circle.png" alt="logo" class="logo" />
+        <div class="brand-text">
+          <h1>Nombre del Portal</h1>
+          <p class="tag">Astrología · Tarot · Vibras · Consultas</p>
+        </div>
+      </div>
+      <nav class="main-nav">
+        <a href="#about">Sobre</a>
+        <a href="#astrologia">Astrología</a>
+        <a href="#tarot">Tarot</a>
+        <a href="#galeria">Galería</a>
+        <a href="#contacto" class="btn-outline">Contacto</a>
+      </nav>
+    </div>
+    <div class="cover" style="background-image:url('assets/img/cover.jpg')">
+      <div class="cover-inner container">
+        <div class="profile">
+          <img src="assets/img/profile.jpg" alt="Foto de perfil" class="avatar" />
+          <div>
+            <h2>Tu nombre profesional</h2>
+            <p class="muted">Lectora de cartas · Astróloga · Consejera energética</p>
+            <a href="#contacto" class="btn">Solicitar consulta</a>
+          </div>
+        </div>
+        <div class="cover-intro">
+          <p>Bienvenido al espacio donde la intuición se encuentra con la práctica. Aquí encontrarás guías de astrología, lecturas de tarot y recursos para elevar tus vibras.</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="about" class="card">
+      <h3>Sobre este espacio</h3>
+      <p>Explica la misión, tu formación, tu enfoque profesional y cómo trabajas con clientes.</p>
+      <ul class="bullets">
+        <li><strong>Profesionalismo</strong> Credenciales y años de experiencia</li>
+        <li><strong>Ética</strong> Confidencialidad y trato amable</li>
+        <li><strong>Métodos</strong> Tarot, cartas oráculo, lecturas natales, sesiones remotas</li>
+      </ul>
+    </section>
+
+    <section id="astrologia" class="card two-col">
+      <div>
+        <h3>Astrología</h3>
+        <p>Texto introductorio sobre cartas natales, tránsitos y cómo interpretarlos para el crecimiento personal.</p>
+        <a class="link" href="#contacto">Pide tu carta natal</a>
+      </div>
+      <aside class="mini-card">
+        <h4>Hoy en tu signo</h4>
+        <p class="muted">Breve extracto o widget dinámico con el horóscopo del día.</p>
+      </aside>
+    </section>
+
+    <section id="tarot" class="card">
+      <h3>Tarot y Lecturas</h3>
+      <p>Explica los tipos de tiradas, tiempos, precios y cómo reservar.</p>
+      <div class="cards-grid">
+        <article class="tarot-card">
+          <img src="assets/img/tarot-1.jpg" alt="Carta ejemplo" />
+          <h5>Tirada rápida</h5>
+          <p class="muted">3 cartas · Respuesta clara</p>
+        </article>
+        <article class="tarot-card">
+          <img src="assets/img/tarot-2.jpg" alt="Carta ejemplo" />
+          <h5>Tirada profunda</h5>
+          <p class="muted">12 cartas · Contexto y guía</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="galeria" class="card">
+      <h3>Galería de imágenes</h3>
+      <p class="muted">Imágenes subidas a GitHub. Usa rutas relativas como <code>assets/img/nombre.jpg</code> o si subes a repo usa <code>/ruta/a/la/imagen.jpg</code>.</p>
+      <div class="gallery-grid">
+        <img src="assets/img/gallery1.jpg" alt="gal1" />
+        <img src="assets/img/gallery2.jpg" alt="gal2" />
+        <img src="assets/img/gallery3.jpg" alt="gal3" />
+      </div>
+    </section>
+
+    <section id="contacto" class="card">
+      <h3>Contacto y consultas</h3>
+      <form id="contactForm">
+        <label>Nombre<input name="name" required /></label>
+        <label>Email<input type="email" name="email" required /></label>
+        <label>Mensaje<textarea name="message" rows="4" required></textarea></label>
+        <button class="btn" type="submit">Enviar</button>
+      </form>
+      <p class="muted">También puedes colocar enlaces a Calendly, PayPal o info de pago.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year"></span> Nombre del Portal · Hecho con intención</p>
+      <div class="social">
+        <a href="#">Instagram</a> · <a href="#">Twitter</a> · <a href="#">Contacto</a>
+      </div>
+    </div>
+  </footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+  // Form submit demo
+  document.getElementById('contactForm').addEventListener('submit', e=>{
+    e.preventDefault();
+    alert('Gracias, tu mensaje fue enviado (simulado).');
+    e.target.reset();
+  });
+</script>
+</body>
+</html>
+styles.css listo para copiar en assets/css/styles.css
+Css
+
+
+Copiar
+:root{
+  --bg:#0b1220;
+  --card:#0f1724;
+  --muted:#94a3b8;
+  --accent:#7c3aed;
+  --accent-2:#fbbf24;
+  --glass: rgba(255,255,255,0.04);
+  --radius:12px;
+  --container:1100px;
+}
+
+*{box-sizing:border-box}
+body{font-family:Inter,system-ui,Segoe UI,Arial;background:linear-gradient(180deg,var(--bg) 0%, #071025 100%);color:#e6eef8;margin:0;line-height:1.45}
+.container{max-width:var(--container);margin:0 auto;padding:20px}
+.site-header .brand{display:flex;gap:12px;align-items:center}
+.logo{width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,0.06)}
+.header-grid{display:flex;justify-content:space-between;align-items:center}
+.main-nav a{color:var(--muted);text-decoration:none;margin-left:12px}
+.main-nav .btn-outline{border:1px solid rgba(255,255,255,0.06);padding:8px 12px;border-radius:10px;color:var(--muted)}
+.cover{padding:36px 0;background-size:cover;background-position:center;border-bottom:1px solid rgba(255,255,255,0.03)}
+.cover-inner{display:flex;justify-content:space-between;align-items:center}
+.profile{display:flex;gap:16px;align-items:center}
+.avatar{width:96px;height:96px;border-radius:14px;object-fit:cover;border:3px solid rgba(255,255,255,0.06)}
+.muted{color:var(--muted)}
+.btn{background:linear-gradient(90deg,var(--accent),#5b21b6);color:white;padding:10px 14px;border-radius:12px;border:0;cursor:pointer}
+.btn-outline{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);padding:8px 10px;border-radius:10px}
+.card{background:var(--card);padding:20px;border-radius:var(--radius);margin:18px 0;box-shadow: 0 6px 18px rgba(2,6,23,0.6)}
+.two-col{display:grid;grid-template-columns:2fr 1fr;gap:18px}
+.mini-card{background:var(--glass);padding:12px;border-radius:10px}
+.cards-grid{display:flex;gap:12px;flex-wrap:wrap}
+.tarot-card{width:200px;background:rgba(255,255,255,0.02);padding:10px;border-radius:10px;text-align:center}
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-top:12px}
+.gallery-grid img{width:100%;height:120px;object-fit:cover;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
+label{display:block;margin-top:10px}
+input,textarea{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+.site-footer{padding:20px 0;border-top:1px solid rgba(255,255,255,0.03);margin-top:30px}
+@media (max-width:980px){ .header-grid{flex-direction:column;align-items:flex-start} .cover-inner{flex-direction:column;gap:16px} .two-col{grid-template-columns:1fr} }
+Consejos prácticos para tus imágenes en GitHub Pages
+Coloca imágenes en assets/img/ dentro del repo. Usa rutas relativas: src="assets/img/profile.jpg" o src="/assets/img/profile.jpg" si site se publica en la raíz.
+
+Si subes imágenes en otros repos y quieres enlazarlas directamente, usa la URL raw de GitHub o el dominio github.io  de tu Pages: https://usuario.github.io/repo/assets/img/imagen.jpg..
+
+Asegúrate de confirmar rutas probando abriendo la URL directa de la imagen en el navegador.
+
+Funcionalidades extras que puedes querer después
+Widget dinámico de horóscopos con fetch a una API o JSON local.
+
+CRUD simple para entradas de blog con archivos markdown y un generador (workflow gen-nav-style).
+
+Integración de pagos y calendario para reservar lecturas.
+
+Animaciones suaves con small JS (revelado de cartas, filtros de galería).
+
+Accesibilidad: alt en todas las imágenes, colores con contraste suficiente.
+
+Siguiente paso
+Dime qué paleta prefieres (Azul Índigo, Violeta, Verde Esmeralda o Dorado) y te devuelvo el index.html  y styles.css  ajustados con esos colores, además del README breve para tu repo y el conjunto de rutas de ejemplo para que subas las imágenes.
+
+
+
+
+
+Editar en una página
+Dijiste
+https://wuana-wuary.github.io/web/ convierte el url a html porfii jajajaja tammnien quiero un url a html , etc etc convertidores jejejeje ojalá no se me acaben los repositorios o un límite porque si estoy haciendo bastantes páginas y bueno también ese me gustaría algún tipo de convertidor además de ojalá pueda checar ese me gustaría uno que pues bueno no extrajera cosas de las cuentas porque pues eso es lo que luego traba las html me gustaría que únicamente convirtiera por html con css y Java script sería absolutamente todo es de también ese está chida el html que acabo de ver el código de ahorita que me acabas de enviar porque Bueno una cosa es no sé si esté bien para el indexmáss que nada lo veo como para el perfil ahora sí que la sección del profile pero me gustaría para el index más que nada pues no sé normalmente para el main o el menú principal que es la viene siendo la Feed normalmente Bueno no sé qué tal este así pero me gusta poner no sé si se lo pueda poner aparte o algo así artículos por ejemplo ahorita lo que te digo de los colores astrología etcétera etcétera todo eso poner aunque sea un párrafo pequeño o algo que llame la atención porque bueno son temas como es tengo que ser breve anche se era tutto stupido un parafò un po' come non un testo per diverticoli paraglianò l'attenzione eccetera eccetera per un contesto veramente con poco con noi almeno almeno si sblocca probabilmente a partire che non Poi dopo andiamo insieme a informazioni e non solo accetta email perché sennò si metterà no no no nunca nunca quise decir estúpido todo eso de italiano nunca lo quise decir o sea me refiero a que hay que ser breve conciso decir mucho con poco un párrafo menos un texto y uso algunos temas variados etcétera etcétera o por lo menos poner así un tipo frame pero únicamente que se vea por ejemplo un frame del otra página o de otro artículo pero que únicamente se ve un párrafo y obviamente dando el clic o lo que sea pues te lleve a la misma página o al link ya con el tema extenso el que me enviaste te gusta para el perfil pero para el Home la principal sí quisiera pues poner un poco de absolutamente todo lo que se pueda llegar a ver este cómo le podría hacer para el contacto así sin base de datos sin tener que vincular a nada un back end o un Front end para obviamente simulado con eso dónde puedo poner con el j son o el ir a ML para poner unos datos por ejemplo que que lo envíen desde ahí pero que se envíe directo no obviamente si no se va a guardar como no hay base de datos en servidor se va a mandar directamente a algún correo electrónico o algo que ponga yo por ejemplo o algo así porque también es algo que quiero hacer automatizar los los mensajes o el spam por así decirlo a él Gmail o emails
+Copilot dijo
+Conversión URL a HTML (versión estática lista para pegar)
+He convertido el contenido principal de tu URL a una página HTML estática mínima. Pega esto como index.html en tu repo (o en otra carpeta) y ajusta rutas de imágenes si hace falta.
+
+Html
+
+
+Copiar
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>This page is to feel energy</title>
+  <meta name="description" content="Wuana Wuary — This page is to feel energy"/>
+  <style>
+    body{font-family:system-ui,Segoe UI,Arial;background:#0b1020;color:#eef3ff;margin:0;padding:24px}
+    .container{max-width:900px;margin:0 auto}
+    header{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+    h1{font-size:24px;margin:0}
+    .muted{color:#98a3bf;font-size:14px}
+    .gallery{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+    .gallery img{width:calc(33% - 8px);height:140px;object-fit:cover;border-radius:8px}
+    .card{background:rgba(255,255,255,0.04);padding:14px;border-radius:10px;margin-top:14px}
+    .teaser{border-left:3px solid #7c5ae6;padding-left:10px;margin:12px 0}
+    footer{margin-top:28px;color:#9aa6c5;font-size:13px}
+    form label{display:block;margin:8px 0}
+    input,textarea{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit}
+    button{background:#7c5ae6;color:white;padding:8px 12px;border-radius:8px;border:0;cursor:pointer}
+    @media(max-width:640px){ .gallery img{width:calc(50% - 8px)} }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <h1>This page is to feel energy</h1>
+        <div class="muted">Wuana Wuary Web</div>
+      </div>
+    </header>
+
+    <section class="card">
+      <h2>Welcome</h2>
+      <p class="muted">This page is to feel energy — extracto y galería de imágenes.</p>
+
+      <div class="gallery" id="gallery">
+        <img src="https://wuana-wuary.github.io/web/1757819056786.jpg" alt="img1">
+        <img src="https://wuana-wuary.github.io/1757819058958.jpg" alt="img2">
+        <img src="https://wuana-wuary.github.io/web/1757819064823.jpg" alt="img3">
+        <img src="https://wuana-wuary.github.io/web/1757819067254.jpg" alt="img4">
+        <img src="https://wuana-wuary.github.io/web/1757819070577.jpg" alt="img5">
+        <img src="https://wuana-wuary.github.io/web/1757819072896.jpg" alt="img6">
+        <img src="https://wuana-wuary.github.io/web/1757819074452.jpg" alt="img7">
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>Breve introducción</h3>
+      <p>Bienvenido. Aquí encontrarás textos cortos sobre astrología, vibras y tarot: mensajes breves que llaman la atención y enlazan a páginas con contenido completo.</p>
+
+      <div class="teaser">
+        <strong>Artículo ejemplo:</strong>
+        <p>Un párrafo corto, potente y directo que explique una idea (p. ej. cómo una carta del tarot puede guiar tu día). <a href="#full-article">Leer más</a></p>
+      </div>
+    </section>
+
+    <section class="card" id="contacto">
+      <h3>Contacto (sin backend)</h3>
+      <p class="muted">Formulario que envía a tu email usando Formspree (sin servidor propio).</p>
+
+      <form id="contactForm" action="https://formspree.io/f/your-form-id" method="POST">
+        <label>Nombre<input name="name" required/></label>
+        <label>Email<input type="email" name="email" required/></label>
+        <label>Mensaje<textarea name="message" rows="4" required></textarea></label>
+        <button type="submit">Enviar</button>
+      </form>
+
+      <p class="muted">Alternativa: usa EmailJS o un simple mailto: link si no quieres servicios externos.</p>
+    </section>
+
+    <footer>
+      <div class="muted">Generado desde https://wuana-wuary.github.io/web/ — versión convertida estática.</div>
+    </footer>
+  </div>
+</body>
+</html>
+Nota: las URLs de las imágenes se han tomado directamente de la página que me diste y ya están embebidas como src absolutos; si las mueves al repo, cambia las rutas a /assets/img/... o relativas para que Pages las sirva correctamente
+wuana-wuary.github.io
+.
+
+Cómo hacer un “convertidor URL → HTML” simple (sin scrapers complejos)
+Opción manual (rápida): abre la URL, copia el HTML visible o los elementos que quieras y pégalos en un archivo index.html como el anterior. Ajusta rutas de imágenes y CSS.
+
+Opción semi-automática local: usa un comando curl para bajar la página y guardarla:
+
+curl -L https://wuana-wuary.github.io/web/  -o page.html
+
+Luego edita page.html  para adaptar estilos y limpiar scripts.
+
+Opción en repo: crea un script (bash/Node) que haga curl + limpieza y lo ejecute localmente o en Actions. Recomiendo Node + cheerio para parsing si quieres automatizar extracción de fragmentos (title, primeros p, imágenes).
+
+Feed y “teasers” de artículos (sin backend)
+Guarda cada artículo como HTML o Markdown en /posts/ (ej. posts/2025-09-30-mi-articulo.html).
+
+Genera un feed.json (workflow o script local) que liste los posts con {title, excerpt, url, date}.
+
+En index.html  haz una sección “Feed” que fetch('/feed.json') y renderice cards con el excerpt y un enlace “Leer más” que abra la página completa. Esto no requiere servidor; Pages sirve los archivos estáticos.
+
+Ejemplo simple de feed.json:
+
+Json
+
+
+Copiar
+[
+  {"title":"Tarot para hoy","excerpt":"Una carta para tu día...","url":"/posts/tarot-hoy.html","date":"2025-09-30"}
+]
+Y JS en index para mostrarlo:
+
+Js
+
+
+Copiar
+fetch('/feed.json').then(r=>r.json()).then(list=>{
+  /* render cards con list */
+});
+Enviar correo sin backend (opciones)
+Formspree: formulario HTML que apunta a la URL de Formspree; los envíos van a un correo que configures. Gratis con límites. (ej. action="https://formspree.io/f/your-form-id")
+
+EmailJS: permite enviar correos desde JS usando su servicio y tu cuenta SMTP; requiere registro pero permite personalizar template.
+
+mailto: abrir cliente del usuario con prellenado (no fiable si quieres que el mensaje llegue automáticamente).
+
+Recomendación: Formspree para comenzar rápido y sin código adicional.
+
+Consejos rápidos para diseño e index principal
+En la home mantén párrafos muy cortos (1–2 frases) que llamen la atención; usa un teaser por artículo con imagen y enlace a la página completa.
+
+Mantén perfil y portada en la cabecera; feed/tiles en el main; galería aparte.
+
+Paleta: elige 1 color de acento (violeta o índigo) y un color neutro oscuro para fondo; usa una pequeña paleta accesible.
+
+Si quieres, hago cualquiera de estas tres cosas ahora mismo:
+
+Generar la versión completa del index adaptada visualmente a la plantilla esotérica que discutimos.
+
+Crear un script Node que convierta la URL automáticamente y guarde index.html + imágenes (listas para subir).
+
+Preparar feed.json y el JS para mostrar teasers desde tus posts en /posts/.
+
+Dime cuál prefieres y lo hago ya.
+
+wuana-wuary.github.io
+
+This page is to feel energy
+
+
+
+
+
+Editar en una página
+Dijiste
+Copilot dijo
+¡Bienvenido de vuelta! Me encanta el giro que le estamos dando. 🌟 Así que vamos a ponerle un toque esotérico a este diseño y a esos colores significativos. ¡Vamos allá!
+
+
+
+
+
+Editar en una página
+Dijiste
+Adiós.
+Copilot dijo
+¡Entendido! Vamos a darle ese toque místico. Me encanta lo que estás proponiendo, y me parece que la paleta violeta es perfecta para el enfoque esotérico: inspir—
+
+
+
+
+
+Editar en una página
+Dijiste
+tomando https://github.com/wuana-wuary/online/ repositorio online y web , jajajaja don dos , osea tomaré profile, 🥺🥺index por mi queea increíble pero bueno, tomando e cuanta los dos repositoios, como quedarían los <img src ... como se ponen es el nombre de la imagen directamente no? 
+
+ queas podria ponerle ?? , sinceramente, no sé que más podré ponerle jejejeje , articulos sobre la diferencia entre exoterismo o esoterismo me dijo el. que s y x significa diferente, sabe de tarod, energía, espiritus , es como medium jeje , osea esos son los temas, ya sea sacar artículo de internet o algo con sus propias palabras
+Copilot dijo
+Imágenes (cómo poner <img src=...> según dónde estén tus repos
+Si la imagen está dentro del mismo repo y en la misma rama que tu página (p. ej. assets/img/profile.jpg):
+<img src="assets/img/profile.jpg" alt="Foto de perfil">
+
+Si la imagen vive en la raíz pública del repo y publicas con GitHub Pages en /repo/:
+<img src="/repo/assets/img/cover.jpg" alt="Portada">  
+(la barra inicial hace la ruta relativa a tu site: https://usuario.github.io/repo/assets/img/cover.jpg).
+
+Si usas otro repo para servir imágenes (por ejemplo wuana-wuary/web):
+<img src="https://wuana-wuary.github.io/web/imagen.jpg" alt="...">  
+o la ruta raw (menos recomendada para producción):
+https://raw.githubusercontent.com/wuana-wuary/web/main/path/imagen.jpg.
+
+Nombre directo del archivo: funciona si la ruta relativa apunta a la carpeta adecuada. Por ejemplo, si tu HTML está en /profile/index.html y la imagen en /profile/img/pic.jpg, usa img src="img/pic.jpg".
+
+Consejo: mantén una carpeta única tipo assets/img/ por sitio cuando puedas; así las rutas son predecibles y fáciles de cambiar.
+
+Uso práctico para tus dos repos (online y web)
+Si vas a combinar contenido de online y web, decide un repo “principal” que sirva la página index.html; desde ahí puedes enlazar imágenes que estén en el otro repo usando la URL pública de Pages (https://usuario.github.io/otro-repo/...).
+
+Alternativa limpia: copia las imágenes al repo principal en assets/img/ y evita dependencias externas.
+
+Qué poner en la web esotérica (ideas concretas y micro-textos)
+Header breve y potente (1 línea): “Lecturas de tarot, astrología y guías para elevar tus vibras.”
+
+Teasers en home: tarjetas cortas con título, 1 frase (30–60 caracteres) y un enlace “Leer más” a la página completa o post.
+
+Secciones recomendadas: Sobre (perfil profesional), Servicios (tarot, carta natal), Blog/Feed (teasers), Galería, Contacto.
+
+Ejemplos de párrafos cortos (para captar atención):
+
+“¿Qué te revela tu carta natal hoy? Una lectura breve puede iluminar una decisión.”
+
+“Tarot práctico: 3 cartas para entender el bloqueo y cómo avanzar.”
+
+Artículos sugeridos (temas): “Esoterismo vs exoterismo”, “Introducción al tarot para principiantes”, “Cómo influyen los tránsitos planetarios”, “Rutina diaria para elevar vibras”.
+
+Diferencia entre esoterismo y exoterismo (texto corto para un artículo o card)
+Lo esotérico se orienta a enseñanzas reservadas, internas y transmitidas a iniciados; lo exoterico es divulgación pública y accesible a muchos
+grupo-millenium.org
++1
+.
+
+En la práctica puedes explicar: “Esoterismo = práctica interior, conexión personal; Exoterismo = rituales públicos, doctrinas abiertas”
+grupo-millenium.org
++1
+.
+
+(Usa estas frases como teaser de 1–2 oraciones y enlaza a un artículo más largo con ejemplos y fuentes).
+
+Citas: Centro Milleniun
+grupo-millenium.org
+; EsotericaBlog
+esotericablog.es
+; ConsultorioEsoterico
+Consultorio esoterico
+.
+
+Feed, teasers y sin backend (cómo implementarlo con tu repositorio)
+Guarda cada artículo en /posts/slug.html o /posts/slug/index.html.
+
+Genera un feed.json con objetos { title, excerpt, url, date, image }. El workflow gen-nav.yml que ya tienes puede generarlo o usar un script local.
+
+En index, carga fetch('/feed.json') y muestra solo title + excerpt + imagen pequeña + Leer más. El click abre la página completa.
+
+Ventaja: totalmente estático, versionado en Git, cero servidor.
+
+Ejemplo de item en feed.json:
+
+Json
+
+
+Copiar
+{"title":"Esoterismo vs Exoterismo","excerpt":"Breve: qué los distingue y por qué importa para tu práctica","url":"/posts/esoterismo-vs-exoterismo.html","date":"2025-09-30","image":"/assets/img/esoterismo.jpg"}
+Contacto sin backend (envíos a tu correo)
+Formspree: formulario simple que envía a tu email sin servidor (action a Formspree) — fácil y rápido.
+
+EmailJS: permite enviar desde JS usando su servicio (requiere registro).
+
+mailto: abre el cliente del usuario (no ideal).
+
+Recomendación inicial: Formspree para recibir mensajes y evitar configuración de servidor o bases de datos.
+
+Si quieres, hago ahora cualquiera de estas tres cosas:
+
+Generar ejemplos de <img src=...> concretos usando wuana-wuary/online y wuana-wuary/web (ponme la ruta exacta de 2-3 imágenes y te devuelvo las etiquetas).
+
+Crear un pequeño feed.json  de ejemplo con 3 teasers y el HTML que los consume.
+
+Escribir el artículo corto “Esoterismo vs Exoterismo” listo para pegar en /posts/ (con lenguaje claro y citando fuentes).
+
+Dime cuál prefieres y lo te lo entrego ya.
+
+www.grupo-millenium.org
+
+Centro Milleniun - Diferencias entre Esotérico y Exotérico
+
+
+Mostrar todo
+
+
+
+
+Editar en una página
+Dijiste
+signf de colores.txt
+
+Texto sin formato
+
+este ya lo habia sacado era algo que quiera, entonces le añado el json a web??? si pongo que ponga la imagen de perfil de avatar solo la de github de la organización?? asi se queda para el font??  para publico ?? jejeje
+Copilot dijo
+Resumen rápido
+Sí: puedes añadir el texto del archivo como contenido (post) y referenciarlo desde un feed JSON para que aparezca en tu web sin backend.
+
+Las imágenes pueden venir del mismo repo o de otro repo publicado en GitHub Pages; usa rutas absolutas a github.io  o rutas relativas dentro del mismo repo.
+
+La foto de perfil/ avatar puede apuntar a la imagen pública de la organización en GitHub (o a cualquier URL pública); eso funciona para mostrarla en la página.
+
+1. ¿Dónde pones el texto que adjuntaste?
+Crea un archivo HTML en tu repo principal, por ejemplo: /posts/significado-colores.html, y pega el contenido formateado (títulos, párrafos).
+
+Alternativa ligera: guarda el contenido como Markdown en /posts/significado-colores.md y convierte a HTML con un workflow o muéstralo en cliente con un render básico (marked.js).
+
+Ejemplo mínimo de post HTML:
+
+Html
+
+
+Copiar
+<!-- /posts/significado-colores.html -->
+<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Significado esotérico de los colores</title></head>
+<body>
+<article>
+  <h1>Significado esotérico de los colores</h1>
+  <p>Los colores siempre nos han atraído...</p>
+  <!-- pega el resto del contenido estructurándolo en <h2>/<p>/<ul> -->
+</article>
+</body></html>
+2. feed.json para mostrar teasers en el index (sin backend)
+Crea /feed.json con objetos que apunten al post: title, excerpt, url, date, image.
+
+En index.html  fetch('/feed.json') y renderiza solo el excerpt y la miniatura; el enlace abre el post completo.
+
+Ejemplo feed.json  (3 items):
+
+Json
+
+
+Copiar
+[
+  {"title":"Significado esotérico de los colores","excerpt":"Breve: los colores vibran y afectan emociones; guía rápida por tonos","url":"/posts/significado-colores.html","date":"2025-09-30","image":"/assets/img/esoterismo-colores.jpg"}
+]
+Pequeño código JS para cargar teasers:
+
+Js
+
+
+Copiar
+fetch('/feed.json').then(r=>r.json()).then(list=>{
+  const el = document.getElementById('feed');
+  list.forEach(item=>{
+    const a = document.createElement('a');
+    a.href = item.url;
+    a.innerHTML = `<h4>${item.title}</h4><p>${item.excerpt}</p>`;
+    el.appendChild(a);
+  });
+});
+3. Rutas de imágenes entre repos (online y web)
+Si la imagen está en el mismo repo: <img src="/assets/img/profile.jpg"> o assets/img/profile.jpg (según ubicación del HTML).
+
+Si la imagen está en otro repo publicado: <img src="https://wuana-wuary.github.io/web/imagen.jpg">.
+
+Para usar la imagen de la organización en GitHub (avatar org): puedes obtener su URL pública y usarla directamente como src; ejemplo:
+<img src="https://github.com/<org>.png" alt="avatar">  
+o para tamaño: https://github.com/<org>.png?size=200.
+
+4. ¿Pongo sólo la imagen de la org como avatar?
+Sí, funciona y es público. Ventajas: siempre accesible y se actualiza cuando cambias la foto en GitHub.
+
+Si quieres control absoluto (caching, tamaño, crop), copia la imagen al repo en assets/img/profile.jpg y referencia localmente.
+
+5. Tips de contenido y estructura (breve y efectivo)
+Home: un párrafo potente de 1–2 líneas que capture la propuesta (astrología, tarot, vibras).
+
+Feed: teasers (imagen + 1 frase) que enlacen a posts completos.
+
+Profile: foto, credenciales breves, CTA “Pedir lectura”.
+
+Posts: dividir en secciones (introducción, significado, aplicaciones, colores por día). Usa subtítulos <h2> y listas para lectura rápida.
+
+Evita copiar sin citar: si sacas contenido de internet, agrega una nota o enlace a la fuente.
+
+6. Siguiente paso concreto (elige uno y lo hago ahora)
+Te creo /posts/significado-colores.html a partir del texto que subiste, ya formateado en HTML.
+
+Te genero /feed.json con 3 teasers de ejemplo y el fragmento JS para index.
+
+Te doy los <img src=...> listos usando rutas concretas entre tus repos (dime 2 nombres de imagen y dónde están).
+
+Dime cuál opción prefieres y te lo preparo listo para pegar.
+
+
+
+
+
+Editar en una página
+Dijiste
+correcto a ver 🥺🥺🥺jejejejej bueno es su servicio profesional, me entregas un html completo porfavorn,   ya un html completo por favor limpio donde en el index o en la página principal tenga una breve información uno o dos renglones sobre cada artículo y obviamente ya sea que mande a su link original de la página web original de origen o uno donde pueda si se puede crear uno para aquí esta misma página igual estaría bien obviamente pero bueno en el index son página principal los que tenga una breve información igual que de las imágenes aparezcan dos o tres y así como está el repositorio web o el repositorio online que tenga una sección profile y de profile pues bueno ya tiene ahora sí la información aquí Que obviamente no se va a dar información personal pero pues ya información de contacto lo que sea va a ser más complicado además de que hay una parte una sección aparte de la media o ya sea las publicaciones que se hagan desde pues este perfil por eso también quería la imagen de portada y de perfil tipo Facebook además de que bueno a ver si se puede también ya me que me des la limpios los comandos img
+Copilot dijo
+index.html (página principal — lista de teasers, perfil, galería y contacto)
+Html
+
+
+Copiar
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Portal Esotérico · Inicio</title>
+<meta name="description" content="Astrología, tarot y vibras — teasers, perfil y contacto.">
+<style>
+  :root{
+    --bg:#0b0614; --card:#0f1220; --muted:#98a3bf;
+    --accent:#6d28d9; --accent-2:#fbbf24; --radius:12px;
+    --container:1100px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,#07060a 0%, #0b0614 100%);color:#eef3ff;line-height:1.45}
+  .container{max-width:var(--container);margin:0 auto;padding:20px}
+  header{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:18px 0}
+  .brand{display:flex;gap:12px;align-items:center}
+  .logo{width:64px;height:64px;border-radius:12px;object-fit:cover;border:2px solid rgba(255,255,255,0.06)}
+  nav a{color:var(--muted);text-decoration:none;margin-left:12px;font-size:15px}
+  .cover{border-radius:14px;overflow:hidden;background-size:cover;background-position:center;padding:30px 20px;margin-bottom:18px;display:flex;gap:20px;align-items:center}
+  .cover-text h1{margin:0;font-size:26px}
+  .cover-text p{margin:8px 0;color:var(--muted)}
+  .avatar{width:110px;height:110px;border-radius:14px;object-fit:cover;border:3px solid rgba(255,255,255,0.06)}
+  main{display:grid;grid-template-columns:2fr 360px;gap:18px}
+  .card{background:var(--card);padding:16px;border-radius:12px;box-shadow:0 8px 20px rgba(2,6,23,0.6)}
+  .muted{color:var(--muted)}
+  .feed-item{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.02)}
+  .thumb{width:120px;height:80px;object-fit:cover;border-radius:8px;flex-shrink:0}
+  .thumb.small{width:80px;height:60px}
+  .teaser h3{margin:0 0 6px 0}
+  .teaser p{margin:0;color:var(--muted)}
+  .btn{background:linear-gradient(90deg,var(--accent),#4c1d95);color:white;padding:8px 12px;border-radius:10px;border:0;cursor:pointer;text-decoration:none}
+  .profile{display:flex;gap:12px;align-items:center}
+  .meta{font-size:13px;color:var(--muted);margin-top:8px}
+  .gallery{display:flex;gap:8px;margin-top:12px}
+  .gallery img{width:calc(33% - 6px);height:100px;object-fit:cover;border-radius:8px}
+  form label{display:block;margin:8px 0;font-size:14px}
+  input,textarea{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+  footer{padding:18px 0;color:var(--muted);text-align:center;margin-top:18px}
+  @media(max-width:980px){ main{grid-template-columns:1fr} .gallery img{height:84px} }
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <img class="logo" src="https://github.com/wuana-wuary.png?size=200" alt="logo org">
+        <div>
+          <div style="font-weight:700">Portal Esotérico</div>
+          <div class="muted" style="font-size:13px">Astrología · Tarot · Vibras</div>
+        </div>
+      </div>
+
+      <nav>
+        <a href="#feed">Feed</a>
+        <a href="#profile">Profile</a>
+        <a href="#galeria">Galería</a>
+        <a href="#contacto" class="btn">Contacto</a>
+      </nav>
+    </header>
+
+    <section class="cover" style="background-image:url('https://wuana-wuary.github.io/web/1757819074452.jpg')">
+      <img class="avatar" src="https://github.com/wuana-wuary.png?size=240" alt="Avatar público de GitHub">
+      <div class="cover-text">
+        <h1>Lecturas, guías y vibras</h1>
+        <p class="muted">Breves reflexiones sobre astrología, tarot y prácticas para equilibrar tu energía.</p>
+        <div style="margin-top:8px"><a class="btn" href="#feed">Explorar artículos</a></div>
+      </div>
+    </section>
+
+    <main>
+      <section>
+        <div id="feed" class="card">
+          <h2 style="margin-top:0">Feed — artículos recientes</h2>
+
+          <!-- Teaser 1 -->
+          <article class="feed-item">
+            <img class="thumb" src="https://wuana-wuary.github.io/web/1757819056786.jpg" alt="colores">
+            <div class="teaser">
+              <h3>Significado esotérico de los colores</h3>
+              <p class="muted">Los colores vibran y afectan emociones; una guía rápida por tonos y usos esotéricos.</p>
+              <div style="margin-top:8px">
+                <a class="btn" href="/posts/significado-colores.html">Leer artículo</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Teaser 2 -->
+          <article class="feed-item">
+            <img class="thumb" src="https://wuana-wuary.github.io/web/1757819064823.jpg" alt="tarot">
+            <div class="teaser">
+              <h3>Tarot práctico: 3 cartas</h3>
+              <p class="muted">Una tirada de tres cartas para decidir frente a un bloqueo personal.</p>
+              <div style="margin-top:8px">
+                <a class="btn" href="/posts/tarot-3-cartas.html">Leer artículo</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Teaser 3 -->
+          <article class="feed-item">
+            <img class="thumb" src="https://wuana-wuary.github.io/web/1757819067254.jpg" alt="astrologia">
+            <div class="teaser">
+              <h3>Astrología breve: tránsitos hoy</h3>
+              <p class="muted">Qué significa el tránsito de hoy y cómo aprovecharlo en decisiones prácticas.</p>
+              <div style="margin-top:8px">
+                <a class="btn" href="/posts/transitos-hoy.html">Leer artículo</a>
+              </div>
+            </div>
+          </article>
+
+        </div>
+
+        <div id="galeria" class="card" style="margin-top:14px">
+          <h3>Galería</h3>
+          <p class="muted">Imágenes públicas tomadas del repo web.</p>
+          <div class="gallery">
+            <img src="https://wuana-wuary.github.io/web/1757819058958.jpg" alt="gal1">
+            <img src="https://wuana-wuary.github.io/web/1757819070577.jpg" alt="gal2">
+            <img src="https://wuana-wuary.github.io/web/1757819072896.jpg" alt="gal3">
+          </div>
+        </div>
+      </section>
+
+      <aside>
+        <div id="profile" class="card">
+          <h3>Perfil profesional</h3>
+          <div class="profile">
+            <img class="avatar" src="https://github.com/wuana-wuary.png?size=200" alt="avatar">
+            <div>
+              <div style="font-weight:700">Wuana Wuary</div>
+              <div class="muted">Lectora de tarot · Astróloga · Guía energética</div>
+              <div class="meta">Consultas por cita; ética y confidencialidad</div>
+            </div>
+          </div>
+
+          <div style="margin-top:12px">
+            <strong>Servicios</strong>
+            <ul class="muted" style="padding-left:18px;margin:8px 0 0 0">
+              <li>Tirada rápida (3 cartas)</li>
+              <li>Carta natal interpretativa</li>
+              <li>Sesiones de alineación energética</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <h4>Contacto rápido</h4>
+          <p class="muted">Formularios sin servidor — enviamos al correo configurado en el servicio</p>
+          <form id="contactForm" action="https://formspree.io/f/your-form-id" method="POST">
+            <label>Nombre<input name="name" required></label>
+            <label>Email<input type="email" name="email" required></label>
+            <label>Mensaje<textarea name="message" rows="3" required></textarea></label>
+            <button class="btn" type="submit">Enviar</button>
+          </form>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <h4>Mini bio</h4>
+          <p class="muted">Con más de años de experiencia en lecturas y trabajo energético, ofrezco guías para procesos personales y decisiones conscientes.</p>
+        </div>
+      </aside>
+    </main>
+
+    <footer>
+      <div class="muted">© <span id="year"></span> Portal Esotérico · Creado con intención · Imágenes públicas del repo web</div>
+    </footer>
+  </div>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+  // Si no quieres usar Formspree, cambia action por el endpoint que prefieras.
+  // Para usar el avatar público de la org: https://github.com/wuana-wuary.png?size=200
+</script>
+</body>
+</html>
+posts/significado-colores.html (post completo, formateado y limpio)
+Html
+
+
+Copiar
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Significado esotérico de los colores</title>
+<meta name="description" content="Guía: significado esotérico de los colores y cómo influyen en tus vibras.">
+<style>
+  body{font-family:Inter,system-ui,Arial;background:#0b0614;color:#eef3ff;margin:0;padding:18px}
+  .container{max-width:900px;margin:0 auto}
+  .card{background:#0f1220;padding:18px;border-radius:12px}
+  h1{margin-top:0}
+  .muted{color:#98a3bf}
+  ul{padding-left:18px}
+  .back{display:inline-block;margin-top:12px;color:#cbd5e1;text-decoration:none}
+  img.header{width:100%;height:300px;object-fit:cover;border-radius:10px;margin-bottom:12px}
+  @media(max-width:640px){ img.header{height:180px} }
+</style>
+</head>
+<body>
+  <div class="container">
+    <a class="back" href="/index.html">← Volver</a>
+    <div class="card" style="margin-top:12px">
+      <img class="header" src="https://wuana-wuary.github.io/web/1757819056786.jpg" alt="colores espirituales">
+      <h1>Significado esotérico de los colores</h1>
+      <p class="muted">Visitas: 11.909 · Extracto: Los colores vibran y pueden aportar energías que influyen en ánimo y decisiones.</p>
+
+      <article style="margin-top:12px;color:#e6eef8">
+        <p>Los colores siempre nos han atraído; todos tenemos un color favorito con el que nos identificamos. En esoterismo los tonos poseen vibraciones que influyen en el cuerpo, la mente y el espíritu. La cromoterapia usa esos matices para equilibrar energías y mejorar estados emocionales.</p>
+
+        <h2>La vibración de los colores</h2>
+        <p>Es un hecho que los colores vibran. Pueden aportar vibraciones positivas o negativas; por eso afectan emociones, conducta y claridad mental. Observa cómo cambian las estaciones: cada paleta genera una resonancia distinta en nosotros.</p>
+
+        <h2>Significados por color (resumen)</h2>
+        <ul>
+          <li><strong>Amarillo:</strong> luz, alegría, prosperidad; favorece la intuición y el avance intelectual.</li>
+          <li><strong>Azul claro:</strong> curación, conexión con lo espiritual.</li>
+          <li><strong>Azul oscuro:</strong> trabajo con el subconsciente y la sanación profunda.</li>
+          <li><strong>Rojo:</strong> pasión, fuerza y vitalidad; también puede intensificar la agresividad.</li>
+          <li><strong>Verde:</strong> naturaleza, salud y renovación; asociado a suerte y prosperidad.</li>
+          <li><strong>Naranja:</strong> vitalidad y adaptación; propicia la unión en grupos.</li>
+          <li><strong>Turquesa:</strong> desarrollo espiritual y claridad mental.</li>
+          <li><strong>Marrón:</strong> estabilidad, labores con la tierra y hogar.</li>
+          <li><strong>Rosa:</strong> ternura, amistad y suavizado de emociones negativas.</li>
+          <li><strong>Violeta:</strong> espiritualidad, transmutación y meditación.</li>
+          <li><strong>Dorado:</strong> perfección mística y estados de iluminación.</li>
+          <li><strong>Gris:</strong> neutralidad y equilibrio; útil en trabajos de justicia.</li>
+          <li><strong>Blanco:</strong> protección, paz y pureza.</li>
+          <li><strong>Negro:</strong> absorción y eliminación de energías negativas.</li>
+        </ul>
+
+        <h2>Colores por día</h2>
+        <p class="muted">Elegir un color según el día puede reforzar ciertas energías:</p>
+        <ul>
+          <li>Lunes: verde, blanco y plateado (Luna)</li>
+          <li>Martes: rojo (Marte)</li>
+          <li>Miércoles: gris metalizado (Mercurio)</li>
+          <li>Jueves: azul (Júpiter)</li>
+          <li>Viernes: tonos cobrizos (Venus)</li>
+          <li>Sábado: negro (Saturno)</li>
+          <li>Domingo: amarillo intenso (Sol)</li>
+        </ul>
+
+        <h2>Aplicaciones prácticas</h2>
+        <p>Usa verdes y azules para calma; rojos, naranjas y amarillos para energía y motivación. Si buscas un cambio positivo, combina amarillo y turquesa para claridad y apertura.</p>
+
+        <p class="muted" style="margin-top:12px">Fuentes y lecturas: textos y guías públicas sobre cromoterapia y esoterismo (resumen adaptado para este portal).</p>
+      </article>
+
+      <a class="back" href="/index.html">← Volver</a>
+    </div>
+  </div>
+</body>
+</html>
+Si quieres, lo siguiente que puedo entregarte ahora mismo sin más trabajo manual:
+
+posts/tarot-3-cartas.html y posts/transitos-hoy.html (dos posts breves para completar los links del index).
+
+Un feed.json  minimal para listar automáticamente los teasers.
+
+Instrucciones para usar Formspree (cómo obtener tu form-id) o alternativa EmailJS para enviar formularios a tu correo sin backend.
+
+Dime cuál de las tres opciones quieres y lo preparo listo para pegar.
+
+
+
+
+
+Editar en una página
+Dijiste
+que mala londa hasta salio muchi mejor jajajaajjajaja .. 🥺🥺🥺🥺 ahora me ahces uno a mi para mi ozclef personal, que usare igual para os-clef, ammmmm mis colores si, que sea tema blanco o dark confogurable, me gusta mas que nada que en dark resalten muchi los colores como en js jajajaja  jejejeje pero obviamente que mi navbar ya sea header o mis layout se queden tal cual plissss porfavor 🥺🥺🥺 solo que el contenido, aside se que que tenga toooodoby que me des algo igual que este pooooorfavoooor.... 
+
+
+ademas uno igual para blue-forest-8.github.io/-/ porfiiii es mi hermana no se si ya le subi fotos pero en github.com/capitan-spalding/amazing-people/ le subi tooodas sus fotos porfiiii 🥺🥺🥺🥺🥺ella si toda su web con colores pastel asi rosa, morado, azul, turquesa, celeste, aquo, le gustaba mucho el tema unicorn
+Copilot dijo
+ozclef — plantilla configurable (light / dark, mismo layout)
+Html
+
+
+Copiar
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ozclef · Portal Personal</title>
+<meta name="description" content="ozclef — Astrología, Tarot y vibras. Tema configurablе light / dark.">
+<style>
+  :root{
+    --bg-light:#ffffff; --text-light:#0b1220; --card-light:#f7f7fb; --muted-light:#5b6470;
+    --bg-dark:#071021; --text-dark:#e6eef8; --card-dark:#0f1724; --muted-dark:#98a3bf;
+    --accent:#7c3aed; --accent-2:#f59e0b; --radius:12px; --container:1100px;
+  }
+  /* base */
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,Arial;background:var(--bg);color:var(--text);line-height:1.45}
+  .container{max-width:var(--container);margin:0 auto;padding:20px}
+  header{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:18px 0}
+  .brand{display:flex;gap:12px;align-items:center}
+  .logo{width:64px;height:64px;border-radius:12px;object-fit:cover;border:2px solid rgba(0,0,0,0.06)}
+  nav a{color:var(--muted);text-decoration:none;margin-left:12px;font-size:15px}
+  .cover{border-radius:14px;overflow:hidden;background-size:cover;background-position:center;padding:24px;margin-bottom:18px;display:flex;gap:18px;align-items:center}
+  .cover-text h1{margin:0;font-size:24px}
+  .avatar{width:110px;height:110px;border-radius:14px;object-fit:cover;border:3px solid rgba(0,0,0,0.06)}
+  main{display:grid;grid-template-columns:2fr 360px;gap:18px}
+  .card{padding:16px;border-radius:12px;box-shadow:0 8px 20px rgba(2,6,23,0.06)}
+  .muted{color:var(--muted)}
+  .feed-item{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.03)}
+  .thumb{width:120px;height:80px;object-fit:cover;border-radius:8px;flex-shrink:0}
+  .btn{background:linear-gradient(90deg,var(--accent),#4c1d95);color:white;padding:8px 12px;border-radius:10px;border:0;cursor:pointer;text-decoration:none}
+  .gallery{display:flex;gap:8px;margin-top:12px}
+  .gallery img{width:calc(33% - 6px);height:100px;object-fit:cover;border-radius:8px}
+  form label{display:block;margin:8px 0;font-size:14px}
+  input,textarea{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);background:transparent;color:inherit}
+  footer{padding:18px 0;color:var(--muted);text-align:center;margin-top:18px}
+
+  /* theme variables (will be toggled by JS) */
+  :root.light{
+    --bg:var(--bg-light); --text:var(--text-light); --card:var(--card-light); --muted:var(--muted-light);
+  }
+  :root.dark{
+    --bg:var(--bg-dark); --text:var(--text-dark); --card:var(--card-dark); --muted:var(--muted-dark);
+  }
+
+  /* dark mode accent glow (subtle) */
+  .accent-glow { box-shadow:0 6px 18px rgba(124,58,237,0.16); border-radius:10px; }
+
+  @media(max-width:980px){ main{grid-template-columns:1fr} .gallery img{height:84px} }
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <!-- Org/user avatar público en GitHub; reemplaza por tu imagen si prefieres local -->
+        <img class="logo" id="logoImg" src="https://github.com/ozclef.png?size=200" alt="ozclef">
+        <div>
+          <div style="font-weight:700" id="siteTitle">ozclef</div>
+          <div class="muted" id="siteTag">Astrología · Tarot · Vibras</div>
+        </div>
+      </div>
+
+      <nav style="display:flex;align-items:center">
+        <a href="#feed">Feed</a>
+        <a href="#profile">Profile</a>
+        <a href="#galeria">Galería</a>
+        <a href="#contacto" class="btn">Contacto</a>
+        <button id="themeToggle" style="margin-left:12px;padding:8px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);background:transparent;color:inherit;cursor:pointer">Dark</button>
+      </nav>
+    </header>
+
+    <section class="cover card accent-glow" id="cover" style="background-image:url('https://wuana-wuary.github.io/web/1757819074452.jpg')">
+      <!-- avatar: usa avatar público de GitHub o tu propia ruta local -->
+      <img class="avatar" id="profileImg" src="https://github.com/ozclef.png?size=240" alt="avatar">
+      <div class="cover-text">
+        <h1 id="coverTitle">Hola — Soy ozclef</h1>
+        <p class="muted" id="coverDesc">Lecturas, guías y pequeñas prácticas para elevar vibras y entender energías.</p>
+        <div style="margin-top:8px"><a class="btn" href="#feed">Leer teasers</a></div>
+      </div>
+    </section>
+
+    <main>
+      <section>
+        <div id="feed" class="card">
+          <h2 style="margin-top:0">Feed — artículos recientes</h2>
+
+          <!-- Feed items generados por JS a partir de feed.json o del array local -->
+          <div id="feedList">
+            <!-- ejemplo estático; JS puede reemplazar dinámicamente -->
+          </div>
+        </div>
+
+        <div id="galeria" class="card" style="margin-top:14px">
+          <h3>Galería</h3>
+          <p class="muted">Muestras públicas (reemplaza src por tus imágenes en repo)</p>
+          <div class="gallery" id="gallery">
+            <!-- imágenes de ejemplo -->
+            <img src="https://wuana-wuary.github.io/web/1757819058958.jpg" alt="img1">
+            <img src="https://wuana-wuary.github.io/web/1757819070577.jpg" alt="img2">
+            <img src="https://wuana-wuary.github.io/web/1757819072896.jpg" alt="img3">
+          </div>
+        </div>
+      </section>
+
+      <aside>
+        <div id="profile" class="card">
+          <h3>Perfil</h3>
+          <div style="display:flex;gap:12px;align-items:center">
+            <img class="avatar" src="https://github.com/ozclef.png?size=200" alt="avatar">
+            <div>
+              <div style="font-weight:700">ozclef</div>
+              <div class="muted">Lectora · Astróloga · Practicante energética</div>
+              <div class="muted" style="margin-top:6px;font-size:13px">Servicios: tirada rápida, carta natal, sesiones energéticas</div>
+            </div>
+          </div>
+          <div style="margin-top:12px">
+            <strong>Mini bio</strong>
+            <p class="muted" style="margin:6px 0 0 0">Palabras breves sobre tu enfoque profesional, ética y metodología.</p>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:12px" id="contactCard">
+          <h4>Contacto</h4>
+          <p class="muted">Formulario sin backend (usa Formspree o EmailJS).</p>
+          <form id="contactForm" action="https://formspree.io/f/your-form-id" method="POST">
+            <label>Nombre<input name="name" required></label>
+            <label>Email<input type="email" name="email" required></label>
+            <label>Mensaje<textarea name="message" rows="3" required></textarea></label>
+            <button class="btn" type="submit">Enviar</button>
+          </form>
+        </div>
+      </aside>
+    </main>
+
+    <footer>
+      <div class="muted">© <span id="year"></span> ozclef · Diseño configurable</div>
+    </footer>
+  </div>
+
+<script>
+/* Tema: alterna light / dark (se guarda en localStorage) */
+(function(){
+  const root = document.documentElement;
+  const toggle = document.getElementById('themeToggle');
+  const key = 'site-theme';
+  function apply(theme){
+    root.classList.remove('light','dark');
+    root.classList.add(theme);
+    toggle.textContent = theme === 'dark' ? 'Light' : 'Dark';
+  }
+  const saved = localStorage.getItem(key) || 'dark';
+  apply(saved);
+  toggle.addEventListener('click', ()=>{
+    const current = root.classList.contains('dark') ? 'dark' : 'light';
+    const next = current === 'dark' ? 'light' : 'dark';
+    apply(next);
+    localStorage.setItem(key,next);
+  });
+})();
+
+/* Feed dinámico simple: reemplaza o carga /feed.json si lo publicas */
+const feed = [
+  {title:"Significado esotérico de los colores", excerpt:"Los colores vibran y afectan emociones; breve guía por tonos.", url:"/posts/significado-colores.html", img:"https://wuana-wuary.github.io/web/1757819056786.jpg"},
+  {title:"Tarot práctico: 3 cartas", excerpt:"Tirada de 3 cartas para orientar decisiones.", url:"/posts/tarot-3-cartas.html", img:"https://wuana-wuary.github.io/web/1757819064823.jpg"},
+  {title:"Tránsitos hoy", excerpt:"Qué está moviéndose en el cielo y cómo aprovecharlo.", url:"/posts/transitos-hoy.html", img:"https://wuana-wuary.github.io/web/1757819067254.jpg"}
+];
+
+function renderFeed(list){
+  const el = document.getElementById('feedList');
+  el.innerHTML = '';
+  list.forEach(it=>{
+    const a = document.createElement('div');
+    a.className='feed-item';
+    a.innerHTML = `<img class="thumb" src="${it.img}" alt=""><div class="teaser"><h3>${it.title}</h3><p class="muted">${it.excerpt}</p><div style="margin-top:8px"><a class="btn" href="${it.url}">Leer</a></div></div>`;
+    el.appendChild(a);
+  });
+}
+renderFeed(feed);
+
+/* Año en footer */
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* Nota sobre imágenes: reemplaza las URLs de ejemplo por rutas dentro de tu repo:
+   - si subes a ozclef repo en GitHub Pages: https://ozclef.github.io/repo/path/to/img.jpg
+   - o usa avatar público: https://github.com/ozclef.png?size=240
+*/
+</script>
+</body>
+</html>
+blue-forest-8 — plantilla pastel “unicorn” (colores suaves, mantiene layout)
+Html
+
+
+Copiar
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>blue-forest-8 · Portfolio</title>
+<meta name="description" content="blue-forest-8 — diseño pastel, galería y perfil.">
+<style>
+  :root{
+    --bg:#fffafc; --text:#0b1220; --card:#ffffff; --muted:#6b6f78;
+    --p1:#f8c8e6; --p2:#d6bef8; --p3:#bdeaf3; --p4:#bfeaf2;
+    --accent:#f7a8d0; --radius:14px; --container:1000px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,#fffafc 0%, #f6fbff 100%);color:var(--text);line-height:1.45}
+  .container{max-width:var(--container);margin:0 auto;padding:20px}
+  header{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:18px 0}
+  .brand{display:flex;gap:12px;align-items:center}
+  .logo{width:64px;height:64px;border-radius:12px;object-fit:cover;border:2px solid rgba(0,0,0,0.04)}
+  nav a{color:var(--muted);text-decoration:none;margin-left:12px;font-size:15px}
+  .cover{border-radius:16px;overflow:hidden;background:linear-gradient(135deg,var(--p1),var(--p2));padding:28px;margin-bottom:18px;display:flex;gap:18px;align-items:center}
+  .avatar{width:120px;height:120px;border-radius:20px;object-fit:cover;border:3px solid rgba(255,255,255,0.6)}
+  main{display:grid;grid-template-columns:2fr 360px;gap:18px}
+  .card{background:var(--card);padding:16px;border-radius:12px;box-shadow:0 6px 18px rgba(12,10,20,0.04)}
+  .muted{color:var(--muted)}
+  .feed-item{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px dashed rgba(0,0,0,0.03)}
+  .thumb{width:120px;height:80px;object-fit:cover;border-radius:10px;flex-shrink:0}
+  .btn{background:linear-gradient(90deg,#ffb3de,#cdb7ff);color:#1b1230;padding:8px 12px;border-radius:12px;border:0;cursor:pointer;text-decoration:none}
+  .gallery{display:flex;gap:8px;margin-top:12px}
+  .gallery img{width:calc(33% - 6px);height:100px;object-fit:cover;border-radius:12px;border:1px solid rgba(0,0,0,0.04)}
+  footer{padding:18px 0;color:var(--muted);text-align:center;margin-top:18px}
+  @media(max-width:980px){ main{grid-template-columns:1fr} .gallery img{height:84px} }
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <!-- avatar of sister: you can point to raw file in capitan-spalding repo or repo pages -->
+        <img class="logo" src="https://github.com/blue-forest-8.png?size=200" alt="blue-forest-8">
+        <div>
+          <div style="font-weight:700">Blue Forest</div>
+          <div class="muted">Unicorn vibes · Pastel portfolio</div>
+        </div>
+      </div>
+
+      <nav>
+        <a href="#feed">Feed</a>
+        <a href="#profile">Profile</a>
+        <a href="#galeria">Galería</a>
+        <a href="#contacto" class="btn">Contacto</a>
+      </nav>
+    </header>
+
+    <section class="cover">
+      <img class="avatar" src="https://raw.githubusercontent.com/capitan-spalding/amazing-people/main/img/profile-example.jpg" alt="avatar">
+      <div>
+        <h1 style="margin:0">Blue Forest</h1>
+        <p class="muted">Colores pastel, fotos y pequeñas historias · Theme unicorn</p>
+        <div style="margin-top:8px"><a class="btn" href="#galeria">Ver galería</a></div>
+      </div>
+    </section>
+
+    <main>
+      <section>
+        <div id="feed" class="card">
+          <h2 style="margin-top:0">Feed — publicaciones</h2>
+          <div id="feedList"></div>
+        </div>
+
+        <div id="galeria" class="card" style="margin-top:14px">
+          <h3>Galería pastel</h3>
+          <p class="muted">Fotos subidas en el repo <code>capitan-spalding/amazing-people</code>. Reemplaza los src por las rutas exactas.</p>
+          <div class="gallery" id="gallery">
+            <img src="https://raw.githubusercontent.com/capitan-spalding/amazing-people/main/img/photo1.jpg" alt="g1">
+            <img src="https://raw.githubusercontent.com/capitan-spalding/amazing-people/main/img/photo2.jpg" alt="g2">
+            <img src="https://raw.githubusercontent.com/capitan-spalding/amazing-people/main/img/photo3.jpg" alt="g3">
+          </div>
+        </div>
+      </section>
+
+      <aside>
+        <div id="profile" class="card">
+          <h3>Perfil</h3>
+          <div style="display:flex;gap:12px;align-items:center">
+            <img class="avatar" src="https://raw.githubusercontent.com/capitan-spalding/amazing-people/main/img/profile-example.jpg" alt="avatar">
+            <div>
+              <div style="font-weight:700">Blue Forest</div>
+              <div class="muted">Fotografías · Estética pastel · Historias</div>
+            </div>
+          </div>
+
+          <div style="margin-top:12px">
+            <strong>Mini bio</strong>
+            <p class="muted" style="margin:6px 0 0 0">Colección de retratos y paisajes en tonos suaves; estilo unicorn / pastel.</p>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:12px" id="contactCard">
+          <h4>Contacto</h4>
+          <p class="muted">Usa Formspree o Mailto simple si prefieres no usar servicios externos.</p>
+          <form id="contactForm" action="https://formspree.io/f/your-form-id" method="POST">
+            <label>Nombre<input name="name" required></label>
+            <label>Email<input type="email" name="email" required></label>
+            <label>Mensaje<textarea name="message" rows="3" required></textarea></label>
+            <button class="btn" type="submit">Enviar</button>
+          </form>
+        </div>
+      </aside>
+    </main>
+
+    <footer>
+      <div class="muted">© <span id="year"></span> Blue Forest · Fotos: capitan-spalding/amazing-people (reemplaza por rutas reales)</div>
+    </footer>
+  </div>
+
+<script>
+/* Feed de ejemplo — reemplaza o carga /feed.json */
+const feed = [
+  {title:"Galería unicorn", excerpt:"Un paseo por tonos pastel y retratos suaves.", url:"#", img:"https://raw.githubusercontent.com/capitan-spalding/amazing-people/main/img/photo1.jpg"},
+  {title:"Mini sesión: atardecer", excerpt:"Imágenes con luz difusa y paleta cromática pastel.", url:"#", img:"https://raw.githubusercontent.com/capitan-spalding/amazing-people/main/img/photo2.jpg"},
+  {title:"Retratos personales", excerpt:"Historias breves y retratos de estudio.", url:"#", img:"https://raw.githubusercontent.com/capitan-spalding/amazing-people/main/img/photo3.jpg"}
+];
+
+function renderFeed(list){
+  const el = document.getElementById('feedList');
+  el.innerHTML = '';
+  list.forEach(it=>{
+    const a = document.createElement('div');
+    a.className='feed-item';
+    a.innerHTML = `<img class="thumb" src="${it.img}" alt=""><div class="teaser"><h3>${it.title}</h3><p class="muted">${it.excerpt}</p><div style="margin-top:8px"><a class="btn" href="${it.url}">Ver</a></div></div>`;
+    el.appendChild(a);
+  });
+}
+renderFeed(feed);
+
+/* Año */
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* Notas rápidas:
+ - Reemplaza los src de imágenes por las rutas exactas dentro de capitan-spalding/amazing-people (raw.githubusercontent.com).
+ - Ejemplo raw URL: https://raw.githubusercontent.com/capitan-spalding/amazing-people/main/img/mi-foto.jpg
+*/
+</script>
+</body>
+</html>
+Si quieres que haga inmediatamente:
+
+posts individuales (tarot, tránsitos) para ambos templates,
+
+un feed.json  listo para publicar para cada sitio, o
+
+un pequeño script que reemplace automáticamente las URLs de las imágenes por las rutas reales en capitan-spalding/amazing-people,
+
+dime cuál de los tres prefieres y lo genero ahora.
+
+
+
+
+
+Editar en una página
+Dijiste
+bueno  la vrdad muchisisiismas gracuas por kos diseños pero mi hermana y yo no somos realmente nada de esoterismo, nos gusta el ajedrez, videojuegos, mayematicas, programacion, fisolpfia, criminalistica, osea igual y ella era tambien mucho canavis e imagenes bonitas memes , ella era modelo, 
+
+
+
+aparte yo por otro lado , bueno tengo , la info te basas en los repositorios, osea muestros gustos 
+
+somos iguales pero diferentes jajajajaj pero mada de esoterimos jeje
+Copilot dijo
+Ajuste de concepto (resumen)
+Perfecto — cambiamos el tema esotérico por uno personal y auténtico: ajedrez, videojuegos, matemáticas, programación, filosofía, criminología, cannabis, memes y fotografía/modelaje. Mantendré el mismo layout y funcionalidades que te gustaron (tema light/dark, header/nav, feed, perfil, galería, contact) y solo cambio texto, etiquetas, imágenes y paleta para que refleje esos intereses.
+
+Qué voy a entregarte ahora (lista corta)
+index.html  adaptado a "ozclef" con contenido y teasers centrados en tus intereses.
+
+posts de ejemplo: chess, gaming y portfolio/modelaje (HTML listos).
+
+feed.json  con esos teasers para que el index los consuma.
+
+Instrucciones rápidas para imágenes (cómo usar las de capitan-spalding/amazing-people o tu propio repo).
+
+Dime si quieres que haga esto para ambos repos (ozclef y blue-forest-8) con variantes de paleta (ozclef: dark/neón; blue-forest-8: pastel/unicorn pero con intereses de tu hermana).
+
+Paleta y tono sugerido
+ozclef: dark base + acento neón (cian, magenta) — resalta bien en dark como pediste.
+
+blue-forest-8 (hermana): pastel suave (rosa, celeste, lavanda) pero con secciones de gaming/portfolio y memes.
+
+Confirmo paleta y procedo a generar los archivos si me das OK; si quieres cambiar colores o textos concretos, indícamelos y lo incluyo.
+
+Mini guía de imágenes (rápida y clara)
+Si tus fotos ya están en capitan-spalding/amazing-people usa raw URLs:
+https://raw.githubusercontent.com/capitan-spalding/amazing-people/main/img/NOMBRE.jpg
+
+Si las copias al repo del sitio ponlas en assets/img/ y usa src="/assets/img/NOMBRE.jpg" o "assets/img/NOMBRE.jpg" según ubicación.
+
+Avatar org público: https://github.com/ozclef.png?size=240
+
+¿Te lo genero ya para ozclef (dark + neón) y para blue-forest-8 (pastel), con los posts y feed.json  incluidos? Dime "Sí, genera" y los saco listos para pegar.
+
+
+
+
+
+Editar en una página
+Dijiste
+andaleeee a mi me late las luces led RGB , normalmente no tengo preferencias con los colores, jejejej mientras se vea cool asi, ... 
+
+ella sii rosa purple, ella es de tattoos 
+
+yo mas de tecnologia .
+animalitos gatos jajajaj 
+ella le gustana SPAWNM el de los comics jajajajaja a mi me gusta Invencible , es la misma marca jajaja
+Copilot dijo
+Entrega: sitios listos para pegar (ozclef — dark RGB; blue-forest-8 — pastel unicorn)
+Te doy los archivos listos para copiar en cada repo. Cada bloque contiene: index.html, three posts (HTML) y feed.json. . Las rutas de imágenes usan ejemplos raw.githubusercontent  (reemplaza por las tuyas). Pega tal cual en cada repo (en la rama que publiques con Pages).
+
+ozclef — index.html (dark · acentos RGB neón)
+Html
+
+
+Copiar
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>ozclef · Tech, Chess & Comics</title>
+<meta name="description" content="ozclef — programación, ajedrez, videojuegos y comics. Tema dark con acentos RGB."/>
+<style>
+  :root{--bg:#05060a;--card:#0d1117;--muted:#9aa6bf;--accent1:#00e5ff;--accent2:#ff4dff;--radius:12px;--container:1100px}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,#03040a 0%,#05060a 100%);color:#e6f0ff}
+  .container{max-width:var(--container);margin:0 auto;padding:20px}
+  header{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:14px 0}
+  .brand{display:flex;gap:12px;align-items:center}
+  .logo{width:60px;height:60px;border-radius:10px;object-fit:cover;border:2px solid rgba(255,255,255,0.04)}
+  nav a{color:var(--muted);text-decoration:none;margin-left:12px;font-size:15px}
+  .cover{border-radius:14px;padding:22px;display:flex;gap:18px;align-items:center;background:linear-gradient(90deg, rgba(0,229,255,0.06), rgba(255,77,255,0.04));margin-bottom:18px}
+  .avatar{width:120px;height:120px;border-radius:14px;object-fit:cover;border:3px solid rgba(255,255,255,0.04)}
+  main{display:grid;grid-template-columns:2fr 360px;gap:18px}
+  .card{background:var(--card);padding:16px;border-radius:var(--radius);box-shadow:0 8px 30px rgba(0,0,0,0.6)}
+  .muted{color:var(--muted)}
+  .feed-item{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.02)}
+  .thumb{width:120px;height:80px;object-fit:cover;border-radius:8px;flex-shrink:0}
+  .btn{display:inline-block;padding:8px 12px;border-radius:10px;color:#061026;text-decoration:none;font-weight:600;background:linear-gradient(90deg,var(--accent1),var(--accent2))}
+  .gallery{display:flex;gap:8px;margin-top:12px}
+  .gallery img{width:calc(33% - 6px);height:100px;object-fit:cover;border-radius:8px}
+  .toggle{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);padding:6px 8px;border-radius:8px;cursor:pointer}
+  footer{padding:18px 0;color:var(--muted);text-align:center;margin-top:18px}
+  @media(max-width:980px){ main{grid-template-columns:1fr} .gallery img{height:84px} }
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <img class="logo" src="https://github.com/ozclef.png?size=200" alt="ozclef logo">
+        <div>
+          <div style="font-weight:700">ozclef</div>
+          <div class="muted" style="font-size:13px">Tech · Chess · Comics · Cats</div>
+        </div>
+      </div>
+      <nav>
+        <a href="#feed">Feed</a>
+        <a href="#profile">Profile</a>
+        <a href="#galeria">Galería</a>
+        <a href="#contacto" class="toggle">Contacto</a>
+      </nav>
+    </header>
+
+    <section class="cover">
+      <img class="avatar" src="https://raw.githubusercontent.com/wuana-wuary/web/main/1757819056786.jpg" alt="avatar">
+      <div>
+        <h1 style="margin:0">ozclef — código, tablero y viñetas</h1>
+        <p class="muted" style="margin-top:6px">Proyecto personal: artículos breves sobre programación, ajedrez, videojuegos y comics como Invincible.</p>
+        <div style="margin-top:10px"><a class="btn" href="#feed">Ver novedades</a></div>
+      </div>
+    </section>
+
+    <main>
+      <section>
+        <div id="feed" class="card">
+          <h2 style="margin-top:0">Feed — últimos posts</h2>
+          <div id="feedList"></div>
+        </div>
+
+        <div id="galeria" class="card" style="margin-top:14px">
+          <h3>Galería</h3>
+          <p class="muted">Tres imágenes seleccionadas</p>
+          <div class="gallery">
+            <img src="https://raw.githubusercontent.com/wuana-wuary/web/main/1757819058958.jpg" alt="g1">
+            <img src="https://raw.githubusercontent.com/wuana-wuary/web/main/1757819064823.jpg" alt="g2">
+            <img src="https://raw.githubusercontent.com/wuana-wuary/web/main/1757819067254.jpg" alt="g3">
+          </div>
+        </div>
+      </section>
+
+      <aside>
+        <div id="profile" class="card">
+          <h3>Perfil</h3>
+          <div style="display:flex;gap:12px;align-items:center">
+            <img class="avatar" src="https://github.com/ozclef.png?size=200" alt="avatar">
+            <div>
+              <div style="font-weight:700">ozclef</div>
+              <div class="muted">Developer · Chess player · Cat lover</div>
+            </div>
+          </div>
+          <div style="margin-top:12px">
+            <strong>Intereses</strong>
+            <ul class="muted" style="padding-left:18px;margin:8px 0 0 0">
+              <li>Programación y automatizaciones</li>
+              <li>Ajedrez estratégico y análisis</li>
+              <li>Comics: Invincible; videojuegos y hardware</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <h4>Contacto</h4>
+          <p class="muted">Formulario sin backend (Formspree o EmailJS)</p>
+          <form id="contactForm" action="https://formspree.io/f/your-form-id" method="POST">
+            <label>Nombre<input name="name" required></label>
+            <label>Email<input type="email" name="email" required></label>
+            <label>Mensaje<textarea name="message" rows="3" required></textarea></label>
+            <button class="btn" type="submit" style="margin-top:8px">Enviar</button>
+          </form>
+        </div>
+      </aside>
+    </main>
+
+    <footer>
+      <div class="muted">© <span id="year"></span> ozclef · Hecho con LEDs RGB y café</div>
+    </footer>
+  </div>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* Feed local (reemplaza por /feed.json si publicas uno) */
+const feed = [
+  {title:"Apertura siciliana: ideas prácticas", excerpt:"Análisis breve y plan de juego para la siciliana.", url:"/posts/chess-siciliana.html", img:"https://raw.githubusercontent.com/wuana-wuary/web/main/1757819058958.jpg"},
+  {title:"Montaje rápido para stream indie", excerpt:"Hardware y consejos para transmitir sin gastar una fortuna.", url:"/posts/stream-setup.html", img:"https://raw.githubusercontent.com/wuana-wuary/web/main/1757819064823.jpg"},
+  {title:"Invincible vs Spawn: por qué me atrapan", excerpt:"Reflexión sobre personajes, tono y creatividad.", url:"/posts/comics-invincible.html", img:"https://raw.githubusercontent.com/wuana-wuary/web/main/1757819067254.jpg"}
+];
+
+function renderFeed(list){
+  const el = document.getElementById('feedList');
+  el.innerHTML = '';
+  list.forEach(it=>{
+    const d = document.createElement('article');
+    d.className='feed-item';
+    d.innerHTML = `<img class="thumb" src="${it.img}" alt=""><div class="teaser"><h3>${it.title}</h3><p class="muted">${it.excerpt}</p><div style="margin-top:8px"><a class="btn" href="${it.url}">Leer</a></div></div>`;
+    el.appendChild(d);
+  });
+}
+renderFeed(feed);
+</script>
+</body>
+</html>
+ozclef — posts (3 archivos HTML)
+posts/chess-siciliana.html
+
+Html
+
+
+Copiar
+<!doctype html><html lang="es"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Siciliana · ozclef</title><style>body{font-family:Inter,system-ui,Arial;background:#05060a;color:#e6f0ff;margin:0;padding:18px}.container{max-width:900px;margin:0 auto}.card{background:#0d1117;padding:18px;border-radius:12px}a.back{color:#9aa6bf;text-decoration:none}</style></head><body><div class="container"><a class="back" href="/index.html">← Volver</a><div class="card"><h1>Apertura Siciliana: ideas prácticas</h1><p class="muted">Resumen: planes típicos para negras y blancas, líneas recomendadas para juego club.</p><article><h2>Objetivo</h2><p>La siciliana es dinámica; busca contrajuego en el flanco de dama.</p><h2>Plan para blancas</h2><ul><li>Control central con e4 y desarrollo rápido.</li><li>Evitar líneas demasiado tácticas si buscas posición estable.</li></ul><h2>Plan para negras</h2><ul><li>Contrajuego con ...</li></ul></article></div></div></body></html>
+posts/stream-setup.html
+
+Html
+
+
+Copiar
+<!doctype html><html lang="es"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Stream setup · ozclef</title><style>body{font-family:Inter,system-ui,Arial;background:#05060a;color:#e6f0ff;margin:0;padding:18px}.container{max-width:900px;margin:0 auto}.card{background:#0d1117;padding:18px;border-radius:12px}a.back{color:#9aa6bf;text-decoration:none}</style></head><body><div class="container"><a class="back" href="/index.html">← Volver</a><div class="card"><h1>Montaje rápido para stream indie</h1><p class="muted">Cámara, audio y software mínimos recomendados.</p><article><ul><li>Webcam decente o cámara USB</li><li>Mic dinámico o condensador con filtro</li><li>Software: OBS + escenas simples</li></ul></article></div></div></body></html>
+posts/comics-invincible.html
+
+Html
+
+
+Copiar
+<!doctype html><html lang="es"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Invincible vs Spawn · ozclef</title><style>body{font-family:Inter,system-ui,Arial;background:#05060a;color:#e6f0ff;margin:0;padding:18px}.container{max-width:900px;margin:0 auto}.card{background:#0d1117;padding:18px;border-radius:12px}a.back{color:#9aa6bf;text-decoration:none}</style></head><body><div class="container"><a class="back" href="/index.html">← Volver</a><div class="card"><h1>Invincible vs Spawn: por qué me atrapan</h1><p class="muted">Comparación de tono, desarrollo y enfoque adulto en ambos cómics.</p><article><p>Invincible ofrece una mezcla de humanidad y violencia; Spawn mezcla horror y redención. Ambos buenos para analizar narrativa gráfica.</p></article></div></div></body></html>
+ozclef — feed.json
+
+Json
+
+
+Copiar
+[
+  {"title":"Apertura Siciliana: ideas prácticas","excerpt":"Planes típicos y recomendaciones para club y online.","url":"/posts/chess-siciliana.html","date":"2025-09-30","image":"/raw-placeholder"},
+  {"title":"Montaje rápido para stream indie","excerpt":"Hardware y software para empezar a transmitir.","url":"/posts/stream-setup.html","date":"2025-09-20","image":"/raw-placeholder"},
+  {"title":"Invincible vs Spawn","excerpt":"Reflexión sobre cómics, tono y personajes.","url":"/posts/comics-invincible.html","date":"2025-09-10","image":"/raw-placeholder"}
+]
+blue-forest-8 — index.html (pastel unicorn · portfolio)
+Html
+
+
+Copiar
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>blue-forest-8 · Portfolio</title>
+<meta name="description" content="blue-forest-8 — fotos, tattoos y estilo pastel"/>
+<style>
+  :root{--bg:#fffafc;--card:#fff;--muted:#7b7280;--p1:#f8c8e6;--p2:#d6bef8;--p3:#bdeaf3;--radius:14px;--container:1000px}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,#fffafc 0%,#f6fbff 100%);color:#231a2b}
+  .container{max-width:var(--container);margin:0 auto;padding:20px}
+  header{display:flex;justify-content:space-between;align-items:center;padding:14px 0}
+  .brand{display:flex;gap:12px;align-items:center}
+  .logo{width:64px;height:64px;border-radius:12px;object-fit:cover}
+  nav a{color:var(--muted);text-decoration:none;margin-left:12px;font-size:15px}
+  .cover{border-radius:16px;padding:22px;display:flex;gap:18px;align-items:center;background:linear-gradient(135deg,var(--p1),var(--p2));margin-bottom:18px}
+  .avatar{width:120px;height:120px;border-radius:20px;object-fit:cover;border:3px solid rgba(255,255,255,0.6)}
+  main{display:grid;grid-template-columns:2fr 360px;gap:18px}
+  .card{background:var(--card);padding:16px;border-radius:12px;box-shadow:0 6px 18px rgba(12,10,20,0.04)}
+  .muted{color:var(--muted)}
+  .feed-item{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px dashed rgba(0,0,0,0.03)}
+  .thumb{width:120px;height:80px;object-fit:cover;border-radius:10px;flex-shrink:0}
+  .btn{background:linear-gradient(90deg,#ffb3de,#cdb7ff);color:#1b1230;padding:8px 12px;border-radius:12px;border:0;cursor:pointer;text-decoration:none}
+  .gallery{display:flex;gap:8px;margin-top:12px}
+  .gallery img{width:calc(33% - 6px);height:100px;object-fit:cover;border-radius:12px;border:1px solid rgba(0,0,0,0.04)}
+  footer{padding:18px 0;color:var(--muted);text-align:center;margin-top:18px}
+  @media(max-width:980px){ main{grid-template-columns:1fr} .gallery img{height:84px} }
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <img class="logo" src="https://github.com/blue-forest-8.png?size=200" alt="blue forest">
+        <div>
+          <div style="font-weight:700">Blue Forest</div>
+          <div class="muted">Fotos · Tattoos · Pastel vibes</div>
+        </div>
+      </div>
+      <nav><a href="#feed">Feed</a><a href="#profile">Profile</a><a href="#galeria">Galería</a><a href="#contacto" class="btn">Contacto</a></nav>
+    </header>
+
+    <section class="cover">
+      <img class="avatar" src="https://raw.githubusercontent.com/capitan-spalding/amazing-people/main/img/profile-example.jpg" alt="avatar">
+      <div>
+        <h1 style="margin:0">Blue Forest — pastel & tattoos</h1>
+        <p class="muted" style="margin-top:6px">Portfolio de fotos, sketches y memes; estilo unicorn.</p>
+        <div style="margin-top:10px"><a class="btn" href="#galeria">Ver galería</a></div>
+      </div>
+    </section>
+
+    <main>
+      <section>
+        <div id="feed" class="card">
+          <h2 style="margin-top:0">Feed — muestras</h2>
+          <div id="feedList"></div>
+        </div>
+
+        <div id="galeria" class="card" style="margin-top:14px">
+          <h3>Galería</h3>
+          <p class="muted">Imágenes desde capitan-spalding/amazing-people</p>
+          <div class="gallery">
+            <img src="https://raw.githubusercontent.com/capitan-spalding/amazing-people/main/img/photo1.jpg" alt="g1">
+            <img src="https://raw.githubusercontent.com/capitan-spalding/amazing-people/main/img/photo2.jpg" alt="g2">
+            <img src="https://raw.githubusercontent.com/capitan-spalding/amazing-people/main/img/photo3.jpg" alt="g3">
+          </div>
+        </div>
+      </section>
+
+      <aside>
+        <div id="profile" class="card">
+          <h3>Perfil</h3>
+          <div style="display:flex;gap:12px;align-items:center">
+            <img class="avatar" src="https://raw.githubusercontent.com/capitan-spalding/amazing-people/main/img/profile-example.jpg" alt="avatar">
+            <div>
+              <div style="font-weight:700">Blue Forest</div>
+              <div class="muted">Modelaje · Tattoos · Memes</div>
+            </div>
+          </div>
+          <div style="margin-top:12px">
+            <strong>Mini bio</strong>
+            <p class="muted" style="margin:6px 0 0 0">Fotógrafa y modelo; fan de paletas pastel y cómics.</p>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <h4>Contacto</h4>
+          <form id="contactForm" action="https://formspree.io/f/your-form-id" method="POST">
+            <label>Nombre<input name="name" required></label>
+            <label>Email<input type="email" name="email" required></label>
+            <label>Mensaje<textarea name="message" rows="3" required></textarea></label>
+            <button class="btn" type="submit">Enviar</button>
+          </form>
+        </div>
+      </aside>
+    </main>
+
+    <footer>
+      <div class="muted">© <span id="year"></span> Blue Forest · Fotos en capitan-spalding/amazing-people</div>
+    </footer>
+  </div>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+const feed = [
+  {title:"Sesión pastel: retratos", excerpt:"Luces suaves, paleta unicorn y poses.", url:"#", img:"https://raw.githubusercontent.com/capitan-spalding/amazing-people/main/img/photo1.jpg"},
+  {title:"Tattoos: mini galería", excerpt:"Sketches y tatuajes recientes.", url:"#", img:"https://raw.githubusercontent.com/capitan-spalding/amazing-people/main/img/photo2.jpg"},
+  {title:"Memes y vibes", excerpt:"Selección divertida para redes.", url:"#", img:"https://raw.githubusercontent.com/capitan-spalding/amazing-people/main/img/photo3.jpg"}
+];
+
+function renderFeed(list){
+  const el = document.getElementById('feedList');
+  el.innerHTML = '';
+  list.forEach(it=>{
+    const d = document.createElement('article');
+    d.className='feed-item';
+    d.innerHTML = `<img class="thumb" src="${it.img}" alt=""><div class="teaser"><h3>${it.title}</h3><p class="muted">${it.excerpt}</p><div style="margin-top:8px"><a class="btn" href="${it.url}">Ver</a></div></div>`;
+    el.appendChild(d);
+  });
+}
+renderFeed(feed);
+</script>
+</body>
+</html>
+blue-forest-8 — posts y feed.json (ejemplos)
+posts/photo-session.html
+
+Html
+
+
+Copiar
+<!doctype html><html lang="es"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Sesión pastel · Blue Forest</title><style>body{font-family:Inter,system-ui,Arial;background:#fffafc;color:#231a2b;margin:0;padding:18px}.container{max-width:900px;margin:0 auto}.card{background:#fff;padding:18px;border-radius:12px}a.back{color:#7b7280;text-decoration:none}</style></head><body><div class="container"><a class="back" href="/index.html">← Volver</a><div class="card"><h1>Sesión pastel: retratos</h1><p class="muted">Luces y paleta unicorn para retratos suaves.</p><article><p>Galería y notas de producción; enlaces a archivos en capitan-spalding/amazing-people.</p></article></div></div></body></html>
+posts/tattoos-mini.html
+
+Html
+
+
+Copiar
+<!doctype html><html lang="es"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Tattoos · Blue Forest</title><style>body{font-family:Inter,system-ui,Arial;background:#fffafc;color:#231a2b;margin:0;padding:18px}.container{max-width:900px;margin:0 auto}.card{background:#fff;padding:18px;border-radius:12px}a.back{color:#7b7280;text-decoration:none}</style></head><body><div class="container"><a class="back" href="/index.html">← Volver</a><div class="card"><h1>Tattoos: mini galería</h1><p class="muted">Sketches y tattoos recientes.</p><article><p>Pequeña selección y notas sobre inspiración y artista.</p></article></div></div></body></html>
+posts/memes.html
+
+Html
+
+
+Copiar
+<!doctype html><html lang="es"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Memes & Vibes · Blue Forest</title><style>body{font-family:Inter,system-ui,Arial;background:#fffafc;color:#231a2b;margin:0;padding:18px}.container{max-width:900px;margin:0 auto}.card{background:#fff;padding:18px;border-radius:12px}a.back{color:#7b7280;text-decoration:none}</style></head><body><div class="container"><a class="back" href="/index.html">← Volver</a><div class="card"><h1>Memes y vibes</h1><p class="muted">Selección divertida para redes sociales.</p><article><p>Imágenes y captions breves.</p></article></div></div></body></html>
+blue-forest-8 — feed.json
+
+Json
+
+
+Copiar
+[
+  {"title":"Sesión pastel: retratos","excerpt":"Luces suaves y paleta unicorn.","url":"/posts/photo-session.html","date":"2025-09-30","image":"/raw-placeholder"},
+  {"title":"Tattoos: mini galería","excerpt":"Sketches y tatuajes recientes.","url":"/posts/tattoos-mini.html","date":"2025-09-20","image":"/raw-placeholder"},
+  {"title":"Memes y vibes","excerpt":"Selección divertida para compartir.","url":"/posts/memes.html","date":"2025-09-10","image":"/raw-placeholder"}
+]
+Notas prácticas y pasos finales
+Reemplaza los src de imágenes por las rutas reales. Ejemplos útiles:
+
+raw GitHub: https://raw.githubusercontent.com/capitan-spalding/amazing-people/main/img/photo1.jpg
+
+avatar público: https://github.com/ozclef.png?size=240
+
+Sube los posts a /posts/ y publica con GitHub Pages (establece rama main y carpeta raíz o gh-pages según config).
+
+Si quieres, genero ahora mismo las variantes con tus imágenes reales: pásame 2–3 nombres de archivos (exactos) dentro de capitan-spalding/amazing-people y los incrusto automáticamente en gallery/teasers.
+
+¿Quieres que cree también un feed.json  combinado para tu panel central (el nav.json/aggregate) que ya teníamos? Puedo generarlo con los posts de ambos sitios.
+
+
+
+
+
+
+Editar en una página
+
+
+
+

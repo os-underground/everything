@@ -1,0 +1,166 @@
+
+
+
+
+Ayer
+Dijiste
+me enseñas a dividir porfiii fracciones  ⅜ ÷1 ½
+Copilot dijo
+¡Claro que sí! 😊 Vamos a dividir fracciones paso a paso usando tu ejemplo:
+⅜ ÷ 1½
+
+🧠 Paso a paso para dividir fracciones
+Convierte los números mixtos en fracciones impropias
+
+1½ se convierte en 3/2 (porque 1 × 2 + 1 = 3)
+
+Mantén la primera fracción y multiplica por el recíproco de la segunda
+
+El recíproco de 3/2 es 2/3
+
+Entonces:
+⅜ ÷ 1½ = ⅜ × 2/3
+
+Multiplica los numeradores y los denominadores
+
+Numeradores: 3 × 2 = 6
+
+Denominadores: 8 × 3 = 24
+Resultado: 6/24
+
+Simplifica la fracción
+
+6/24 se simplifica a ¼
+
+✅ Resultado final:
+⅜ ÷ 1½ = ¼
+
+¿Quieres que practiquemos otro ejemplo juntos? Puedo darte uno para resolver tú o lo hacemos paso a paso.
+
+
+
+
+
+Editar en una página
+Dijiste
+me explicas lo del reciproco porfavor
+Copilot dijo
+¡Por supuesto! El recíproco de una fracción es súper fácil de entender y muy útil cuando queremos dividir fracciones.
+
+🔄 ¿Qué es el recíproco?
+El recíproco de una fracción es simplemente darle la vuelta:
+
+Cambias el numerador (el número de arriba) por el denominador (el número de abajo).
+
+Por ejemplo:
+
+El recíproco de ⅔ es 3/2
+
+El recíproco de 5/1 es 1/5
+
+🧠 ¿Por qué usamos el recíproco al dividir?
+Cuando dividimos fracciones, en lugar de hacer una operación complicada, convertimos la división en multiplicación usando el recíproco.
+
+Por ejemplo:
+⅜ ÷ 1½  
+→ Convertimos 1½ en fracción impropia: 3/2  
+→ Tomamos el recíproco de 3/2, que es 2/3  
+→ Entonces hacemos: ⅜ × 2/3
+
+🎯 Regla mágica para dividir fracciones:
+"Multiplica por el recíproco"
+
+¿Quieres que practiquemos con otro ejemplo para que lo domines?
+
+
+
+
+
+Editar en una página
+Dijiste
+el mumero mito, se multiplica el entero o se suma ?
+Copilot dijo
+¡Buena pregunta! Vamos a aclarar cómo convertir un número mixto en una fracción impropia, que es lo que necesitas para dividir fracciones correctamente.
+
+🍰 ¿Qué es un número mixto?
+Un número mixto es una combinación de un número entero y una fracción.
+Por ejemplo: 1½ (se lee “uno y medio”).
+
+🔄 ¿Cómo convertirlo en fracción impropia?
+Usamos esta fórmula:
+
+(entero × denominador) + numerador  
+Ese resultado lo colocas como el nuevo numerador, y el denominador se queda igual.
+
+Ejemplo con 1½:
+Entero: 1
+
+Fracción: ½ → numerador: 1, denominador: 2
+
+Cálculo: (1 × 2) + 1 = 3
+
+Resultado: 3/2
+
+✅ Entonces:
+Se multiplica el entero por el denominador, y luego se suma el numerador.
+
+¿Quieres que practiquemos con otro número mixto? Puedo darte uno para que lo conviertas tú.
+
+
+
+
+
+Editar en una página
+Dijiste
+½ ÷ 3 ⅞
+Copilot dijo
+¡Vamos a resolverlo paso a paso! 😊
+
+🧮 Ejemplo:
+½ ÷ 3⅞
+
+1. ✏️ Convierte el número mixto a fracción impropia
+3⅞ →
+
+Entero: 3
+
+Fracción: ⅞
+
+Cálculo: (3 × 8) + 7 = 24 + 7 = 31
+
+Resultado: 31/8
+
+2. 🔄 Multiplica por el recíproco
+½ ÷ 31/8 →
+Convertimos la división en multiplicación:
+½ × 8/31
+
+3. ✖️ Multiplica numeradores y denominadores
+Numeradores: 1 × 8 = 8
+
+Denominadores: 2 × 31 = 62  
+Resultado: 8/62
+
+4. ➗ Simplifica la fracción
+8/62 se puede simplificar dividiendo ambos por 2:
+4/31
+
+✅ Resultado final:
+½ ÷ 3⅞ = 4/31
+
+¿Quieres que te dé uno para practicar tú? O lo resolvemos juntos paso a paso.
+
+
+
+
+
+
+Editar en una página
+
+Enviar un mensaje a Copilot
+
+
+Respuesta rápida
+
+
+

@@ -1,0 +1,193 @@
+
+
+
+>
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>WebRTC Ephemeral Chat — Copy/Paste / QR</title>
+<style>
+  body{font-family:system-ui,Segoe UI,Roboto,Arial;margin:18px;max-width:980px}
+  h1{font-size:1.2rem}
+  .row{display:flex;gap:10px;flex-wrap:wrap}
+  textarea{width:100%;min-height:6rem}
+  .panel{border:1px solid #ddd;padding:10px;border-radius:8px;margin-bottom:12px}
+  #log{height:220px;overflow:auto;background:#fafafa;padding:8px;border-radius:6px}
+  .msg{padding:6px;margin:6px 0;border-radius:6px;background:#fff;border:1px solid #eee}
+  .meta{font-size:.8rem;color:#666}
+  button{padding:8px 10px;border-radius:6px;border:1px solid #ccc;background:#fff}
+  input[type=number]{width:80px}
+</style>
+</head>
+<body>
+  <h1>WebRTC Ephemeral Chat (Copy/Paste / QR)</h1>
+
+  <div class="panel">
+    <div class="row">
+      <label>Tu nombre: <input id="nick" value="Anon" /></label>
+      <label>Auto-borrar (seg): <input id="autoDelete" type="number" min="0" value="10" /></label>
+      <label><input id="showCandidates" type="checkbox" checked /> Mostrar candidatos en señal</label>
+    </div>
+  </div>
+
+  <div class="panel">
+    <strong>Señalización (copy/paste o convertir a QR)</strong>
+    <p class="meta">Genera Oferta/Respuesta y copia el JSON. Puedes pegar la señal remota en el mismo cuadro y presionar "Aplicar".</p>
+    <div class="row">
+      <button id="createOffer">Crear Oferta (soy A)</button>
+      <button id="createAnswer">Prepararme para Responder (soy B)</button>
+      <button id="applySignal">Aplicar señal pegada (SDP/candidates)</button>
+      <button id="generateQR">Generar archivo de señal (descargar)</button>
+    </div>
+    <textarea id="signal" placeholder="Aquí aparecerá la oferta/respuesta y candidatos..."></textarea>
+  </div>
+
+  <div class="panel">
+    <strong>Chat (efímero — no se guarda en disco por defecto)</strong>
+    <div id="log" aria-live="polite"></div>
+    <div class="row" style="margin-top:8px">
+      <input id="msg" placeholder="Escribe tu mensaje..." style="flex:1"/>
+      <button id="send">Enviar</button>
+    </div>
+    <p class="meta">Advertencia: el otro participante puede copiar o fotografiar el mensaje. El borrado local no evita que el otro lo conserve.</p>
+  </div>
+
+<script>
+/* CONFIG */
+const ICE_CONFIG = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
+
+/* Estado */
+let pc = null;
+let dc = null;
+let nickEl = document.getElementById('nick');
+let autoDeleteSecEl = document.getElementById('autoDelete');
+let showCandidatesEl = document.getElementById('showCandidates');
+
+const logEl = document.getElementById('log');
+function appendMsg(text, fromMe=false){
+  const div = document.createElement('div'); div.className='msg';
+  div.textContent = text;
+  if(fromMe) div.style.borderColor = '#cce5ff';
+  logEl.appendChild(div);
+  logEl.scrollTop = logEl.scrollHeight;
+  return div;
+}
+
+function appendSystem(text){
+  const d = document.createElement('div'); d.className='meta'; d.textContent = text;
+  logEl.appendChild(d); logEl.scrollTop = logEl.scrollHeight;
+}
+
+/* Crear Peer y DataChannel */
+function createPeer(makeDataChannel=false){
+  pc = new RTCPeerConnection(ICE_CONFIG);
+  pc.onicecandidate = (e) => {
+    if(e.candidate){
+      // append candidate JSON to signal textarea if desired
+      if(showCandidatesEl.checked){
+        const cur = document.getElementById('signal').value.trim();
+        const line = JSON.stringify({candidate: e.candidate});
+        document.getElementById('signal').value = cur ? (cur + "\\n" + line) : line;
+      }
+    }
+  };
+  pc.onconnectionstatechange = ()=> appendSystem("Estado: " + pc.connectionState);
+  pc.ondatachannel = (ev)=> {
+    dc = ev.channel; setupChannel();
+  };
+  if(makeDataChannel){
+    dc = pc.createDataChannel('chat');
+    setupChannel();
+  }
+}
+
+function setupChannel(){
+  dc.onopen = ()=> appendSystem('-- Canal abierto --');
+  dc.onclose = ()=> appendSystem('-- Canal cerrado --');
+  dc.onmessage = (ev)=> {
+    // mensaje entrante: se muestra y se programa borrado según autoDelete
+    const txt = ev.data;
+    const el = appendMsg(txt, false);
+    const sec = parseInt(autoDeleteSecEl.value, 10) || 0;
+    if(sec > 0){
+      setTimeout(()=> {
+        try{ el.remove(); }catch(e){}
+      }, sec*1000);
+    }
+  };
+}
+
+/* UI Actions */
+document.getElementById('createOffer').onclick = async () => {
+  createPeer(true);
+  const offer = await pc.createOffer();
+  await pc.setLocalDescription(offer);
+  // show local SDP
+  document.getElementById('signal').value = JSON.stringify({sdp: pc.localDescription});
+  appendSystem('Oferta creada — comparte este JSON con el receptor.');
+};
+
+document.getElementById('createAnswer').onclick = () => {
+  // prepare to receive an offer: createPeer(false) then paste offer and Apply
+  createPeer(false);
+  appendSystem('Preparado para recibir oferta. Pega la oferta en el cuadro y haz click en Aplicar señal.');
+};
+
+document.getElementById('applySignal').onclick = async () => {
+  const raw = document.getElementById('signal').value.trim();
+  if(!raw) return alert('Pega la señal remota (JSON) aquí.');
+  // puede haber múltiples líneas JSON (candidatos); parseamos cada línea
+  const lines = raw.split('\\n').map(l=>l.trim()).filter(Boolean);
+  for(const ln of lines){
+    let obj;
+    try{ obj = JSON.parse(ln); } catch(e){ console.warn('skip non-json', ln); continue; }
+    if(obj.sdp){
+      // SDP: si es offer y somos quien debe responder, crear answer
+      await pc.setRemoteDescription(new RTCSessionDescription(obj.sdp));
+      if(obj.sdp.type === 'offer'){
+        const answer = await pc.createAnswer();
+        await pc.setLocalDescription(answer);
+        // poner la respuesta en la señal para que la copien de vuelta
+        const newVal = JSON.stringify({sdp: pc.localDescription});
+        document.getElementById('signal').value = newVal;
+        appendSystem('Oferta aplicada. Respuesta creada — devuelve el JSON al creador de la oferta.');
+      } else {
+        appendSystem('Respuesta aplicada.');
+      }
+    } else if(obj.candidate){
+      try{ await pc.addIceCandidate(obj.candidate); } catch(e){ console.warn('ICE add fail', e); }
+    }
+  }
+};
+
+document.getElementById('generateQR').onclick = () => {
+  // descarga la señal como archivo .webrtc.json para convertir a QR externo o enviar por AirDrop
+  const data = document.getElementById('signal').value;
+  if(!data) return alert('La señal está vacía. Genera oferta/respuesta primero.');
+  const blob = new Blob([data], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'signal.webrtc.json'; a.click();
+  URL.revokeObjectURL(url);
+};
+
+/* Mensajes efímeros: enviar */
+document.getElementById('send').onclick = () => {
+  const text = (nickEl.value || 'Anon') + ': ' + (document.getElementById('msg').value || '');
+  if(!dc || dc.readyState !== 'open') return alert('Canal no abierto.');
+  dc.send(text);
+  const el = appendMsg('(yo) ' + text, true);
+  const sec = parseInt(autoDeleteSecEl.value, 10) || 0;
+  if(sec > 0){
+    setTimeout(()=> { try{ el.remove(); }catch(e){} }, sec*1000);
+  }
+  // limpiar input
+  document.getElementById('msg').value = '';
+};
+
+/* Nota: no usamos localStorage por defecto. Si quisieras historial opcional, implementa con cuidado. */
+appendSystem('Interfaz lista. Flujo típico: (1) Offerer crea oferta y copia JSON; (2) Offerer comparte JSON con Answerer (copy/paste o QR); (3) Answerer pega y presiona Aplicar señal; (4) Answerer copia resultado (respuesta) y la devuelve al Offerer; (5) Offerer pega respuesta y aplica; (6) cuando el canal se abra, comenzad a chatear.');
+</script>
+</body>
+</html>

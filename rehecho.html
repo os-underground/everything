@@ -1,0 +1,108 @@
+
+
+
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>WebRTC P2P Chat (copy/paste)</title></head>
+<body>
+  <h2>WebRTC Chat (sin servidor, copy/paste)</h2>
+
+  <div>
+    <label>Tu nombre: <input id="nick" value="Yo"></label><br><br>
+
+    <button id="createOffer">Crear oferta (soy Offerer)</button>
+    <button id="createAnswer">Crear respuesta (soy Answerer)</button><br><br>
+
+    <div>
+      <textarea id="signal" rows="8" cols="80" placeholder="Aquí aparecerá la oferta/respuesta. Copia/pega entre pares"></textarea><br>
+      <button id="applySignal">Aplicar señal pegada</button>
+    </div>
+
+    <h3>Chat</h3>
+    <textarea id="log" rows="10" cols="80" readonly></textarea><br>
+    <input id="msg" placeholder="Mensaje" style="width:60%"/>
+    <button id="send">Enviar</button>
+  </div>
+
+<script>
+const cfg = {iceServers:[{urls:"stun:stun.l.google.com:19302"}]}; // STUN público
+let pc = null;
+let dc = null;
+const log = document.getElementById('log');
+const signal = document.getElementById('signal');
+const nick = document.getElementById('nick');
+
+function appendLine(t){ log.value += t + "\\n"; log.scrollTop = log.scrollHeight; }
+
+function makePeer(createDataChannel=false){
+  pc = new RTCPeerConnection(cfg);
+  pc.onicecandidate = (e)=> {
+    if(!e.candidate) return;
+    // append candidate to signal area so user can copy/paste
+    signal.value += JSON.stringify({candidate:e.candidate}) + "\\n";
+  };
+  pc.onconnectionstatechange = ()=> appendLine("STADO: " + pc.connectionState);
+  pc.ondatachannel = (ev)=> {
+    dc = ev.channel;
+    setupDataChannel();
+  };
+  if(createDataChannel){
+    dc = pc.createDataChannel('chat');
+    setupDataChannel();
+  }
+}
+
+function setupDataChannel(){
+  dc.onopen = ()=> appendLine("-- Canal abierto --");
+  dc.onclose = ()=> appendLine("-- Canal cerrado --");
+  dc.onmessage = (e)=> appendLine(`${new Date().toLocaleTimeString()} ${e.data}`);
+}
+
+document.getElementById('createOffer').onclick = async ()=>{
+  makePeer(true);
+  const offer = await pc.createOffer();
+  await pc.setLocalDescription(offer);
+  // pegar la oferta (sdp + candidatos aparecerán luego en signal)
+  signal.value = JSON.stringify({sdp: pc.localDescription});
+  appendLine("Oferta creada. Copia el texto y compártelo con el otro dispositivo.");
+};
+
+document.getElementById('createAnswer').onclick = async ()=>{
+  // el answerer espera recibir la oferta pegada y luego creará respuesta
+  makePeer(false);
+  appendLine("Pega la oferta en el cuadro y haz click en 'Aplicar señal pegada'");
+};
+
+document.getElementById('applySignal').onclick = async ()=>{
+  const lines = signal.value.trim().split('\\n').map(l=>l.trim()).filter(Boolean);
+  for(const l of lines){
+    try{
+      const obj = JSON.parse(l);
+      if(obj.sdp){
+        // si es oferta o respuesta
+        const desc = new RTCSessionDescription(obj.sdp);
+        await pc.setRemoteDescription(desc);
+        if(desc.type === 'offer'){
+          const answer = await pc.createAnswer();
+          await pc.setLocalDescription(answer);
+          // mostrar la respuesta para copiar
+          signal.value = JSON.stringify({sdp: pc.localDescription}) + "\\n";
+          appendLine("Respuesta creada. Copia el texto y devuélvelo al offerer.");
+        }
+      } else if(obj.candidate){
+        try{
+          await pc.addIceCandidate(obj.candidate);
+        }catch(e){ console.warn('ICE add fail',e) }
+      }
+    }catch(err){ console.warn('parse fail', err) }
+  }
+};
+
+document.getElementById('send').onclick = ()=>{
+  const m = `${nick.value||'Anon'}: ${document.getElementById('msg').value}`;
+  if(dc && dc.readyState === 'open'){ dc.send(m); appendLine('(yo) ' + m); document.getElementById('msg').value = ''; }
+  else alert('Canal no abierto aún');
+};
+</script>
+</body>
+</html>

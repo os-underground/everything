@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+				<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8">
+				<title>Hello, World!</title>
+</head>
+<body>
+				<h1>
+								Hello, World!
+				</h1>
+</body>
+</html>
+Sí — te ayudo ahora mismo. 💛
+Te dejo dos versiones listas para usar (copiar/pegar): una estática (pegar tus títulos directo en el HTML) y otra dinámica que lee titulos.txt y los muestra como <h2> (secciones) y <h3> (títulos). Ambas tienen un diseño limpio y profesional para que lo publiques en GitHub Pages o lo abras localmente.
+
+Pega lo que prefieras en un archivo index_preview.html en la raíz de tu repo y pon project_styles.css (si ya lo tienes) o usa el estilo embebido.
+
+
+---
+
+Opción A — Página ESTÁTICA (pega tus títulos manualmente)
+
+Copia todo en index_preview_static.html y edita las líneas donde están <!-- TU TÍTULOS AQUÍ -->.
+
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Previews — Ozclef (Estático)</title>
+  <style>
+    :root{
+      --bg:#fbfbfc;
+      --card:#ffffff;
+      --muted:#6b7280;
+      --accent:#5350C4;
+      --border:#e6e6ee;
+      --radius:12px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
+    }
+    *{box-sizing:border-box}
+    body{font-family:Inter,system-ui,Arial,Helvetica,sans-serif;margin:18px;background:var(--bg);color:#0f1724}
+    header{display:flex;align-items:center;gap:14px}
+    header h1{font-size:20px;margin:0;color:var(--accent)}
+    header p{margin:0;color:var(--muted);font-size:13px}
+    .container{max-width:980px;margin:18px auto}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:0 6px 18px rgba(15,23,42,0.04)}
+    .meta{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+    .meta .author{font-size:13px;color:var(--muted)}
+    .grid{display:grid;grid-template-columns:1fr;gap:14px}
+    @media(min-width:880px){ .grid{grid-template-columns:repeat(2,1fr)} }
+    section.group{padding:12px;border-radius:10px;border:1px dashed var(--border);background:linear-gradient(180deg,#fff, #fbfbfb)}
+    section.group h2{margin:0 0 8px 0;font-size:18px;color:#111}
+    section.group h3{margin:6px 0;font-size:15px;color:#333;font-weight:600}
+    .note{font-size:13px;color:var(--muted);margin-top:10px}
+    footer{margin-top:18px;font-size:13px;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <h1>Previews — Ozclef</h1>
+        <p>Índice profesional (estático). Títulos mostrados con &lt;h2&gt; y &lt;h3&gt;.</p>
+      </div>
+    </header>
+
+    <div class="card">
+      <div class="meta">
+        <div class="author">Autor: <strong>ozclef</strong></div>
+        <div class="small note">📌 Presentación profesional — solo títulos</div>
+      </div>
+
+      <div class="grid">
+        <!-- Sección 1 -->
+        <section class="group">
+          <h2>HTML Demos</h2>
+          <!-- Títulos (h3) -->
+          <h3>Landing interactiva - demo</h3>
+          <h3>Widget de chat - preview</h3>
+          <h3>Formulario con validación</h3>
+        </section>
+
+        <!-- Sección 2 -->
+        <section class="group">
+          <h2>React / JSX</h2>
+          <h3>Mini-app React: contador</h3>
+          <h3>Galería dinámica (JSX)</h3>
+          <h3>Componente modal</h3>
+        </section>
+
+        <!-- Puedes duplicar secciones -->
+        <section class="group">
+          <h2>Scripting y Tools</h2>
+          <h3>Generador de README (script)</h3>
+          <h3>Watcher Termux</h3>
+        </section>
+
+        <section class="group">
+          <h2>Proyectos varios</h2>
+          <h3>Demo experimental — ver</h3>
+          <h3>Mini-juego: laberinto</h3>
+        </section>
+      </div>
+
+      <p class="note">Consejo: si quieres que cada título abra el archivo, sustitúyelo por un enlace: &lt;a href="ruta/archivo.html"&gt;&lt;h3&gt;Título&lt;/h3&gt;&lt;/a&gt;</p>
+      <footer>Última actualización: <em>inserta fecha</em></footer>
+    </div>
+  </div>
+</body>
+</html>
+
+
+---
+
+Opción B — Página DINÁMICA (lee titulos.txt y genera <h2> y <h3>)
+
+Esta versión intenta leer titulos.txt (el que genera el script) con líneas en formato:
+
+[SECCIÓN] Título — ruta/archivo.html
+
+Si no existe, muestra instrucciones. Guarda como index_preview.html.
+
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Previews — Ozclef (Dinámico)</title>
+  <style>
+    :root{--bg:#fbfbfc;--card:#fff;--muted:#6b7280;--accent:#5350C4;--border:#e6e6ee;--radius:12px}
+    *{box-sizing:border-box}
+    body{font-family:Inter,system-ui,Arial;margin:18px;background:var(--bg);color:#0f1724}
+    .container{max-width:980px;margin:18px auto}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:0 8px 20px rgba(10,15,30,0.04)}
+    header h1{color:var(--accent);margin:0}
+    .group{margin-bottom:14px;padding:12px;border-radius:10px;border:1px dashed var(--border);background:linear-gradient(180deg,#fff,#fbfbfb)}
+    .group h2{margin:0 0 8px 0;font-size:18px}
+    .group h3{margin:6px 0;font-size:15px}
+    .note{font-size:13px;color:var(--muted)}
+    a.title-link{color:inherit;text-decoration:none}
+    code.path{float:right;color:var(--muted);font-size:13px}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <header>
+        <h1>Previews — Ozclef</h1>
+        <p class="note">Sección automática desde <code>titulos.txt</code>. Muestra &lt;h2&gt; (sección) y &lt;h3&gt; (títulos).</p>
+      </header>
+
+      <div id="content">Cargando lista…</div>
+
+      <p class="note" style="margin-top:12px">Si no tienes `titulos.txt`, genera uno con: <code>find . -type f \( -iname "*.html" -o -iname "*.js" -o -iname "*.jsx" -o -iname "*.css" \) &gt; titulos.txt</code></p>
+    </div>
+  </div>
+
+<script>
+async function fetchTitulos(){
+  try{
+    const r = await fetch('titulos.txt');
+    if(!r.ok) throw new Error('No titulos.txt');
+    const text = await r.text();
+    const lines = text.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+    // Parse lines like: [SECTION] Title — path OR Title — path OR ./path/file.html
+    const groups = {};
+    for(const line of lines){
+      let section = 'OTROS';
+      let title = line;
+      let path = null;
+      // try split by '—' (emdash) or '-' fallback
+      let parts = line.split('—');
+      if(parts.length===1) parts = line.split(' - ');
+      if(parts.length>1){
+        // left could be "[SEC] Title" or just Title
+        const left = parts.slice(0,parts.length-1).join('—').trim();
+        path = parts[parts.length-1].trim();
+        // If left starts with [SEC]
+        const m = left.match(/^\[(.*?)\]\s*(.*)$/);
+        if(m){ section = m[1].trim(); title = m[2].trim(); }
+        else {
+          // try to see if left contains section-like words before a /
+          title = left;
+          // leave section as OTROS
+        }
+      } else {
+        // no separator — treat whole as path or filename
+        path = line;
+        title = line.split('/').pop();
+      }
+      groups[section] = groups[section] || [];
+      groups[section].push({title, path});
+    }
+
+    // render
+    const container = document.getElementById('content');
+    container.innerHTML = '';
+    Object.keys(groups).sort().forEach(sec=>{
+      const el = document.createElement('section');
+      el.className='group';
+      const h2 = document.createElement('h2'); h2.innerText = sec + ' (' + groups[sec].length + ')';
+      el.appendChild(h2);
+      groups[sec].forEach(item=>{
+        const h3 = document.createElement('h3');
+        // if file ends with .html, make link
+        const a = document.createElement('a'); a.className='title-link';
+        a.innerText = item.title;
+        if(item.path && (item.path.endsWith('.html') || item.path.endsWith('.htm'))){
+          a.href = item.path; a.target='_blank';
+        } else if(item.path){
+          // still link, might be js/jsx; open raw
+          a.href = item.path; a.target='_blank';
+        }
+        h3.appendChild(a);
+        if(item.path){
+          const code = document.createElement('code'); code.className='path'; code.innerText = item.path;
+          h3.appendChild(code);
+        }
+        el.appendChild(h3);
+      });
+      container.appendChild(el);
+    });
+
+  }catch(err){
+    document.getElementById('content').innerHTML = '<p class="note">No se encontró <code>titulos.txt</code>. Genera la lista con el comando <code>find</code> o pega un archivo <code>titulos.txt</code> en la raíz.</p>';
+  }
+}
+fetchTitulos();
+</script>
+</body>
+</html>
+
+
+---
+
+Cómo usar (rápido)
+
+1. Si vas a usar la opción dinámica, asegúrate de tener titulos.txt en la misma carpeta (ejecuta en Termux o PC):
+
+
+
+find . -type f \( -iname "*.html" -o -iname "*.js" -o -iname "*.jsx" -o -iname "*.css" \) > titulos.txt
+
+2. Sube ambos archivos al repo (o abre localmente con python3 -m http.server 8000) y abre http://localhost:8000/index_preview.html.
+
+
+3. Si quieres enlazar títulos a archivos, edita titulos.txt para que cada línea termine en — ruta/archivo.html. El dinámico intentará crear el enlace.
+
+
+
+
+---
+
+Extras (pequeñas recomendaciones)
+
+Para proteger tus capturas: agrega watermark en las imágenes (tu-nombre © ozclef) antes de publicarlas.
+
+En el README de tu repo incluye una frase clara: “Código completo se entrega solo tras pago”.
+
+Si quieres, te hago ahora una versión con tu nombre y 6 títulos reales si pegas aquí tu titulos.txt o me das 6 títulos de ejemplo y la fecha: lo personalizo al toque.
+
+
+
+---
+
+¿Quieres que haga ya la versión final con tus títulos reales? Pega aquí tu titulos.txt o escribe 6–12 títulos y yo te devuelvo el HTML ya con ellos listos. 💛
+

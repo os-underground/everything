@@ -1,0 +1,57 @@
+# SAFE-PLAYBOOK
+
+Guía corta para estudiar y probar offline sin riesgo — mantenla como referencia antes de ejecutar cualquier script.
+
+## Objetivo
+Tener una lista de pasos seguros para revisar, probar y luego ejecutar tus scripts (o subir archivos) sin correr riesgo de encriptar o borrar datos reales.
+
+## 1) Principios rápidos
+- **Nada se ejecuta automáticamente aquí.** Los archivos en el canvas son solo texto; no ejecutan nada en tu teléfono o en GitHub.
+- No ejecutes scripts hasta probarlos con datos de prueba.
+- Nunca pongas contraseñas, claves privadas o tokens en el código. Usa Secrets **solo** cuando sepas exactamente por qué.
+
+## 2) Qué NO activar todavía (lista práctica)
+- No actives **Actions** en un repo real. (Repo → Settings → Actions → General → Disable Actions for this repository)
+- No agregues **Secrets** (ENCRYPT_PASS, PAT, etc.) hasta que lo pruebes en un repo de prueba.
+- No ejecutes scripts (`.sh`, `.js`, `.py`) en tu máquina con datos reales sin antes probar con datos dummy.
+- No subas los `.part-*` ni los `.enc` a un repo público.
+
+## 3) Cómo revisar un script sin correrlo
+- Abre el archivo en un editor (VSCode/Notepad++/Obsidian). Lee las líneas que hagan `rm`, `mv`, `curl`, `gpg` o `git push`.
+- Busca flags tipo `--yes` o `--force` y coméntalos con `#` hasta que confirmes lo que hacen.
+- Si ves `ENCRYPT_PASS` o `secrets.*`, entiende de dónde viene esa variable antes de habilitarla.
+
+## 4) Pasos seguros para probar localmente
+1. Crea una carpeta de prueba: `mkdir prueba && cp -r carpeta_que_no_importa prueba/`.
+2. Ejecuta pasos manuales y uno por uno:
+   - `zip -r demo.zip prueba/`
+   - `gpg --symmetric --cipher-algo AES256 demo.zip`  (te pedirá passphrase)
+   - `split -b 25M demo.zip.gpg demo.zip.gpg.part-`
+3. Reensambla y desencripta en la máquina de prueba:
+   - `cat demo.zip.gpg.part-* > demo_reassembled.gpg`
+   - `gpg --output demo.zip --decrypt demo_reassembled.gpg`
+   - `unzip demo.zip -d demo_unzipped`
+4. Verifica que los archivos desencriptados coinciden con el original.
+5. Si todo OK, puedes adaptar el script para usar los nombres correctos.
+
+## 5) Recomendación para pruebas más seguras
+- Usa una **máquina virtual** o contenedor (VirtualBox/WSL/Docker) si te da miedo tocar tu sistema principal.
+- Alternativa: crea un repo **privado** de prueba en GitHub y solo sube archivos small dummy.
+
+## 6) Cómo mantener todo OFFLINE
+- Guarda los scripts como archivos `.sh`, `.js`, `.md` en tu dispositivo.
+- No instales ni ejecutes nada que requiera subir a la web.
+- Abre el `zip-folder-reader-and-scripts.html` localmente y úsalo para visualizar sin subir nada.
+
+## 7) Si en el futuro quieres automatizar con Actions
+- Crea primero un repo de prueba y un secret de prueba (sin datos reales).
+- En Settings → Actions → General: controla si las Actions corren desde forks y quién puede activar workflows.
+- Revisa los logs de Actions en modo prueba y no permitas workflows desconocidos en repos principales.
+
+## 8) Contacto y ayuda
+Si quieres, te puedo:
+- Generar ejemplos dummy (mini-zip) y scripts ya probados para ejecutar en local.
+- Crear una checklist personalizada para tu proyecto real.
+
+> Nota: Si en cualquier momento quieres que haga una copia separada de alguno de los scripts en el canvas (por ejemplo `encrypt_and_split.sh` o `README.md`) dímelo y lo guardo como archivos individuales sin ejecutar nada.
+

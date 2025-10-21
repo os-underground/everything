@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Chat local</title></head>
+<body>
+  <h2>Chat local (misma máquina, varias pestañas)</h2>
+  <div>
+    <textarea id="log" rows="10" cols="60" readonly></textarea><br>
+    <input id="nick" placeholder="Tu nombre" value="Yo"/>
+    <input id="msg" placeholder="Mensaje" style="width:50%"/>
+    <button id="send">Enviar</button>
+    <label><input id="persist" type="checkbox"/> Guardar en localStorage</label>
+  </div>
+
+<script>
+const ch = new BroadcastChannel('mini_chat_channel');
+const log = document.getElementById('log');
+const nick = document.getElementById('nick');
+const msg = document.getElementById('msg');
+const persist = document.getElementById('persist');
+
+function appendLine(t){
+  log.value += t + "\\n";
+  log.scrollTop = log.scrollHeight;
+}
+
+ch.onmessage = e => {
+  const d = e.data;
+  appendLine(`[${new Date(d.t).toLocaleTimeString()}] ${d.from}: ${d.text}`);
+};
+
+document.getElementById('send').onclick = ()=>{
+  const text = msg.value.trim();
+  if(!text) return;
+  const payload = {from: nick.value||'Anon', text, t: Date.now()};
+  ch.postMessage(payload);
+  if(persist.checked){
+    // opcional: guarda en localStorage (si quieres)
+    const key = 'mini_chat_history';
+    const cur = JSON.parse(localStorage.getItem(key) || '[]');
+    cur.push(payload);
+    localStorage.setItem(key, JSON.stringify(cur));
+  }
+  msg.value = '';
+};
+
+// opcional: mostrar historial guardado
+const hist = JSON.parse(localStorage.getItem('mini_chat_history') || '[]');
+if(hist.length) hist.forEach(h=>appendLine(`[hist] ${new Date(h.t).toLocaleTimeString()} ${h.from}: ${h.text}`));
+</script>
+</body>
+</html>

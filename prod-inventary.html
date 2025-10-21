@@ -1,0 +1,531 @@
+
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>inventary Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+				
+  <style>
+				
+ body {
+ 				
+font-family: Arial, sans-serif;
+     margin: 7;
+    background: linear-gradient(135deg, #00c3ff 0%, #ffff1c 100%);
+      min-height: 1000;
+      display: flex;
+  }
+    .navbar {
+      background: linear-gradient(90deg, #43cea2 0%, #185a9d 100%);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(30, 41, 59, 0.18);
+      border-radius: 0 0 14px 14px;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-height: 50px;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+    }
+.input {
+  width:200px; height: 30px; margin:1px 2px 1px; box-shadow:2px ;
+}
+    .footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      font-size: 0.95em;
+      background: linear-gradient(90deg, #43cea2 0%, #B0D7FFA8 100%);
+      color: #fff;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 10;
+    }
+
+    .menu-btn,
+    .login-btn,
+    .logout-btn {
+      background: linear-gradient(90deg, #f7971e 0%, #ffd200 100%);
+      color: #232323;
+      border: none;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.14);
+      padding: 10px 14px;
+      font-weight: bold;
+      cursor: pointer;
+      margin: 0 4px;
+      font-size: 1em;
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+
+    .menu-btn.active {
+      background: #16a34a;
+    }
+
+    .card {
+      background: #fafafa;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(30, 41, 59, 0.26);
+      border: none;
+      margin: 16px auto;
+      padding: 20px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-width: 600px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card img {
+      width: 100%;
+      border-radius: 8px;
+    }
+
+    .crud-btn {
+      background: #0ea5e9;
+      color: #fff;
+      border-bottom: 4px;
+      border: none;
+      border-radius: 4px;
+      padding: 7px 14px;
+      cursor: pointer;
+      margin-right: 8px;
+      font-size: 0.95em;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    /* Estilos del Portal Estudiantes */
+    .layout {
+      display: flex;
+      flex-grow: 1;
+      padding-top: 80px;
+      padding-bottom: 60px;
+    }
+
+    .sidebar-left {
+      width: 250px;
+      background: #f0f0f0;
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+      overflow-y: auto;
+      border:3px;
+    }
+
+    .sidebar-left ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+   .sidebar-left li a {
+      display: block;
+      padding: 10px;
+      margin-bottom: 5px;
+      background: #E0E0E0C4;
+      border-radius: 5px;
+      text-decoration: none;
+      color: #333;
+      transition: background 0.2s;
+    }
+    .sidebar-left li a:hover {
+      background: #d4d4d4;
+    }
+    .main-content {
+      flex-grow: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+ /* Estilos para el inventario */
+  .product-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .product-card {
+      background: #f9f9f9;
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    } porque k
+    .product-card h3 {
+      margin: 0;
+      color: #555;
+    }
+    .product-card span {
+      color: #777;
+    }
+    .product-card button {
+      background: #0ea5e9;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .product-card .delete-btn {
+      background: #dc2626;
+    }
+
+    .form-container {
+      margin-top: 30px;
+      padding: 20px;
+      background: #fafafa;
+      border-radius: 8px;
+    }
+
+    .form-container input,
+    .form-container button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
+
+    .form-container button {
+      background: #16a34a;
+      color: white;
+      font-size: 1.1em;
+      cursor: pointer;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+<div class="navbar">
+ <div>
+   <span style="font-weight:bold;">Mi Panel Admin</span>
+    </div>
+      <div>
+    <input type="text" style="width:200px; height: 20px; margin:1px 2px 1px; box-shadow:2px ;" />
+    <button class="searchButton" id="searchButtonId"style="width:100px; height: 20px; margin:1px 2px 1px; box-shadow:2px ; ; background:#f26488; ">BUSCAR</button>
+  </div>
+    <div>
+      <button class="menu-btn" onclick="showSection('autos')">Venta de Autos</button>
+      <button class="menu-btn" onclick="showSection('estudiantes')">Portal Estudiantes</button>
+    </div>
+  </div>
+
+  <div class="layout">
+    <aside class="sidebar-left">
+        <div>
+    <input type="text" style="width:200px; height: 20px; margin:1px 2px 1px; box-shadow:2px ;"/>
+    <button class="searchButton" id"searchButtonId"style="width:100px; height: 20px; margin:1px 2px 1px; box-shadow:2px ; ; background:#f26488; ">BUSCAR</button>
+  </div>
+      <ul>
+        <label>
+        <li><a href="#" onclick="showPage('crudPageAutos')">Panel de Administración de Autos</a>
+        </li>
+      
+        <li>
+          </label>
+          <label for="">
+            
+          </label><a href="#" onclick="showPage('inventoryPage')">Inventario de Productos (Oxxo)</a>
+          </label>
+          </li> 
+        </ul> 
+    </aside>
+
+    <div class="main-content" id="main-content"> 
+    <div>
+    <input type="text" style=""
+    <tag>
+      <!--Tab to edit-->
+    </tag>" />
+    <button class="searchButton" id"searchButtonId"style="width:100px; height: 20px; margin:1px 2px 1px; box-shadow:2px ; ; background:#f26488; ">BUSCAR</button>
+  </div>
+      <div id="crudPageAutos" class="section">
+        <h2>Panel de Administración de Autos</h2>
+        <button class="crud-btn" id="addItemBtn">Agregar Nuevo Vehículo</button>
+        <div id="addForm" class="hidden form-container">
+          <input type="text" id="itemNombre" placeholder="Marca y modelo">
+          <input type="text" id="itemTipo" placeholder="Tipo: auto/moto">
+          <input type="text" id="itemPrecio" placeholder="Precio">
+          <input type="text" id="itemImagen" placeholder="URL de imagen (opcional)">
+          <button class="crud-btn" id="saveItemBtn">Guardar</button>
+          <button class="crud-btn" id="cancelItemBtn" style="background:#64748b;">Cancelar</button>
+        </div>
+        <div id="crudList" class="product-list"></div>
+      </div>
+
+      <div id="inventoryPage" class="section hidden">
+        <h2>Inventario de Productos Oxxo</h2>
+          <div>
+    <input type="text" style="width:200px; height: 20px; margin:3px 2px 6px; box-shadow:2px ;" />
+    <button class="searchButton" id"searchButtonId"style="width:100px; height: 20px; margin:3px 2px 5px; box-shadow:2px ; ; background:#f26488; ">BUSCAR</button>
+  </div>
+        <div class="form-container">
+          <h2>Agregar/Editar Producto</h2>
+          <form id="productForm">
+            <input type="hidden" id="productId">
+            <input type="text" id="productName" placeholder="Nombre del Producto" required>
+            <input type="number" id="productPrice" placeholder="Precio" step="0.01" required>
+            <input type="number" id="productQuantity" placeholder="Cantidad" required>
+            <button type="submit">Guardar Producto</button>
+          </form>
+        </div>
+        <div class="product-list" id="productList"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div>
+      © 2025 Mi Proyecto Combinado.
+    </div>
+    <div>
+      <a href="#" style="color:#fff;">Contacto</a>
+    </div>
+  </div>
+
+				
+
+  <script>
+    // --- Lógica del CRUDS ---
+    let items = [{
+      id: 1,
+      nombre: "Toyota Corolla",
+      tipo: "auto",
+      precio: "$50,000",
+      imagen: "https://images.unsplash.com/photo-1511918984145-48de785d4c4e?fit=crop&w=400&q=80"
+    }];
+    let nextId = items.length + 1;
+    let editId = null;
+
+    function cargarItemsAutos() {
+      const listContainer = document.getElementById('crudList');
+      if (!listContainer) return;
+      let html = "";
+      items.forEach(item => {
+        html += `<div class="card">
+                    <img src="${item.imagen || 'https://via.placeholder.com/400x200'}" alt="${item.nombre}">
+                    <strong>${item.nombre}</strong>
+                    <span>Tipo: ${item.tipo}</span>
+                    <span>Precio: ${item.precio}</span>
+                    <button class="crud-btn" onclick="editarItemAutos(${item.id})">Editar</button>
+                    <button class="crud-btn" style="background:#dc2626;" onclick="eliminarItemAutos(${item.id})">Eliminar</button>
+                  </div>`;
+      });
+      listContainer.innerHTML = html;
+    }
+
+    document.getElementById('addItemBtn').onclick = () => {
+      editId = null;
+      document.getElementById('addForm').classList.remove('hidden');
+      document.getElementById('itemNombre').value = "";
+      document.getElementById('itemTipo').value = "";
+      document.getElementById('itemPrecio').value = "";
+      document.getElementById('itemImagen').value = "";
+    };
+
+    document.getElementById('cancelItemBtn').onclick = () => {
+      document.getElementById('addForm').classList.add('hidden');
+    };
+
+    document.getElementById('saveItemBtn').onclick = () => {
+      const nombre = document.getElementById('itemNombre').value;
+      const tipo = document.getElementById('itemTipo').value;
+      const precio = document.getElementById('itemPrecio').value;
+      const imagen = document.getElementById('itemImagen').value;
+      if (!nombre || !tipo || !precio) return alert("Completa todos los campos");
+      if (editId) {
+        const idx = items.findIndex(i => i.id === editId);
+        if (idx > -1) {
+          items[idx] = {
+            id: editId,
+            nombre,
+            tipo,
+            precio,
+            imagen
+          };
+        }
+      } else {
+        items.push({
+          id: nextId++,
+          nombre,
+          tipo,
+          precio,
+          imagen
+        });
+      }
+      cargarItemsAutos();
+      document.getElementById('addForm').classList.add('hidden');
+    };
+
+    window.editarItemAutos = function(id) {
+      const item = items.find(i => i.id === id);
+      if (!item) return;
+      editId = id;
+      document.getElementById('addForm').classList.remove('hidden');
+      document.getElementById('itemNombre').value = item.nombre;
+      document.getElementById('itemTipo').value = item.tipo;
+      document.getElementById('itemPrecio').value = item.precio;
+      document.getElementById('itemImagen').value = item.imagen || "";
+    }
+
+    window.eliminarItemAutos = function(id) {
+      if (!confirm("¿Seguro que deseas eliminar este vehículo?")) return;
+      items = items.filter(i => i.id !== id);
+      cargarItemsAutos();
+    }
+
+    // --- Lógica del Inventario Oxxo ---
+    const form = document.getElementById('productForm');
+    const listContainer = document.getElementById('productList');
+//   let productos = [{
+ //     id: 1,
+ //     nombre: "tortillas",
+//      precio: 19.00,
+//      cantidad: 10
+ //   }, {
+ //     id: 2,
+ //     nombre: "huevo",
+//      precio: 43.00,
+ //     cantidad: 21
+ //   }, ];
+
+let productos = [
+  { id: 1, nombre: "tortillas", precio: 19.00, cantidad: 10 },
+  { id: 2, nombre: "huevo", precio: 43.00, cantidad: 21 },
+  { id: 3, nombre: "pan Teleras", precio: 5.00, cantidad: 10 },
+  { id: 4, nombre: "Pan dulce", precio: 7.00, cantidad: 1 },
+  { id: 5, nombre: "azúcar", precio: 26.00, cantidad: 10 },
+  { id: 6, nombre: "chips fuego", precio: 20.00, cantidad: 3 },
+  { id: 7, nombre: "chips sal", precio: 20.00, cantidad: 2 },
+  { id: 8, nombre: "chips jalapeño", precio: 20.00, cantidad: 5 },
+  { id: 9, nombre: "Takis brava", precio: 18.00, cantidad: 4 },
+  { id: 10, nombre: "originales", precio: 18.00, cantidad: 3 },
+  { id: 11, nombre: "guacamole", precio: 18.00, cantidad: 3 },
+  { id: 12, nombre: "azules", precio: 18.00, cantidad: 4 },
+  { id: 13, nombre: "Chile y limón", precio: 18.00, cantidad: 1 },
+  { id: 14, nombre: "Fuego", precio: 18.00, cantidad: 1 },
+  { id: 15, nombre: "Barcel Sal", precio: 16.00, cantidad: 2 },
+  { id: 16, nombre: "Barcel Mexicanas Adobadas", precio: 16.00, cantidad: 1 },
+  { id: 17, nombre: "Runner Azules", precio: 16.00, cantidad: 2 },
+  { id: 18, nombre: "Limón y Sal", precio: 16.00, cantidad: 3 },
+  { id: 19, nombre: "Fuego", precio: 16.00, cantidad: 2 },
+  { id: 20, nombre: "originales", precio: 16.00, cantidad: 1 },
+  { id: 21, nombre: "Big Mix Inglesa", precio: 20.00, cantidad: 1 },
+  { id: 22, nombre: "Big Mix Queso", precio: 20.00, cantidad: 1 },
+  { id: 23, nombre: "pop queso", precio: 12.00, cantidad: 1 },
+  { id: 24, nombre: "santa clara entera", precio: 32.00, cantidad: 5 },
+  { id: 25, nombre: "santa clara deslaxtosada", precio: 33.00, cantidad: 1 },
+  { id: 26, nombre: "Lala entera 1litro", precio: 32.00, cantidad: 2 },
+  { id: 27, nombre: "nutri leche", precio: 23.00, cantidad: 2 },
+  { id: 28, nombre: "Lala 100", precio: 38.00, cantidad: 1 },
+  { id: 29, nombre: "santa clara Fresa 200ml", precio: 14.00, cantidad: 3 },
+  { id: 30, nombre: "sabrolet", precio: 15.00, cantidad: 30 },
+  { id: 31, nombre: "Santa clara 200ml choco", precio: 14.00, cantidad: 5 },
+  { id: 32, nombre: "santa clara 35 ML choco", precio: 17.00, cantidad: 6 },
+  { id: 33, nombre: "santa clara 355 mal fresa", precio: 17.00, cantidad: 2 },
+  { id: 34, nombre: "Nito 300", precio: 14.00, cantidad: 2 },
+  { id: 35, nombre: "Coca 1.35", precio: 32.00, cantidad: 9 },
+  { id: 36, nombre: "Coca 1.75", precio: 33.00, cantidad: 4 },
+  { id: 37, nombre: "coca 2.25", precio: 38.00, cantidad: 9 },
+  { id: 38, nombre: "coca 3Litros", precio: 44.00, cantidad: 5 },
+  { id: 39, nombre: "COCA RET 2,5", precio: 38.00, cantidad: 16 },
+  { id: 40, nombre: "Coca chubby SA", precio: 10.00, cantidad: 12 },
+  { id: 41, nombre: "Coca Mini pet", precio: 12.00, cantidad: 16 },
+  { id: 42, nombre: "Coca Lata", precio: 20.00, cantidad: 11 },
+  { id: 43, nombre: "Coca Ret 500 mil", precio: 15.00, cantidad: 3 },
+  { id: 44, nombre: "Coca 400ml", precio: 14.00, cantidad: 9 },
+  { id: 45, nombre: "Coca 600ml", precio: 20.00, cantidad: 11 },
+  { id: 46, nombre: "Coca Ret 1 1/4", precio: 27.00, cantidad: 17 },
+  { id: 47, nombre: "Coca 1.35 L", precio: 33.00, cantidad: 7 },
+  { id: 48, nombre: "coca Ret 3", precio: 42.00, cantidad: 5 },
+  { id: 49, nombre: "envases", precio: 10.00, cantidad: 60 },
+  { id: 50, nombre: "rejas", precio: 0, cantidad: 5 },
+  { id: 51, nombre: "electrolicts", precio: 25.00, cantidad: 4 },
+  { id: 52, nombre: "Gatorade 500ml", precio: 20.00, cantidad: 5 },
+  { id: 53, nombre: "Ciel 1Litro", precio: 15.00, cantidad: 1 },
+  { id: 54, nombre: "Bonafont Levite 600 té", precio: 20.00, cantidad: 3 },
+  { id: 55, nombre: "Bonafont 1L", precio: 18.00, cantidad: 12 },
+  { id: 56, nombre: "Garrafont 20 Ciel", precio: 56.00, cantidad: 12 },
+  { id: 57, nombre: "Amper", precio: 20.00, cantidad: 9 },
+  { id: 58, nombre: "Arizona", precio: 19.00, cantidad: 17 },
+  { id: 59, nombre: "Topochico 600", precio: 20.00, cantidad: 8 },
+  { id: 60, nombre: "3 Litros", precio: 40.00, cantidad: 10 },
+  { id: 61, nombre: "Fanta 600", precio: 19.00, cantidad: 9 },
+  { id: 62, nombre: "Sidral Mundet 600ml", precio: 19.00, cantidad: 2 },
+  { id: 63, nombre: "Delaware punch 600", precio: 19.00, cantidad: 1 },
+  { id: 64, nombre: "Fizz Naranja", precio: 19.00, cantidad: 4 },
+  { id: 65, nombre: "DelValle 1Litro", precio: 31.00, cantidad: 1 },
+  { id: 66, nombre: "Delvalle 355ml", precio: 20.00, cantidad: 10 },
+  { id: 67, nombre: "Sprite 600", precio: 19.00, cantidad: 19 },
+  { id: 68, nombre: "Fresca 600", precio: 19.00, cantidad: 19 },
+  { id: 69, nombre: "2Litros", precio: 30.00, cantidad: 8 },
+  { id: 70, nombre: "Capsup MONTE", precio: 48.00, cantidad: 1 },
+  { id: 71, nombre: "Capsup Clemns", precio: 12.00, cantidad: 3 },
+  { id: 72, nombre: "Bufalo", precio: 15.00, cantidad: 1 },
+  { id: 73, nombre: "Sardinas Dolores", precio: 47.00, cantidad: 2 },
+  { id: 74, nombre: "Atun Agua", precio: 25.00, cantidad: 3 },
+  { id: 75, nombre: "Atun Aceite", precio: 25.00, cantidad: 1 },
+  { id: 76, nombre: "Coffe Mate", precio: 50.00, cantidad: 1 },
+  { id: 77, nombre: "Sobre Nescafe", precio: 15.00, cantidad: 9 },
+  { id: 78, nombre: "Encendedores", precio: 10.00, cantidad: 15 },
+  { id: 79, nombre: "Sobre Pure Jitomate en polvo", precio: 5.00, cantidad: 19 },
+  { id: 80, nombre: "La Morena Chipotle 210g", precio: 32.00, cantidad: 2 },
+  { id: 81, nombre: "Chipotle 60g", precio: 18.00, cantidad: 10 },
+  { id: 82, nombre: "Rajas Lata 60g", precio: 16.00, cantidad: 6 },
+  { id: 83, nombre: "Tab Abuelita", precio: 20.00, cantidad: 5 },
+  { id: 84, nombre: "Tostadas Delicias", precio: 28.00, cantidad: 6 },
+  { id: 85, nombre: "Carnation", precio: 25.00, cantidad: 6 },
+  { id: 86, nombre: "Media Crema Alpura", precio: 23.00, cantidad: 5 },
+  { id: 87, nombre: "Media Crema LALA", precio: 20.00, cantidad: 4 },
+  { id: 88, nombre: "Lechera", precio: 32.00, cantidad: 7 },
+  { id: 89, nombre: "Hunts BBQ", precio: 25.00, cantidad: 7 },
+  { id: 90, nombre: "Iconor", precio: 20.00, cantidad: 4 },
+  { id: 91, nombre: "Salsa Habanera", precio: 30.00, cantidad: 1 },
+  { id: 92, nombre: "YAYA", precio: 18.00, cantidad: 2 },
+  { id: 93, nombre: "Valentina", precio: 20.00, cantidad: 8 },
+  { id: 94, nombre: "Valentina Negra", precio: 20.00, cantidad: 1 },
+  { id: 95, nombre: "Vinagre Blanco", precio: 19.00, cantidad: 9 },
+  { id: 96, nombre: "Mayonesa McCornick", precio: 35.00, cantidad: 3 },
+  { id: 97, nombre: "Clement LAta", precio: 20.00, cantidad: 1 },
+  { id: 98, nombre: "Elote LCosteña", precio: 20.00, cantidad: 3 },
+  { id: 99, nombre: "Ensalada Lata La Costeña", precio: 20.00, cantidad: 3 },
+  { id: 100, nombre: "Rajas Lata 150", precio: 17.00, cantidad: 3 },
+  { id: 101, nombre: "Pim Mrr", precio: 17.00, cantidad: 4 },
+  { id: 102, nombre: "Latas", precio: 17.00, cantidad: 17 },
+  { id: 103, nombre: "Rajas", precio: 17.00, cantidad: 1 },
+  { id: 104, nombre: "Elotes", precio: 18.00, cantidad: 3 },
+  { id: 105, nombre: "Sal La fina 1k", precio: 23.00, cantidad: 1 },
+  { id: 106, nombre: "Sal Fort", precio: 21.00, cantidad: 2 },
+  { id: 107, nombre: "Maruchan", precio: 19.00, cantidad: 10 },
+  { id: 108, nombre: "Charras", precio: 3.00, cantidad: 4 },
+  { id: 109, nombre: "Sopas", precio: 12.00, cantidad: 13 },
+  { id: 110, nombre: "Sopas", precio: 12.00, cantidad: 11 },
+  { id: 111, nombre: "Spaguetti", precio: 12.00, cantidad: 1 },
+  { id: 112, nombre: "Totopos", precio: 37.00, cantidad: 6 },
+  { id: 113, nombre: "Frijoles Sierra Lata", precio: 20.00, cantidad: 25 },
+  { id: 114, nombre: "Frijoles Sobre", precio: 19.00, cantidad: 1 },
+  { id: 115, nombre: "Vinagre Manzana", precio: 19.00, cantidad: 12 },
+  { id: 116, nombre: "Frijoles Sierra Lata", precio: 40.00, cantidad: 16 },
+  { id: 117, nombre: "Arroz SOS", precio: 40.00, cantidad: 2 },
+  { id: 118, nombre: "Hot Cakes", precio: 37.00, cantidad: 2 },
+  { id: 119, nombre: "Frijoles", precio: 45.00, cantidad: 1 },
+  { id: 120, nombre: "2 Tortillinas Cas", precio: 27.00, cantidad: 2 },
+  { id: 121, nombre: "Maizenas AT", precio: 12.00, cantidad: 15 },
+  { id: 122, nombre: "D Garris Gelatinas", precio: 15.00, cantidad: 2 },
+  { id: 123, nombre: "Pronto Gelatinas", precio: 15.00, cantidad: 4 },
+  { id: 124, nombre: "Cajas Maizena Ch", precio: 14.00, cantidad: 4 },
+  { id: 125, nombre: "Cajas Maizena GR", precio: 24.00, cantidad: 4 },
+  { id: 126, nombre: "Boings", precio: 17.00, cantida

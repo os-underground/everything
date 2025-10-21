@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+				<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8">
+				<title>Hello, World!</title>
+</head>
+<body>
+				<h1>
+								Hello, World!
+				</h1>
+</body>
+</html>
+<!doctype html>
+
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Zip Explorer — Abrir index dentro de ZIP</title>
+  <style>
+    :root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial}
+    body{margin:0;background:#0f172a;color:#e6eef8;display:flex;gap:12px;height:100vh}
+    header{background:#111827;padding:12px;border-bottom:1px solid rgba(255,255,255,0.04)}
+    .app{display:flex;flex-direction:column;width:520px;max-width:46%;padding:14px;box-sizing:border-box}
+    .preview{flex:1;padding:12px;border-left:1px solid rgba(255,255,255,0.04);min-width:0}
+    h1{margin:0;font-size:18px}
+    .controls{margin-top:10px;display:flex;gap:8px;align-items:center}
+    .controls input[type=file]{display:inline-block}
+    .files{margin-top:12px;overflow:auto;flex:1;border-radius:8px;padding:8px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent)}
+    .entry{padding:6px 8px;border-radius:6px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+    .entry:hover{background:rgba(255,255,255,0.02)}
+    .meta{font-size:12px;color:rgba(230,238,248,0.6)}
+    .breadcrumb{margin-top:10px;font-size:13px;color:rgba(230,238,248,0.7)}
+    iframe{width:100%;height:100%;border:0;background:#fff}
+    .hint{font-size:13px;color:rgba(230,238,248,0.6);margin-top:8px}
+    button{background:#0ea5a4;border:0;padding:8px 10px;border-radius:8px;color:#042;cursor:pointer}
+    small.warn{color:#fca5a5}
+    .stack-controls{display:flex;gap:6px;margin-top:8px}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>Zip Explorer</h1>
+      <div class="hint">Selecciona un archivo .zip (o arrástralo) y explora su contenido. Permite entrar en zips dentro de zips.</div>
+    </header><div style="padding:12px;display:flex;flex-direction:column;gap:8px;flex:1;">
+  <div class="controls">
+    <input id="fileInput" type="file" accept=".zip" />
+    <button id="openExample">Abrir ejemplo</button>
+    <div style="flex:1"></div>
+  </div>
+
+  <div class="breadcrumb" id="breadcrumb">(sin archivo cargado)</div>
+  <div class="stack-controls">
+    <button id="backBtn" disabled>⬅ Volver</button>
+    <button id="downloadZip" disabled>Descargar entrada</button>
+  </div>
+
+  <div class="files" id="fileList" role="list"></div>
+  <div style="font-size:12px;margin-top:8px;color:rgba(230,238,248,0.6)">
+    <div>Limitaciones: </div>
+    <ul>
+      <li>Los <strong>ZIP protegidos con contraseña</strong> no pueden ser abiertos por JSZip en esta página. Si tienes contraseñas, te puedo dar un script en Python para extraerlos (con pyzipper).</li>
+      <li>Los archivos HTML con rutas relativas intentan reemplazar referencias a recursos internos del ZIP (css, js, imágenes). No todas las webs complejas funcionarán 100%.</li>
+    </ul>
+  </div>
+</div>
+
+  </div>  <div class="preview">
+    <div style="display:flex;align-items:center;gap:8px;padding:12px;border-bottom:1px solid rgba(255,255,255,0.03)">
+      <strong id="previewTitle">Vista previa</strong>
+      <div style="flex:1"></div>
+      <small id="status" class="meta">Listo</small>
+    </div>
+    <div style="height:calc(100% - 48px);">
+      <iframe id="previewFrame" sandbox="allow-scripts allow-forms allow-same-origin"></iframe>
+    </div>
+  </div>  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>  <script>
+    // ZIP EXPLORER
+    const fileInput = document.getElementById('fileInput');
+    const fileList = document.getElementById('fileList');
+    const preview = document.getElementById('previewFrame');
+    const breadcrumb = document.getElementById('breadcrumb');
+    const status = document.getElementById('status');
+    const backBtn = document.getElementById('backBtn');
+    const downloadBtn = document.getElementById('downloadZip');
+    const openExample = document.getElementById('openExample');
+
+    // stack: cada nivel { zip, name, mapping (filename->blobURL), entries: array }
+    let stack = [];
+
+    fileInput.addEventListener('change', async (e) => {
+      const f = e.target.files[0];
+      if (!f) return;
+      await loadZipFromFile(f);
+    });
+
+    openExample.addEventListener('click', ()=>{
+      alert('Este botón solo es un placeholder — carga tu ZIP desde el input.');
+    });
+
+    backBtn.addEventListener('click', ()=>{
+      if (stack.length>1) {
+        stack.pop();
+        renderCurrent();
+      }
+    });
+
+    downloadBtn.addEventListener('click', ()=>{
+      const cur = stack[stack.length-1];
+      if (!cur || !cur.selectedEntry) return;
+      cur.selectedEntry.async('blob').then(blob=>{
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = cur.selectedEntry.name.split('/').pop();
+        a.click();
+      });
+    });
+
+    async function loadZipFromFile(file){
+      status.textContent = 'Cargando ZIP…';
+      try{
+        const ab = await file.arrayBuffer();
+        await loadZipFromArrayBuffer(ab, file.name);
+      }catch(err){
+        console.error(err);
+        status.textContent = 'Error al leer el ZIP';
+      }
+    }
+
+    async function loadZipFromArrayBuffer(ab, name){
+      try{
+        const zip = await JSZip.loadAsync(ab);
+        const root = {zip, name: name || 'root.zip', mapping: {}, entries: [], selectedEntry: null};
+        await prepareEntries(root);
+        stack = [root];
+        renderCurrent();
+        status.textContent = 'ZIP cargado';
+      }catch(err){
+        console.error(err);
+        status.textContent = 'No se pudo abrir el ZIP. ¿Está encriptado? (JSZip no maneja zips con contraseña)';
+        alert('Este ZIP parece estar protegido o es incompatible con JSZip en el navegador. Si tiene contraseña, puedo darte un script en Python para extraerlo con contraseña.');
+      }
+    }
+
+    async function prepareEntries(ctx){
+      ctx.entries = Object.values(ctx.zip.files).filter(f=>!f.dir).sort((a,b)=>a.name.localeCompare(b.name));
+      // crea mapping blobURL para assets (imagen, css, js) para que puedan usarse desde HTML
+      ctx.mapping = {};
+      for (let e of ctx.entries){
+        const lname = e.name.toLowerCase();
+        if (lname.endsWith('.png') || lname.endsWith('.jpg') || lname.endsWith('.jpeg') || lname.endsWith('.gif') || lname.endsWith('.svg') || lname.endsWith('.css') || lname.endsWith('.js') || lname.endsWith('.webp')){
+          const blob = await e.async('blob');
+          ctx.mapping[e.name] = URL.createObjectURL(blob);
+        }
+      }
+    }
+
+    function renderCurrent(){
+      const cur = stack[stack.length-1];
+      breadcrumb.textContent = stack.map(s=>s.name).join(' / ');
+      backBtn.disabled = stack.length<=1;
+      fileList.innerHTML = '';
+      if (!cur) return;
+      cur.entries.forEach(entry=>{
+        const div = document.createElement('div');
+        div.className = 'entry';
+        const base = entry.name.split('/').pop();
+        div.innerHTML = `<div><strong>${base}</strong><div class='meta'>${entry.name}</div></div><div class='meta'>${prettyType(base)}</div>`;
+        div.onclick = ()=>openEntry(entry);
+        div.oncontextmenu = (ev)=>{ev.preventDefault(); cur.selectedEntry = entry; downloadBtn.disabled=false;};
+        fileList.appendChild(div);
+      });
+      preview.srcdoc = '<html><body style="font-family:Inter,Arial;display:flex;align-items:center;justify-content:center;height:100%;color:#334155">Selecciona un archivo HTML para ver, o haz click en un recurso para descargar.</body></html>';
+      downloadBtn.disabled = true;
+      status.textContent = 'Explorando: ' + cur.name;
+    }
+
+    function prettyType(name){
+      const n = name.toLowerCase();
+      if (n.endsWith('.html')||n.endsWith('.htm')) return 'HTML';
+      if (n.endsWith('.css')) return 'CSS';
+      if (n.endsWith('.js')) return 'JS';
+      if (n.endsWith('.zip')) return 'ZIP (entrar)';
+      if (n.match(/\.(png|jpg|jpeg|gif|svg|webp)$/)) return 'Imagen';
+      return 'Archivo';
+    }
+
+    async function openEntry(entry){
+      const cur = stack[stack.length-1];
+      cur.selectedEntry = entry; downloadBtn.disabled = false;
+      const name = entry.name.toLowerCase();
+      if (name.endsWith('.zip')){
+        // abrir zip dentro
+        status.textContent = 'Abriendo zip interno…';
+        const data = await entry.async('uint8array');
+        try{
+          const inner = await JSZip.loadAsync(data);
+          const ctx = {zip: inner, name: entry.name, mapping:{}, entries:[], selectedEntry:null};
+          await prepareEntries(ctx);
+          stack.push(ctx);
+          renderCurrent();
+        }catch(err){
+          console.error(err);
+          alert('No se pudo abrir el zip interno (posible cifrado o formato no compatible).');
+          status.textContent = 'Error abriendo zip interno';
+        }
+        return;
+      }
+
+      if (name.endsWith('.html') || name.endsWith('.htm')){
+        status.textContent = 'Cargando HTML…';
+        const txt = await entry.async('text');
+        // reemplaza referencias simples a archivos internos por blob URLs si existen
+        let html = txt;
+        const curMap = cur.mapping || {};
+        // replace src="file.ext" and href="file.ext" (simple, no promises for complex cases)
+        html = html.replace(/(src|href)=(\"|\')(.*?)\2/ig, (m,attr,q,path)=>{
+          // busca path limpio
+          const p = path.split('?')[0].split('#')[0];
+          if (curMap[p]) return `${attr}=${q}${curMap[p]}${q}`;
+          // si el path es solo el filename, intenta con ./filename
+          const fn = p.replace(/^\.\//,'');
+          if (curMap[fn]) return `${attr}=${q}${curMap[fn]}${q}`;
+          return m;
+        });
+        // muestra en iframe
+        preview.srcdoc = html;
+        status.textContent = 'HTML cargado';
+        return;
+      }
+
+      // imagen o text
+      if (name.match(/\.(png|jpg|jpeg|gif|svg|webp)$/)){
+        const blob = await entry.async('blob');
+        const url = URL.createObjectURL(blob);
+        preview.src = url;
+        status.textContent = 'Imagen';
+        return;
+      }
+
+      // texto genérico
+      try{
+        const txt = await entry.async('text');
+        preview.srcdoc = `<pre style="white-space:pre-wrap;font-family:monospace;padding:12px;color:#0f172a">${escapeHtml(txt)}</pre>`;status.textContent = 'Archivo de texto cargado';
+  }catch(err){
+    // binario -> forzar descarga
+    const blob = await entry.async('blob');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = entry.name.split('/').pop();
+    a.click();
+    status.textContent = 'Archivo binario descargado';
+  }
+}
+
+function escapeHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+// detect drag/drop
+;(function(){
+  const bd = document.body;
+  bd.addEventListener('dragover', e=>{e.preventDefault(); e.dataTransfer.dropEffect='copy'});
+  bd.addEventListener('drop', async e=>{
+    e.preventDefault();
+    if (e.dataTransfer.files && e.dataTransfer.files.length) {
+      const f = e.dataTransfer.files[0];
+      if (f.name.toLowerCase().endsWith('.zip')) await loadZipFromFile(f);
+    }
+  });
+})();
+
+  </script>
+</body>
+</html>

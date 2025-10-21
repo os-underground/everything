@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+				<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8">
+				<title>    all </title>
+				<style>
+				
+				/* Project shared stylesheet — project-styles.css*/
+				html, body {
+  --radius:10px;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
+}
+
+*{box-sizing:border-box}
+body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,Helvetica,sans-serif;margin:12px;background:var(--bg);color:#111}
+header{display:flex;gap:12px;align-items:center}
+h2{margin:0;font-size:20px}
+.small{font-size:13px;color:var(--muted)}
+
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:12px;box-shadow:0 1px 2px rgba(15,23,42,0.03)}
+main{display:grid;grid-template-columns:340px 1fr;gap:12px;margin-top:12px}
+
+button{padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:white;cursor:pointer}
+button.primary{background:var(--accent);color:white;border-color:transparent}
+
+.file-item{display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px dashed var(--border)}
+.file-item div:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:220px}
+
+textarea#viewer{width:100%;height:380px;font-family:var(--mono);padding:8px;border-radius:8px;border:1px solid var(--border);background:#fff}
+
+/* Markdown rendering */
+.markdown-body{padding:18px;background:linear-gradient(180deg,#fff 0%, #fbfbfb 100%);border-radius:8px;border:1px solid var(--border)}
+.markdown-body h1,.markdown-body h2,.markdown-body h3{margin:12px 0}
+.markdown-body p{margin:8px 0;color:#111;line-height:1.6}
+.markdown-body code{background:#f3f4f6;padding:2px 6px;border-radius:6px;font-family:var(--mono);}
+.markdown-body pre{background:#0f1724;color:#e6eef8;padding:12px;border-radius:8px;overflow:auto}
+.markdown-body a{color:var(--accent);text-decoration:none}
+.markdown-body img{max-width:100%;border-radius:6px}
+
+/* Responsive */
+@media (max-width:900px){
+  main{grid-template-columns:1fr}
+}
+
+				</style>
+</head>
+<body>
+				<h1>
+								body
+				</h1>
+				<p>
+								
+								
+
+
+  <!-
+    
+    
+    
+    -"Omitir e ir al contenido
+Abrir barra lateral
+
+ChatGPT
+Tú dijiste:
+si de casualidad cambiamos el archivo zip o sea si cambiamos el punto zip por algún punto y otro archivo qué tipo de archivo sería para que cambie a carpeta y bueno si es algo así como descomprimirla en un repositorio de github
+ChatGPT Plus
+Excelente pregunta 💡 — lo que estás tocando aquí es cómo funciona internamente un archivo .zip y cómo GitHub interpreta los archivos comprimidos o descomprimidos dentro de un repositorio.
+
+Vamos paso a paso 👇
+
+🧩 1. Qué pasa si cambias la extensión .zip
+Un archivo .zip sigue siendo el mismo internamente, aunque cambies la extensión (por ejemplo .zip → .folder o .zip → .repo).
+Pero ⚠️ solo cambiar la extensión no lo convierte en carpeta: el sistema operativo y GitHub siguen viendo un archivo comprimido, solo que con una extensión desconocida.
+
+Ejemplo:
+
+archivo.zip  → archivo.repo
+Si haces esto, sigue siendo un .zip, pero nadie lo reconocerá automáticamente como tal.
+Podrías volver a cambiarlo manualmente a .zip para descomprimirlo.
+
+📂 2. Cómo hacerlo "carpeta" (descomprimido)
+Para que aparezca como carpeta en un repositorio (es decir, los archivos visibles y navegables), debes descomprimirlo realmente antes de subirlo a GitHub.
+
+Ejemplo en consola:
+
+unzip archivo.zip -d carpeta_destino
+Luego subes la carpeta_destino/ completa a tu repo, y GitHub la mostrará con todos los archivos dentro.
+
+🧰 3. En un flujo con GitHub
+Supongamos que tienes proyecto.zip y quieres que aparezca descomprimido en GitHub:
+
+Opción A — Manual
+Descomprime el .zip localmente.
+
+Copia el contenido a tu carpeta del repo.
+
+Ejecuta:
+
+git add .
+git commit -m "Agrego archivos descomprimidos"
+git push
+Opción B — Automático (por script)
+Si quieres que se descomprima automáticamente en GitHub Actions o un script local:
+
+# .github/workflows/unzip.yml
+name: Unzip repo
+on: [push]
+
+jobs:
+  unzip:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Unzip file
+        run: unzip archivo.zip -d ./descomprimido
+Así cada vez que subes el .zip, se descomprime en el flujo.
+
+🧪 4. Si quisieras otro tipo de compresión
+También podrías usar otros formatos reconocidos:
+
+Extensión	Tipo de archivo	Descripción breve
+.zip	ZIP	Común y multiplataforma
+.tar	TAR	Agrupa sin comprimir
+.tar.gz / .tgz	TAR + GZIP	Más eficiente en Linux
+.7z	7-Zip	Alta compresión
+.rar	RAR	Propietario
+.gz	Gzip	Solo un archivo comprimido
+Pero GitHub no descomprime automáticamente ninguno; todos se verán como archivos binarios.
+
+✅ En resumen
+Cambiar la extensión no lo convierte en carpeta.
+
+Para que se vea como carpeta en GitHub, debes descomprimir el .zip y subir el contenido.
+
+Si quieres hacerlo automático, usa scripts o GitHub Actions.
+
+¿Quieres que te muestre un pequeño script en Bash o Node.js que lea un .zip, lo descomprima, y copie todo a una carpeta lista para subir a GitHub (por ejemplo public/)?
+
+Tú dijiste:
+en serio muchas gracias o sea sé que pido muchísima información y sé que igual y mucho está en internet pero aún así me siento mal sacando muchísima información no sé si entiendo que me digas hasta de más o si me falta es que me digas más pero pues ya ves bien preguntón... 
+
+de hecho me pasas todo un script o el html completo de cómo igual supongo que esos ejemplos no pero cómo leer absolutamente pues otra vez lo mismo todos los todo el folder no sé en este caso si es quiero que lea un archivo ya sea sí o punto tal que es el que se me interesó o no sé por ejemplo en un repositorio bueno tener depósito yo directamente porque es lo que quiero hacer entonces creo que están ocupando no sé si están ocupando algo mientras no están este activos entonces creo que están como que las bases de datos activos creo que me quieren cobrar $10 así que no sé porque me quieran cobrar o bueno supongo que por algún tipo de uso los quiero este eliminar totalmente así que bueno sí un servidor la fuerza me va a cobrar No manches Entonces aguántame tantito este no quiero poner servidores por eso ahorita con el gma il está increíble con el j Jason no sé si es la única manera en la que bueno se funcione todo de esa misma forma con la base de datos Y con él Entonces yo tengo que organizar un buen Jason o un buen Gmail para que me guarde creo que en un solo repositorio voy a hacer absolutamente todo y lo único que quiero es como dices también cómo bloquear este así que los archivos por ejemplo porque como si estuviesen en privado quiero ver cómo si hay archivos tipo carpeta quiero ver si hay archivos en los que pueda leer y bueno al mismo tiempo que leer nos mantenga en privado no se puedan descomprimir y pues de esa manera No ya sé que te tenga todo en un solo archivo obviamente va a haber personas que sepan descomprimir esas cosas y pues bueno yo esperaba que no voy a ver la manera en que si puedo guardar pues por ejemplo pues todos los repositorios y así en secrets es que todavía sigo haciendo muchísimas configuraciones duras penas estoy aprendiendo a agarrar unas que otras son muchísimas muchísimas cosas tanto en los branches como en los forks y pues bueno lo que yo quiero es más que nada que me sirva al marketplace lo malo es que jala nadie lo haya descargado ya no y pues no puedo publicar nada De momento ahorita por el ejemplo el archivo de todo el html-Apps entonces pues ese lo tengo en privado y todo eso ya lo descargué Al subirlo por ejemplo quiero en bloques de 25 megas porque pues no me deja subir más de 25 megas
+ChatGPT Plus
+
+Pensado durante 35s
+Perfecto — listo: creé un archivo llamado Zip-folder-reader-and-scripts (HTML) en el canvas. 🚀
+
+Qué contiene (resumen rápido):
+
+HTML + JS que corre 100% en tu navegador (nada se sube): abre .zip, muestra la lista, permite ver archivos de texto, descargar archivos, dividir en partes (por defecto 25 MB) y encriptar/desencriptar usando contraseña (AES-GCM, Web Crypto).
+
+Snippets dentro del mismo documento: ejemplos de Bash (unzip, split, rejoin), Python (recorrer carpeta y filtrar por extensión), y un ejemplo de GitHub Actions para descomprimir en CI y guardar artifact.
+
+Consejos prácticos sobre privacidad (usar repos repos privados, Git LFS, encriptación antes de subir, GitHub Secrets).
+
+Cómo abrirlo y usarlo:
+
+En el canvas verás el archivo Zip-folder-reader-and-scripts. Ábrelo y copia el contenido a un archivo llamado, por ejemplo, zip-folder-reader-and-scripts.html.
+
+Abre ese archivo en tu navegador (doble clic). Todo funciona localmente: selecciona tu .zip, explora, encripta y/o divide en partes de 25 MB para subir donde necesites.
+
+Si quieres subir a GitHub: preferible encriptar primero y luego subir a un repo privado o usar Git LFS para archivos grandes.
+
+Si quieres, puedo ahora (elige una opción):
+
+Adaptar el HTML para que en vez de descargar las partes las suba automáticamente a un servicio (necesitarás una API o credenciales).
+
+Generar un script CLI (Bash o Node.js) que automatice: descomprimir → filtrar por extensión → encriptar cada archivo → dividir en 25MB → preparar para push a un repo o para subir a Google Drive.
+
+Explicarte paso a paso cómo configurar Git LFS y cuándo usarlo vs. dividir archivos.
+
+Hacer el mismo visor pero en React para poderlo integrar a un proyecto (lo dejo listo para que lo subas al marketplace).
+
+Dime cuál prefieres y lo hago ya. 😊
+
+Tú dijiste:
+Mira sinceramente tienes muy buenas ideas con eso más bien sí está bien si todos sirven diferentes increíble y no no te preocupes por demás únicamente pues era eso más que nada pues los ejemplos y pues bueno en este caso me puede seguir explicando cómo bueno supongo que los repositorios en marketplace son de parte de secretos Es que de verdad Bueno me está costando mucho todavía entender porque está en la piel la Piqué y el token son un montón de cosas un montón de conceptos y o sea sé que cada cosa tiene su función en específico y pues sí la estoy estudiando bastante obviamente me estoy tardando y pues no sé la verdad por ejemplo todo lo que he visto todo todo no me aprendo la mayor parte y lo sigo estudiando y todavía Tengo que aprender más conceptos como los que estoy preguntando este estaría chido que me apoyes bastante pero sí o sea también estoy preparando todo prácticamente lo estoy haciendo como el libro también por ejemplo me Ah es que primero quiero que hagas todo todo lo que me acabas de decir porque o sea cambiar eso para en vez de cambiarlelo encriptarlo y todo eso son diferentes conceptos y aparte todavía tengo otra idea Entonces es muchísimo no no sé si me puedes enviar todo de golpe o todavía no
+ChatGPT Plus
+
+Pensado durante 33s
+Perfecto — gracias por la confianza. Te voy a dar todo junto: explicación clara de conceptos (repos, Marketplace, secrets, keys, tokens), buenas prácticas de privacidad, y scripts / comandos listos para que los copies y pegues (Bash + GPG + Git/Git LFS + GitHub Actions). Esto te ayudará a organizar tu repo, proteger los archivos grandes y privados, y automatizar tareas sin pagar servidores.
+
+Voy directo y en orden — si algo te interesa que convierta en archivo (HTML, script o workflow) lo pongo en el canvas que ya creé.
+
+1) Conceptos clave (breve y claro)
+Repositorio (repo): carpeta con historial Git. Puede ser público o privado. En privado, solo la gente que invites puede verlo.
+
+Marketplace: plataforma (ej. GitHub Marketplace) donde publicas apps/actions; publicar suele requerir cumplir requisitos y decidir si será gratuito o de pago.
+
+Secretos (GitHub Secrets): pares nombre/valor que guardas en la configuración del repo (Settings → Secrets & variables → Actions). Los workflows pueden usarlos como secrets.MI_SECRETO. NO se deben poner en el código.
+
+Token / PAT (Personal Access Token): credencial generada por GitHub que permite autenticación por HTTPS y acceso a la API. Tiene permisos que tú eliges (repo, workflow, etc.). Trátalo como contraseña.
+
+SSH key: par de llaves pública/privada que permiten autenticar con Git sobre SSH (ej. git@github.com:usuario/repo.git). Más seguro para pushes desde tu máquina.
+
+Git LFS: extensión para manejar archivos grandes (imágenes, zips, binarios). Reemplaza los binarios por punteros y almacena objetos en LFS. Útil para >25 MB.
+
+Encriptación local: cifrar archivos antes de subirlos (recomendado si quieres máxima privacidad). Si encriptas, solo quien tenga la contraseña/clave podrá leerlos.
+
+Chunks / split: dividir archivos grandes en partes (ej. 25 MB) y recombinarlos después; útil si hay límites de subida.
+
+2) Buenas prácticas de privacidad y flujo recomendado
+Repo privado si el contenido es sensible.
+
+Nunca subas contraseñas, claves privadas o tokens en código (usa .gitignore y Secrets).
+
+Para archivos grandes:
+
+Usa Git LFS si vas a versionarlos con Git.
+
+O encripta + sube los .enc (aunque sean grandes) o sube partes como artefactos.
+
+Si no quieres pagar servidores: haz todo local y encripta antes de subir. Usa Actions para automatizar si necesitas que GitHub haga transformaciones (desencriptar en CI con secrets).
+
+Rotar tokens y claves con frecuencia; usar 2FA en cuenta GitHub.
+
+Si publicas algo en Marketplace, revisa permisos que solicita tu app — mientras menos permisos, mejor.
+
+3) Comandos y scripts útiles (listos para usar)
+A) Descomprimir, dividir en 25 MB y recomponer (Bash)
+# Descomprimir ZIP
+unzip archivo.zip -d carpeta_destino
+
+# Dividir archivo grande en partes de 25 MB
+split -b 25M "carpeta_destino/archivo_grande.bin" "archivo_grande.bin.part-"
+
+# Recombinar (Linux/macOS)
+cat archivo_grande.bin.part-* > archivo_grande_recompuesto.bin
+B) Encriptar / desencriptar archivos (recomendado: GPG simétrico)
+Usaremos GPG (fácil y seguro). Si no tienes gpg: sudo apt install gnupg (Linux) o instala GPG en Windows/Mac.
+
+# Encriptar (symmetric AES256). Te pedirá contraseña:
+gpg --symmetric --cipher-algo AES256 archivo
+
+# Resultado: archivo.gpg
+
+# Desencriptar:
+gpg --output archivo_decrypted --decrypt archivo.gpg
+Si prefieres openssl para cifrado simétrico (menos conveniente para contraseñas largas), ten cuidado con parámetros. GPG es más simple.
+
+C) Script Bash: encriptar todo un folder, luego dividir cada archivo en 25MB
+#!/usr/bin/env bash
+set -e
+ROOT_DIR="$1"   # e.g. ./carpeta_destino
+OUTDIR="${2:-encrypted_out}"
+CHUNK_SIZE=25M
+
+mkdir -p "$OUTDIR"
+
+find "$ROOT_DIR" -type f | while read -r file; do
+  base=$(basename "$file")
+  enc="${OUTDIR}/${base}.gpg"
+  echo "Encriptando $file -> $enc"
+  gpg --batch --yes --symmetric --cipher-algo AES256 --passphrase "$ENCRYPT_PASS" -o "$enc" "$file"
+  echo "Dividiendo $enc en partes de $CHUNK_SIZE..."
+  split -b $CHUNK_SIZE "$enc" "${enc}.part-"
+  # borrar .gpg si quieres sólo las partes
+  rm -f "$enc"
+done
+Nota: este script espera que exportes ENCRYPT_PASS (variable de entorno). No la pongas en el repo; en CI la pones como secret.
+
+D) Git LFS (instalación y uso básico)
+# instalar
+git lfs install
+
+# indicar qué archivos manejar con LFS (ej. .zip)
+git lfs track "*.zip"
+git add .gitattributes
+git add path/to/bigfile.zip
+git commit -m "Add big file via LFS"
+git push origin main
+GitHub tiene límites gratuitos de LFS por almacenamiento/transferencia; revisa si necesitas plan.
+
+4) GitHub Actions — ejemplo: descomprimir y desencriptar en CI (usa Secrets)
+Workflow que al hacer push de archivo.zip.gpg.part-* toma las partes, las junta, desencripta (con secret ENCRYPT_PASS) y sube artifact.
+
+```
+# .github/workflows/reassemble-and-decrypt.yml
+name: Reassemble and Decrypt
+on:
+  push:
+    paths:
+      - 'encrypted/**'   # donde subes las partes
+
+jobs:
+  reassemble:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Reassemble parts
+        run: |
+          mkdir -p tmp
+          cat encrypted/*.part-* > tmp/all.gpg
+
+      - name: Decrypt (GPG symmetric)
+        env:
+          ENCRYPT_PASS: ${{ secrets.ENCRYPT_PASS }}
+        run: |
+          echo "$ENCRYPT_PASS" > pass.txt
+          gpg --batch --yes --passphrase-file pass.txt --output tmp/decrypted.zip --decrypt tmp/all.gpg
+
+      - name: Unzip
+        run: |
+          unzip tmp/decrypted.zip -d tmp/unzipped
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: unzipped-content
+          path: tmp/unzipped/
+```
+
+
+Importante: agrega ENCRYPT_PASS en los Secrets del repo (Settings → Secrets & variables → Actions → New repository secret).
+
+5) Tokens, SSH y permisos — diferencias y cuándo usarlos
+SSH key: usa para pushes desde tu PC (configurar ssh-keygen, subir id_rsa.pub en GitHub → Settings → SSH and GPG keys). Es simple y seguro.
+
+PAT (Personal Access Token): necesario para scripts que usan HTTPS o llaman la API (ej. desde CI o programas). Tiene scopes (permisos) limitables. Trátalo como secreto.
+
+GitHub App / OAuth App: para integraciones más complejas (Marketplace, instalación por otros usuarios). Requiere más configuración (webhooks, permisos).
+
+GitHub Secrets: coloca PATs, claves y passwords aquí; Actions los leen como secrets.MI_TOKEN.
+
+Seguridad:
+
+No compartas claves por chat.
+
+Usa permisos mínimos para tokens.
+
+En CI, evita exponer secrets a workflows que corran desde forks (riesgo de leak en PRs).
+
+6) Publicar en Marketplace (resumen práctico)
+Si te refieres a GitHub Marketplace (ej. publicar un Action o una App):
+
+Decide tipo: GitHub Action, GitHub App o Integration.
+
+Documenta bien tu acción (README, usage, inputs/outputs).
+
+Revisa requisitos de publicación (licencia, descripción, logo).
+
+Para Apps que manejan repos privados de otros usuarios, hay proceso de revisión y permisos.
+
+Si no quieres publicar todavía, mantén tu proyecto privado hasta estar lista.
+
+Si te referías a otro "marketplace" (otro hosting o tienda), dime cuál y adapto los pasos.
+
+7) Checklist práctico para tu caso (paso a paso)
+Haz backup local de todo lo que no quieras perder.
+
+Decide: ¿uso Git LFS o encripto + subo partes?
+
+Si quieres control total: encriptar + subir partes (no dependes de LFS ni pagos).
+
+Si quieres versionado y compartir dentro de GitHub: Git LFS (verifica cuotas).
+
+Crea repo privado en GitHub.
+
+Añade .gitignore y no subas archivos sensibles sin encriptar.
+
+Si automatizas (CI), guarda la contraseña de encriptación en Secrets (ENCRYPT_PASS) y cualquier PAT en repo secrets.
+
+Sube las partes (archivo.part-*) o usa LFS.
+
+Prueba workflow localmente y en Actions (usa artifacts para ver el resultado).
+
+Cuando publiques en Marketplace: prepara README, licencias y revisa permisos.
+
+8) Ejemplo completo — flujo "seguro" para subir archivos grandes sin pagar
+Localmente:
+
+gpg --symmetric --cipher-algo AES256 mi_folder.zip → mi_folder.zip.gpg
+
+split -b 25M mi_folder.zip.gpg mi_folder.zip.gpg.part-
+
+git add encrypted/ (contiene mi_folder.zip.gpg.part-*), commit y push a repo privado
+
+En GitHub Actions:
+
+Workflow detecta cambios en encrypted/, reensambla las partes, desencripta usando secret ENCRYPT_PASS, y sube artifact con el contenido (o lo procesa).
+
+Si necesitas compartir con alguien: dales el link al repo (si es privado, invítales) y la contraseña ENCRYPT_PASS por un canal seguro.
+
+9) Código extra opcional (Node.js) — encriptar y dividir (si lo prefieres)
+Puedo adjuntar un encrypt-split.js que:
+
+toma carpeta → zip (usando archiver) → encripta (crypto, AES-GCM) → divide en 25MB → guarda partes.
+Dime si lo quieres y lo creo en el canvas.
+
+10) Riesgos y recomendaciones finales
+Subir archivos sensibles sin cifrado: riesgo de exposición.
+
+Secrets en logs: evita echo $SECRET en CI.
+
+Acceso innecesario: otorga mínimo scope a tokens.
+
+Backups: guarda claves en gestor de contraseñas seguro.
+
+Si quieres, ahora hago cualquiera de estas cosas inmediatamente (elije una o varias, no pregunto más ya que dijiste que quieres todo):
+
+A) Crear el script Node.js que zipe, encripte y divida automáticamente.
+
+B) Poner el workflow de GitHub Actions completo en el canvas listo para pegar.
+
+C) Generar un README paso a paso con todo lo anterior, listo para subir a tu repo.
+
+D) Crear el script Bash final y probado (lo pongo en el canvas).
+
+Dime cuál (A/B/C/D) quieres que cree ahora y lo preparo completo en el canvas. Si prefieres que haga los cuatro, también los genero; solo dime “hazlos todos” y los creo ya.
+
+Tú dijiste:
+jajajajja 🥺🥺🥺todas las anteriores.. ademas me dices cual es mejor . -funcion pensar, investigar a fondo, internet ??! 
+ChatGPT Plus
+
+Pensado durante 1m 1s
+
+Pensado durante 28s
+
+Pensado durante 20s
+¡Perfecto, lo tengo todo listo! 🥳
+
+¿Qué subí al canvas?
+He añadido —dentro del documento Zip-folder-reader-and-scripts— todos los archivos y artefactos que pediste. Puedes abrir ese archivo en el canvas y verlos/ copiarlos directamente. Los entregables añadidos son:
+
+encrypt-split.js — Node.js: zip + AES-GCM encrypt + split en partes.
+
+decrypt-reassemble.js — Node.js: recombina las partes y desencripta (para usar en CI o local).
+
+.github/workflows/reassemble-decrypt.yml — GitHub Actions que ejecuta el decrypt-reassemble.js y sube artifacts.
+
+encrypt_and_split.sh — script Bash simple que usa ZIP + GPG + split (muy portable).
+
+README.md — instrucciones, opciones y notas de seguridad.
+
+(No pegué aquí el código —está todo en el canvas para que lo copies — así evitamos duplicar contenido.)
+
+¿Cuál es mejor? (resumen práctico según tu situación)
+Depende de lo que priorices: privacidad, facilidad, multiplataforma o automatización.
+
+Si priorizas PRIVACIDAD y quieres evitar costos/servicios extra:
+→ Bash + GPG (el encrypt_and_split.sh) es el camino más simple y robusto.
+Pros: pocas dependencias, fácil de auditar, funciona offline.
+Contras: en Windows necesitas WSL/Git Bash o instalar GPG.
+
+Si quieres AUTOMATIZACIÓN, cross-platform y reproducibilidad:
+→ Node.js + Actions (encrypt-split.js + workflow).
+Pros: se integra con CI (Actions), fácil de extender, funciona en cualquier SO con Node.
+Contras: más dependencias (archiver, Node), y el runner de Actions tiene límites de memoria/tiempo si trabajas con archivos enormes.
+
+Si prefieres mantener versionado y facilidad al colaborar (y aceptas posibles 
+				</p>
+</body>
+</html>

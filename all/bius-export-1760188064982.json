@@ -1,0 +1,19 @@
+{
+  "chats": [],
+  "pending": [
+    {
+      "id": "m_i8rgxj8",
+      "payload": {
+        "type": "msg",
+        "id": "m_i8rgxj8",
+        "from": "dev_w4bclbr",
+        "text": "jdkdkd",
+        "createdAt": 1760187946024
+      },
+      "createdAt": 1760187946024,
+      "status": "pending"
+    }
+  ],
+  "files": [],
+  "exportedAt": 1760188064979
+}

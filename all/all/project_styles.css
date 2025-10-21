@@ -1,0 +1,45 @@
+/* Project shared stylesheet — project-styles.css
+   Use this single CSS for the HTML viewer and for rendering .md files.
+   It styles the UI (panels) and common Markdown elements.
+*/
+
+:root{
+  --bg:#fbfbfc;
+  --panel:#ffffff;
+  --muted:#6b7280;
+  --border:#e5e7eb;
+  --accent:#0ea5a4;
+  --radius:10px;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
+}
+
+*{box-sizing:border-box}
+body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,Helvetica,sans-serif;margin:12px;background:var(--bg);color:#111}
+header{display:flex;gap:12px;align-items:center}
+h2{margin:0;font-size:20px}
+.small{font-size:13px;color:var(--muted)}
+
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:12px;box-shadow:0 1px 2px rgba(15,23,42,0.03)}
+main{display:grid;grid-template-columns:340px 1fr;gap:12px;margin-top:12px}
+
+button{padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:white;cursor:pointer}
+button.primary{background:var(--accent);color:white;border-color:transparent}
+
+.file-item{display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px dashed var(--border)}
+.file-item div:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:220px}
+
+textarea#viewer{width:100%;height:380px;font-family:var(--mono);padding:8px;border-radius:8px;border:1px solid var(--border);background:#fff}
+
+/* Markdown rendering */
+.markdown-body{padding:18px;background:linear-gradient(180deg,#fff 0%, #fbfbfb 100%);border-radius:8px;border:1px solid var(--border)}
+.markdown-body h1,.markdown-body h2,.markdown-body h3{margin:12px 0}
+.markdown-body p{margin:8px 0;color:#111;line-height:1.6}
+.markdown-body code{background:#f3f4f6;padding:2px 6px;border-radius:6px;font-family:var(--mono);}
+.markdown-body pre{background:#0f1724;color:#e6eef8;padding:12px;border-radius:8px;overflow:auto}
+.markdown-body a{color:var(--accent);text-decoration:none}
+.markdown-body img{max-width:100%;border-radius:6px}
+
+/* Responsive */
+@media (max-width:900px){
+  main{grid-template-columns:1fr}
+}

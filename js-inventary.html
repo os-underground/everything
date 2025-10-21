@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+				<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8">
+				<title>scripts inventary</title>
+</head>
+<body>
+				<h1>
+								scripst 
+				</h1>
+</body>
+</html>
+awww yaaa 🥺💙 ahora sí entiendo clarito — tú ya tienes otro archivo o base donde están todos los productos reales, ¿cierto?
+(o sea, una lista completa que ya usabas en el “panel admin / CRUD”, y quieres que el nuevo punto_de_venta.html la lea automáticamente para no tener que volver a meter todo a mano 😭).
+
+Perfecto.
+Entonces hay dos caminos — te explico clarito para que elijas el que prefieras 👇
+
+
+---
+
+🅰️ Opción 1 — Leer los productos de un archivo .json
+
+✅ Ideal si ya tienes todos tus productos guardados en un archivo, como por ejemplo:
+
+productos.json
+
+con contenido tipo:
+
+[
+  { "id": 1, "nombre": "Refresco 600ml", "codigo": "COKE600", "cantidad": 20, "precio": 19.00, "proveedor": "Distribuidora X" },
+  { "id": 2, "nombre": "Pan de caja", "codigo": "PAN680", "cantidad": 12, "precio": 28.50, "proveedor": "Panadería Y" }
+]
+
+Entonces el punto_de_venta puede leerlo al inicio con algo así:
+
+<script>
+async function loadFromJSON(){
+  const res = await fetch('productos.json');
+  const data = await res.json();
+  DB.productos = data;
+  saveDB(DB);
+  renderProductos();
+  renderHistory();
+}
+loadFromJSON();
+</script>
+
+Eso lo podríamos integrar debajo del loadDB(), y así cuando abras el archivo, si encuentra productos.json en tu carpeta, cargará todos tus productos del panel admin automáticamente.
+
+
+---
+
+🅱️ Opción 2 — Leer desde tu otro HTML (panel admin)
+
+Si tu “panel admin” tiene un <script> con todos los productos (por ejemplo un const productos = [...] o los genera en una tabla), entonces puedo hacer que el POS los lea desde ese archivo también (usando fetch() para traer el HTML y extraer los datos, o usando postMessage si los conectas en la misma pestaña).
+
+Por ejemplo:
+
+fetch('admin.html')
+  .then(r => r.text())
+  .then(html => {
+    // analizar el HTML y extraer los productos
+  });
